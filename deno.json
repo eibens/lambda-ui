@@ -1,0 +1,39 @@
+{
+  "importMap": "./features/docs/import_map.json",
+  "lock": false,
+  "tasks": {
+    "fix": "deno fmt && deno lint && deno test -A",
+    "ci": "deno fmt --check && deno lint && deno test -A",
+    "start": "deno run -A --watch=features/ dev.ts start",
+    "build": "deno task ci && deno run -A dev.ts build"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.unstable"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "docs",
+      ".todo"
+    ]
+  },
+  "lint": {
+    "exclude": [
+      "docs",
+      ".todo"
+    ]
+  },
+  "test": {
+    "exclude": [
+      "docs",
+      ".todo"
+    ]
+  }
+}
