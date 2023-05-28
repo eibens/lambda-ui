@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { Twind } from "./deps.ts";
 import { DefaultTwindConfig } from "./twind_config.ts";
 import { TwindContext } from "./use_twind.ts";
+import { useTwindSheet } from "./use_twind_sheet.ts";
 import { ViewChildren } from "./view.tsx";
 
 /** MAIN **/
@@ -12,9 +13,9 @@ export function TwindProvider(props: {
 }) {
   const { children, config } = props;
 
-  const instance = useMemo(() => {
-    const sheet = document ? Twind.cssomSheet() : undefined;
+  const sheet = useTwindSheet();
 
+  const instance = useMemo(() => {
     const instance = Twind.create({
       sheet,
       darkMode: "class",
@@ -22,7 +23,7 @@ export function TwindProvider(props: {
     });
 
     return instance;
-  }, []);
+  }, [sheet]);
 
   return (
     <TwindContext.Provider value={instance}>

@@ -1,9 +1,11 @@
 import type { CSSProperties, JSX, ReactNode } from "react";
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import type { Twind } from "./deps.ts";
 import { useTwind } from "./use_twind.ts";
 
 /** MAIN **/
+
+export { createElement as h } from "react";
 
 export type ViewNode = ReactNode;
 
@@ -17,9 +19,12 @@ export type ViewProps<Tag extends ViewTag = ViewTag> =
     tag?: Tag;
     style?: CSSProperties;
     class?: Twind.Token;
+    rawClass?: string;
     viewProps?: ViewProps<Tag>;
     onElement?: (el: HTMLElement) => void;
   };
+
+export const ViewFragment = Fragment;
 
 export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
   const {
@@ -28,6 +33,7 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
     viewProps,
     onElement,
     class: className,
+    rawClass = "",
     ...rest
   } = { ...props.viewProps, ...props };
 
@@ -36,6 +42,7 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
   const {
     style: viewStyle,
     class: viewClassName,
+    rawClass: viewRawClass = "",
     ...viewRest
   } = viewProps ?? {};
 
@@ -45,7 +52,7 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
     ...rest,
     ...viewRest,
     ref,
-    class: tw([
+    class: rawClass + " " + viewRawClass + " " + tw([
       className,
       viewClassName,
     ]),
