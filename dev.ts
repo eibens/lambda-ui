@@ -1,4 +1,4 @@
-import { build, start } from "./features/docs/mod.ts";
+import { build, start } from "./features/website/mod.ts";
 
 const [command] = Deno.args;
 

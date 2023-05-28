@@ -2,7 +2,7 @@
 
 My personal web UI library.
 
-- [Docs](https://eibens.github.io/lambda-ui/)
+- [Website](https://eibens.github.io/lambda-ui/)
 
 ## Structure
 
