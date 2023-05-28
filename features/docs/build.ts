@@ -4,11 +4,12 @@ import {
 } from "https://deno.land/std@0.159.0/path/mod.ts";
 import * as es from "https://deno.land/x/esbuild@v0.15.10/mod.js";
 import { denoPlugin } from "https://deno.land/x/esbuild_deno_loader@0.6.0/mod.ts";
-import { renderToString } from "react-dom/server";
+import { render } from "../theme/render.ts";
 
 async function renderReact(options: {
   source: URL;
   output: URL;
+  outputCss: URL;
 }) {
   const { source, output } = options;
   const exports = await import(
@@ -20,9 +21,8 @@ async function renderReact(options: {
     );
   }
 
-  const render = exports.render;
-  const view = await render();
-  const html = "<!DOCTYPE html>" + renderToString(view);
+  const view = await exports.render();
+  const { html, css } = render(view);
 
   await Deno.mkdir(
     dirname(fromFileUrl(output)),
@@ -32,6 +32,11 @@ async function renderReact(options: {
   await Deno.writeTextFile(
     fromFileUrl(new URL(output)),
     html,
+  );
+
+  await Deno.writeTextFile(
+    fromFileUrl(new URL("./index.css", output)),
+    css,
   );
 }
 
@@ -72,6 +77,7 @@ export async function build(output: URL) {
   await renderReact({
     source: new URL("./index.html.tsx", source),
     output: new URL("./index.html", output),
+    outputCss: new URL("./index.css", output),
   });
 
   await esbuild({
