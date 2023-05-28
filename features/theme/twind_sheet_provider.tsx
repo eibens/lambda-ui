@@ -1,5 +1,5 @@
 import { virtualSheet } from "https://esm.sh/twind@0.16.17/sheets";
-import { useMemo } from "react";
+import { useMemo } from "preact/hooks";
 import { Twind } from "./deps.ts";
 import { TwindSheetContext } from "./use_twind_sheet.ts";
 import { ViewChildren } from "./view.tsx";

@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext } from "preact";
 import { ViewNode } from "../theme/view.tsx";
 import type { Theme } from "./types.ts";
 

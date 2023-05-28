@@ -1,5 +1,5 @@
 import { Bulb } from "icons/bulb.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 import { Markdown, MarkdownProvider, MarkdownRoot } from "../markdown/mod.ts";
 import { useTheme, View } from "../theme/mod.ts";
 

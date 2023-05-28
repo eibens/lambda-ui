@@ -4,7 +4,7 @@ import {
 } from "https://deno.land/std@0.159.0/path/mod.ts";
 import * as es from "https://deno.land/x/esbuild@v0.15.10/mod.js";
 import { denoPlugin } from "https://deno.land/x/esbuild_deno_loader@0.6.0/mod.ts";
-import { render } from "../theme/render.ts";
+import { render } from "../build/mod.ts";
 
 async function renderReact(options: {
   source: URL;
@@ -50,7 +50,7 @@ async function esbuild(options: {
     platform: "browser",
     jsx: "automatic",
     jsxDev: true,
-    jsxImportSource: "react",
+    jsxImportSource: "preact",
     jsxSideEffects: true,
     format: "esm",
     bundle: true,
@@ -65,7 +65,7 @@ async function esbuild(options: {
     ],
     plugins: [
       denoPlugin({
-        importMapURL: new URL("./import_map.json", source),
+        importMapURL: new URL("../../import_map.json", source),
       }),
     ],
   });

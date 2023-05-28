@@ -1,5 +1,5 @@
 {
-  "importMap": "./features/website/import_map.json",
+  "importMap": "./import_map.json",
   "lock": false,
   "tasks": {
     "fix": "deno fmt && deno lint && deno test -A",

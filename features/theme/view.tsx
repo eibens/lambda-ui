@@ -1,11 +1,10 @@
-import type { CSSProperties, JSX, ReactNode } from "react";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, JSX } from "preact";
+import { useEffect, useRef } from "preact/hooks";
 import type { Twind } from "./deps.ts";
+import type { ReactNode } from "./react.ts";
 import { useTwind } from "./use_twind.ts";
 
 /** MAIN **/
-
-export { createElement as h } from "react";
 
 export type ViewNode = ReactNode;
 
@@ -14,12 +13,10 @@ export type ViewChildren = ReactNode | undefined;
 export type ViewTag = keyof JSX.IntrinsicElements;
 
 export type ViewProps<Tag extends ViewTag = ViewTag> =
-  & Omit<JSX.IntrinsicElements[Tag], "class" | "style">
+  & Omit<JSX.IntrinsicElements[Tag], "class">
   & {
     tag?: Tag;
-    style?: CSSProperties;
     class?: Twind.Token;
-    rawClass?: string;
     viewProps?: ViewProps<Tag>;
     onElement?: (el: HTMLElement) => void;
   };
@@ -33,32 +30,39 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
     viewProps,
     onElement,
     class: className,
-    rawClass = "",
     ...rest
   } = { ...props.viewProps, ...props };
 
-  const { tw } = useTwind();
+  const twind = useTwind();
+  const tw = twind?.tw ?? ((x) => x);
 
   const {
     style: viewStyle,
     class: viewClassName,
-    rawClass: viewRawClass = "",
     ...viewRest
   } = viewProps ?? {};
 
   const ref = useRef<HTMLElement>(null);
 
+  if (style && typeof style !== "object") {
+    throw new Error("style must be an object");
+  }
+
+  if (viewStyle && typeof viewStyle !== "object") {
+    throw new Error("viewStyle must be an object");
+  }
+
   const mergedProps = {
     ...rest,
     ...viewRest,
     ref,
-    class: rawClass + " " + viewRawClass + " " + tw([
+    class: tw([
       className,
       viewClassName,
     ]),
     style: {
-      ...style,
-      ...viewStyle,
+      ...(style ?? {}),
+      ...(viewStyle ?? {}),
     },
   };
 

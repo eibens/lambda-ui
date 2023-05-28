@@ -1,4 +1,3 @@
-export * from "./render.ts";
 export * from "./twind_config.ts";
 export * from "./twind_provider.tsx";
 export * from "./twind_sheet_provider.tsx";

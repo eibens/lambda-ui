@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { createContext } from "preact";
+import { useContext } from "preact/hooks";
 import { Twind } from "./deps.ts";
 
 /** MAIN **/

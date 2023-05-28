@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo } from "preact/hooks";
 import { Twind } from "./deps.ts";
 import { DefaultTwindConfig } from "./twind_config.ts";
 import { TwindContext } from "./use_twind.ts";

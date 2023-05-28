@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+import { createContext } from "preact";
+import { useContext } from "preact/hooks";
 import { Twind } from "./deps.ts";
 
 /** MAIN **/
@@ -6,9 +7,5 @@ import { Twind } from "./deps.ts";
 export const TwindContext = createContext<Twind.Instance | null>(null);
 
 export function useTwind() {
-  const twind = useContext(TwindContext);
-  if (twind === null) {
-    throw new Error("TwindContext is null");
-  }
-  return twind;
+  return useContext(TwindContext);
 }
