@@ -1,4 +1,3 @@
-import { ViewNode } from "../theme/mod.ts";
 import {
   Block,
   Blockquote,
@@ -16,7 +15,8 @@ import {
   Strong,
   ThematicBreak,
 } from "../text/mod.ts";
-import type { Theme } from "./types.ts";
+import { ViewFragment, ViewNode } from "../theme/mod.ts";
+import type { Node, Theme } from "./types.ts";
 import { useMarkdownRenderer } from "./use_markdown_renderer.ts";
 
 /** HELPERS **/
@@ -37,13 +37,24 @@ function Unknown(props: {
   );
 }
 
+function useChildrenRenderer() {
+  const render = useMarkdownRenderer();
+  return (children: Node[]) => (
+    <>
+      {children.map((child, i) => (
+        <ViewFragment key={i}>{render(child)}</ViewFragment>
+      ))}
+    </>
+  );
+}
+
 /** MAIN **/
 
 export const DefaultTheme: Theme<ViewNode> = {
   Root: function (props) {
     const { blocks } = props;
-    const render = useMarkdownRenderer();
-    return <>{blocks.map(render)}</>;
+    const render = useChildrenRenderer();
+    return <>{render(blocks)}</>;
   },
   Block: function (props) {
     const { child } = props;
@@ -52,8 +63,8 @@ export const DefaultTheme: Theme<ViewNode> = {
   },
   Blockquote: function (props) {
     const { children } = props;
-    const render = useMarkdownRenderer();
-    return <Blockquote>{children.map(render)}</Blockquote>;
+    const render = useChildrenRenderer();
+    return <Blockquote>{render(children)}</Blockquote>;
   },
   Break: function (_) {
     return <Break />;
@@ -63,13 +74,13 @@ export const DefaultTheme: Theme<ViewNode> = {
   },
   Delete: function (props) {
     const { children } = props;
-    const render = useMarkdownRenderer();
-    return <Delete>{children.map(render)}</Delete>;
+    const render = useChildrenRenderer();
+    return <Delete>{render(children)}</Delete>;
   },
   Emphasis: function (props) {
     const { children } = props;
-    const render = useMarkdownRenderer();
-    return <Emphasis>{children.map(render)}</Emphasis>;
+    const render = useChildrenRenderer();
+    return <Emphasis>{render(children)}</Emphasis>;
   },
   FootnoteReference: function (props) {
     const { identifier } = props;
@@ -79,14 +90,14 @@ export const DefaultTheme: Theme<ViewNode> = {
   },
   Heading: function (props) {
     const { id, depth, children, blockIndex } = props;
-    const render = useMarkdownRenderer();
+    const render = useChildrenRenderer();
     return (
       <Heading
         id={id}
         blockIndex={blockIndex}
         depth={depth}
       >
-        {children.map(render)}
+        {render(children)}
       </Heading>
     );
   },
@@ -117,33 +128,33 @@ export const DefaultTheme: Theme<ViewNode> = {
   },
   Link: function (props) {
     const { url, children } = props;
-    const render = useMarkdownRenderer();
-    return <Link href={url}>{children.map(render)}</Link>;
+    const render = useChildrenRenderer();
+    return <Link href={url}>{render(children)}</Link>;
   },
   LinkReference: function (props) {
     const { identifier, children } = props;
-    const render = useMarkdownRenderer();
-    return <Link href={identifier}>{children.map(render)}</Link>;
+    const render = useChildrenRenderer();
+    return <Link href={identifier}>{render(children)}</Link>;
   },
   List: function (props) {
     const { children, ordered } = props;
-    const render = useMarkdownRenderer();
-    return <List ordered={ordered ?? undefined}>{children.map(render)}</List>;
+    const render = useChildrenRenderer();
+    return <List ordered={ordered ?? undefined}>{render(children)}</List>;
   },
   ListItem: function (props) {
     const { children } = props;
-    const render = useMarkdownRenderer();
-    return <ListItem>{children.map(render)}</ListItem>;
+    const render = useChildrenRenderer();
+    return <ListItem>{render(children)}</ListItem>;
   },
   Paragraph: function (props) {
     const { children } = props;
-    const render = useMarkdownRenderer();
-    return <Paragraph>{children.map(render)}</Paragraph>;
+    const render = useChildrenRenderer();
+    return <Paragraph>{render(children)}</Paragraph>;
   },
   Strong: function (props) {
     const { children } = props;
-    const render = useMarkdownRenderer();
-    return <Strong>{children.map(render)}</Strong>;
+    const render = useChildrenRenderer();
+    return <Strong>{render(children)}</Strong>;
   },
   Text: function (props) {
     const { value } = props;
