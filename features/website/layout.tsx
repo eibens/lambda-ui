@@ -47,7 +47,7 @@ export function Layout(props: {
             class={[
               "fixed z-10 top-0 left-0 right-0",
               `h-${headerHeight}`,
-              "bg-gradient-to-b from-gray-100 dark:from-gray-900 to-transparent",
+              "bg-gradient-to-b from-gray-100 dark:from-gray-900 to-[transparent]",
             ]}
           >
             <View
