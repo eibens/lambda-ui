@@ -6,6 +6,7 @@ export function useTheme() {
   const storageKey = "app/theme";
 
   const [name, setName] = useState(() => {
+    if (!globalThis.localStorage) return "dark";
     const stored = globalThis.localStorage.getItem(storageKey);
     if (stored != null) return stored;
     return "dark";
