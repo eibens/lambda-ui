@@ -95,8 +95,8 @@ const button: Record<string, Twind.Plugin> = {
 export const DefaultTwindConfig: Omit<Twind.Configuration, "mode" | "sheet"> = {
   darkMode: "class",
   preflight: {
-    html: apply`bg-gray-200 dark:bg-gray-800`,
-    "html.dark": apply`bg-gray-800 dark:bg-gray-200`,
+    html: apply`bg-gray-200 text-gray-800`,
+    "html.dark": apply`bg-gray-800 text-gray-200`,
   },
   theme: {
     colors: TwindColors,

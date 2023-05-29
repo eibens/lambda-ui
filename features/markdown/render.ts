@@ -38,8 +38,9 @@ const NodeTypeMap: {
 
 function isBlock(node: Node): boolean {
   const { type } = node;
+
   if (type === NodeTypeMap.Html) {
-    return node.block ?? true;
+    return node.block ?? false;
   }
 
   const blocks: BlockType[] = [

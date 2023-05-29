@@ -102,9 +102,10 @@ export const DefaultTheme: Theme<ViewNode> = {
     );
   },
   Html: function (props) {
-    const { value } = props;
+    const { value, block } = props;
+    const Tag = block ? "div" : "span";
     return (
-      <div
+      <Tag
         dangerouslySetInnerHTML={{ __html: value }}
       />
     );
