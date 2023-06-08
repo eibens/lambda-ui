@@ -1,4 +1,4 @@
-import "./monaco.d.ts";
+import { monaco } from "./monaco.d.ts";
 
 /** MAIN **/
 

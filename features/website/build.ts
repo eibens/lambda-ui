@@ -2,8 +2,8 @@ import {
   dirname,
   fromFileUrl,
 } from "https://deno.land/std@0.159.0/path/mod.ts";
-import * as es from "https://deno.land/x/esbuild@v0.15.10/mod.js";
-import { denoPlugin } from "https://deno.land/x/esbuild_deno_loader@0.6.0/mod.ts";
+import * as es from "https://deno.land/x/esbuild@v0.17.19/mod.js";
+import { denoPlugins } from "https://deno.land/x/esbuild_deno_loader@0.8.1/mod.ts";
 import { render } from "../build/mod.ts";
 
 async function renderReact(options: {
@@ -56,7 +56,6 @@ async function esbuild(options: {
     bundle: true,
     minify: true,
     sourcemap: true,
-    watch: false,
     supported: {
       "top-level-await": true,
     },
@@ -64,8 +63,8 @@ async function esbuild(options: {
       fromFileUrl(new URL("./index.tsx", source)),
     ],
     plugins: [
-      denoPlugin({
-        importMapURL: new URL("../../import_map.json", source),
+      ...denoPlugins({
+        importMapURL: new URL("../../import_map.json", source).href,
       }),
     ],
   });
