@@ -1,19 +1,29 @@
-import { md } from "../markdown/mod.ts";
+import { Markdown, MarkdownProvider, md } from "../markdown/mod.ts";
+import MonacoExample from "../monaco/example.tsx";
 import { TwindProvider } from "../theme/twind_provider.tsx";
-import { Layout } from "./layout.tsx";
+import { Layout } from "../widgets/layout.tsx";
 
 /** MAIN **/
 
 const root = md`
 # Lambda UI
 
-> TODO: Add some examples.
+This is Lukas Eibensteiner's personal UI library.
+It strives to be isomorphic in react and preact.
+
+---
+
+${<MonacoExample />}
 `;
 
 export function App() {
   return (
     <TwindProvider>
-      <Layout root={root} />
+      <Layout title="Lambda UI">
+        <MarkdownProvider>
+          <Markdown root={root} />
+        </MarkdownProvider>
+      </Layout>
     </TwindProvider>
   );
 }
