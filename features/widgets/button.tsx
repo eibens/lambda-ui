@@ -2,7 +2,7 @@ import { View, ViewChildren, ViewProps } from "../theme/view.tsx";
 
 export function Button(
   props: Omit<ViewProps<"a" | "button">, "size" | "icon"> & {
-    label: string;
+    label?: string;
     icon?: ViewChildren;
     size?: "xs" | "sm" | "md" | "lg";
     disabled?: boolean;
@@ -50,9 +50,11 @@ export function Button(
           {icon}
         </View>
       )}
-      <View class={`label-${size}`}>
-        {label}
-      </View>
+      {label && (
+        <View class={`label-${size}`}>
+          {label}
+        </View>
+      )}
     </View>
   );
 }
