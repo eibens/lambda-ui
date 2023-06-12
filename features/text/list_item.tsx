@@ -7,7 +7,7 @@ export function ListItem(props: ViewProps<"li">) {
     <View
       tag="li"
       viewProps={props}
-      class="gap-2"
+      class="my-1"
     />
   );
 }
