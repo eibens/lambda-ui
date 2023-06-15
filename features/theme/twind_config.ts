@@ -55,7 +55,9 @@ export const DefaultTwindConfig: Omit<Twind.Configuration, "mode" | "sheet"> = {
     `;
     },
     icon: ([size]) => {
-      const index = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"].indexOf(size);
+      const index = ["xs", "sm", "md", "lg", "xl", "2xl", "3xl", "4xl"].indexOf(
+        size,
+      );
       const iconSize = (index + 4) * 4;
       return apply`w-[${iconSize}px] h-[${iconSize}px]`;
     },
