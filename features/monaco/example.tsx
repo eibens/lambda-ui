@@ -1,7 +1,8 @@
 import { useState } from "preact/hooks";
 import { useEnv } from "../client/mod.ts";
-import { lit, LitTagEvent } from "../lit/mod.ts";
-import { Markdown, MarkdownProvider, md } from "../markdown/mod.ts";
+import { LitDoc } from "../lit-doc/LitDoc.tsx";
+import { lit } from "../lit-doc/mod.ts";
+import { MarkdownProvider } from "../markdown/mod.ts";
 import {
   MonacoProvider,
   useMonacoEditor,
@@ -211,19 +212,10 @@ function ManipulateValue() {
 doc``;
 
 export default function MonacoExample() {
-  const [_, update] = useState(0);
-
-  const parts = doc
-    .state
-    .events
-    .filter((x) => x.type === "tag")
-    .map((x) => x as LitTagEvent)
-    .map((x) => md(...x.args as [TemplateStringsArray, ...unknown[]]));
-
   return (
     <MonacoProvider>
       <MarkdownProvider>
-        {parts.map((x, i) => <Markdown key={i} root={x} />)}
+        <LitDoc events={doc.state.events} />
       </MarkdownProvider>
     </MonacoProvider>
   );
