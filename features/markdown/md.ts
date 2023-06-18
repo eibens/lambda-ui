@@ -13,12 +13,12 @@ function visit(node: Node, fn: (node: Node) => void) {
   node.children.forEach((child) => visit(child, fn));
 }
 
-function stringifyTemplate<V>(options: {
-  strings: string[];
-  values: unknown[];
-}) {
-  const { strings, values } = options;
+/** MAIN **/
 
+export function md<V = unknown>(
+  strings: TemplateStringsArray | string[],
+  ...values: unknown[]
+) {
   const slots: Record<string, V> = {};
 
   const source = strings.reduce((acc, part, i) => {
@@ -32,18 +32,6 @@ function stringifyTemplate<V>(options: {
 
     return `${acc}${value}${part}`;
   }, "");
-
-  return {
-    source,
-    slots,
-  };
-}
-
-function parseTemplate<V>(options: {
-  source: string;
-  slots: Record<string, V>;
-}): Node<"Root"> {
-  const { source, slots } = options;
 
   const root = unified()
     .use(parseRemark)
@@ -86,16 +74,4 @@ function parseTemplate<V>(options: {
   });
 
   return root;
-}
-
-/** MAIN **/
-
-export function md(
-  strings: TemplateStringsArray | string[],
-  ...values: unknown[]
-) {
-  return parseTemplate(stringifyTemplate({
-    strings: [...strings],
-    values,
-  }));
 }
