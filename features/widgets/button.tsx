@@ -1,17 +1,17 @@
-import { View, ViewChildren, ViewProps } from "../theme/view.tsx";
+import { View, ViewNode, ViewProps } from "../theme/view.tsx";
 
-export function Button(
-  props: Omit<ViewProps<"a" | "button">, "size" | "icon"> & {
-    label?: string;
-    icon?: ViewChildren;
-    size?: "xs" | "sm" | "md" | "lg";
-    disabled?: boolean;
-    iconPosition?: "left" | "right";
-    color?: string;
-    tint?: boolean;
-    href?: string;
-  },
-) {
+export type ButtonProps = Omit<ViewProps<"a" | "button">, "size" | "icon"> & {
+  label?: ViewNode;
+  icon?: ViewNode;
+  size?: "xs" | "sm" | "md" | "lg";
+  disabled?: boolean;
+  iconPosition?: "left" | "right";
+  color?: string;
+  tint?: boolean;
+  href?: string;
+};
+
+export function Button(props: ButtonProps) {
   const {
     label,
     icon,
@@ -33,6 +33,7 @@ export function Button(
       disabled={disabled}
       viewProps={rest}
       class={[
+        "font-sans",
         `pill-${size} rounded-full gap-1`,
         "transition-all duration-300",
         disabled ? "fill-20 opacity-50" : `hover:fill-20`,
@@ -40,6 +41,7 @@ export function Button(
         "border-1 stroke-0",
         !disabled && "focus:(not-active:stroke-50)",
         !disabled && "active:(transform scale-95)",
+        !label && "hover:(scale-105)",
         "outline-none focus:outline-none",
         `color-${color}`,
         tint ? "fill-10" : "fill-0",

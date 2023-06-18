@@ -1,54 +1,38 @@
+import Cookies from "https://esm.sh/js-cookie@3.0.5";
 import { useEffect, useState } from "preact/hooks";
 
 /** MAIN **/
 
 export function useTheme() {
-  const storageKey = "app/theme";
-
-  const [name, setName] = useState(() => {
-    if (!globalThis.localStorage) return "dark";
-    const stored = globalThis.localStorage.getItem(storageKey);
-    if (stored != null) return stored;
-    return "dark";
+  const [isDark, setIsDark] = useState(() => {
+    if (!globalThis.document) return false;
+    return globalThis.document.documentElement.classList.contains("dark");
   });
 
-  useEffect(() => {
-    globalThis.document.documentElement.classList.toggle(
-      "dark",
-      name === "dark",
-    );
-  }, [name]);
+  function update(isDark: boolean) {
+    if (!globalThis.document) {
+      throw new Error("Cannot set theme outside of browser context.");
+    }
+    Cookies.set("theme", isDark ? "dark" : "light");
+    globalThis.document.documentElement.classList.toggle("dark", isDark);
+  }
 
   useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === "attributes") {
-          const { classList } = mutation.target as HTMLElement;
-          const dark = classList.contains("dark");
-          setName(dark ? "dark" : "light");
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-
-    return () => {
-      observer.disconnect();
-    };
-  }, [setName]);
+    if (Cookies.get("theme") === "dark") {
+      setIsDark(true);
+    }
+  }, []);
 
   return {
-    name,
+    isDark,
+    name: isDark ? "dark" : "light",
+    set: (isDark: boolean) => {
+      setIsDark(isDark);
+      update(isDark);
+    },
     toggle: () => {
-      setName((name) => {
-        const newName = name === "dark" ? "light" : "dark";
-        globalThis.localStorage.setItem(storageKey, newName);
-
-        return newName;
-      });
+      setIsDark((isDark) => !isDark);
+      update(!isDark);
     },
   };
 }

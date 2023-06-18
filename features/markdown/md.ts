@@ -3,9 +3,15 @@ import { default as gfm } from "https://esm.sh/remark-gfm@3.0.1";
 import { default as parseRemark } from "https://esm.sh/remark-parse@10.0.1";
 import { snakeCase } from "https://esm.sh/tiny-case@1.0.3";
 import { unified } from "https://esm.sh/unified@10.1.2";
-import { BlockNode, Node } from "./types.ts";
+import { Node } from "./types.ts";
 
 /** HELPERS **/
+
+function visit(node: Node, fn: (node: Node) => void) {
+  fn(node);
+  if (!("children" in node)) return;
+  node.children.forEach((child) => visit(child, fn));
+}
 
 function stringifyTemplate<V>(options: {
   strings: string[];
@@ -42,54 +48,44 @@ function parseTemplate<V>(options: {
   const root = unified()
     .use(parseRemark)
     .use(gfm)
-    .parse(source) as Node<"Root">;
+    .parse(source);
 
-  let index = 0;
+  root.children.forEach((child, i) => {
+    // @ts-ignore TODO
+    child.blockIndex = i;
+  });
 
-  const blocks: BlockNode[] = root.children.map((child) => {
-    const block: BlockNode = {
-      ...child as BlockNode,
-      blockIndex: index++,
-    };
+  visit(root, (node) => {
+    if (node.type === "heading") {
+      // Add IDs to headings.
+      if (node.type === "heading") {
+        const text = node.children.map((child) => {
+          if (child.type === "text") {
+            return child.value;
+          }
+          return "";
+        }).join("");
+        const id = snakeCase(text);
+        node.id = id;
+      }
+    }
 
-    // Mark HTML blocks.
-    if (block.type === "html") {
-      block.block = true;
-
+    if (node.type === "html") {
       // replace HTML used for VDOM slots
-      const match = /^<slot id="([^"]+)"\/>$/.exec(block.value.trim());
+      const match = /^<slot id="([^"]+)"\/>$/.exec(node.value.trim());
       if (match) {
         const id = match[1];
         const slot = slots[id];
-        return {
-          id,
-          type: "Slot",
-          value: slot,
-        };
+
+        const s = node as unknown as Node<"Slot">;
+        s.id = id;
+        s.type = "Slot";
+        s.value = slot;
       }
-
-      return block;
     }
-
-    // Add IDs to headings.
-    if (block.type === "heading") {
-      const text = block.children.map((child) => {
-        if (child.type === "text") {
-          return child.value;
-        }
-        return "";
-      }).join("");
-      const id = snakeCase(text);
-      block.id = id;
-    }
-
-    return block;
   });
 
-  return {
-    ...root,
-    blocks,
-  };
+  return root;
 }
 
 /** MAIN **/

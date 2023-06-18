@@ -1,9 +1,11 @@
-import type { Node } from "./types.ts";
+import type { Node, NodeType } from "./types.ts";
 import { useMarkdownRenderer } from "./use_markdown_renderer.ts";
 
 /** MAIN **/
 
 export type MarkdownRoot = Node<"Root">;
+
+export type MarkdownNode = Node<NodeType>;
 
 export type MarkdownProps = {
   root: MarkdownRoot;

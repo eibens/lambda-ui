@@ -30,7 +30,7 @@ export function Heading(props: HeadingProps) {
       tag={H}
       viewProps={rest}
       class={[
-        "font-serif",
+        "font-sans",
         `text-[${s}px] pb-${mb} ${font}`,
         isFirst ? `-mt-[${mt1}px]` : `pt-${mt}`,
       ]}

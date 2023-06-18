@@ -1,11 +1,10 @@
-import { BlockType, Node, NodeType, Theme } from "./types.ts";
+import { Node, NodeType, Theme } from "./types.ts";
 
 /** HELPERS **/
 
 const NodeTypeMap: {
   [K in NodeType]: Node<K>["type"];
 } = {
-  Block: "Block",
   FootnoteReference: "footnoteReference",
   InlineCode: "inlineCode",
   Blockquote: "blockquote",
@@ -36,25 +35,6 @@ const NodeTypeMap: {
   Root: "root",
 };
 
-function isBlock(node: Node): boolean {
-  const { type } = node;
-
-  if (type === NodeTypeMap.Html) {
-    return node.block ?? false;
-  }
-
-  const blocks: BlockType[] = [
-    "Blockquote",
-    "CodeBlock",
-    "Heading",
-    "List",
-    "Paragraph",
-    "Table",
-  ];
-
-  return (blocks as string[]).includes(type);
-}
-
 function findNodeType(node: Node): NodeType | null {
   for (const key in NodeTypeMap) {
     if (NodeTypeMap[key as NodeType] === node.type) {
@@ -74,19 +54,11 @@ export function render<V>(node: Node, options: {
   } = options;
 
   const key = findNodeType(node);
+
   if (!key) {
     return node as V;
   }
 
-  const renderBlock = theme.Block as (props: unknown) => V;
   const renderNode = theme[key] as (props: unknown) => V;
-
-  if (isBlock(node)) {
-    return renderBlock({
-      type: "Block",
-      child: renderNode(node),
-    });
-  }
-
   return renderNode(node);
 }

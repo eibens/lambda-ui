@@ -9,11 +9,12 @@ export function CodeBlock(props: ViewProps<"pre">) {
       viewProps={props}
       class={[
         "transition",
-        "text-xs font-mono",
+        "text-sm font-mono",
         "text-gray-600 dark:text-gray-400",
         "rounded-md p-4",
         "bg-white dark:bg-gray-900",
-        "overflow-auto leading-6",
+        "overflow-auto",
+        "-mx-4",
       ]}
     />
   );

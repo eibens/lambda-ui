@@ -34,8 +34,6 @@ export function Layout(props: {
     <View
       class={[
         "flex justify-center",
-        "font-sans",
-        "leading-relaxed",
       ]}
     >
       <View

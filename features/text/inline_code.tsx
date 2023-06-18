@@ -14,7 +14,7 @@ export function InlineCode(props: ViewProps<"code">) {
         "shadow-sm border-1 border-gray-300 dark:border-gray-700",
       ]}
       style={{
-        fontSize: "75%",
+        fontSize: "85%",
       }}
     />
   );

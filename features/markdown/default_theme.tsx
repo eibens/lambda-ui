@@ -1,5 +1,4 @@
 import {
-  Block,
   Blockquote,
   Break,
   CodeBlock,
@@ -16,6 +15,7 @@ import {
   ThematicBreak,
 } from "../text/mod.ts";
 import { ViewFragment, ViewNode } from "../theme/mod.ts";
+import { View, ViewChildren } from "../theme/view.tsx";
 import type { Node, Theme } from "./types.ts";
 import { useMarkdownRenderer } from "./use_markdown_renderer.ts";
 
@@ -37,6 +37,17 @@ function Unknown(props: {
   );
 }
 
+function Block(props: {
+  children: ViewChildren;
+}) {
+  const { children } = props;
+  return (
+    <View>
+      {children}
+    </View>
+  );
+}
+
 function useChildrenRenderer() {
   const render = useMarkdownRenderer();
   return (children: Node[]) => (
@@ -51,26 +62,75 @@ function useChildrenRenderer() {
 /** MAIN **/
 
 export const DefaultTheme: Theme<ViewNode> = {
+  // MISC
+
   Root: function (props) {
-    const { blocks } = props;
+    const { children } = props;
     const render = useChildrenRenderer();
-    return <>{render(blocks)}</>;
+    return <>{render(children)}</>;
   },
-  Block: function (props) {
-    const { child } = props;
-    const render = useMarkdownRenderer();
-    return <Block>{render(child)}</Block>;
+  Slot: function (props) {
+    return <>{props.value}</>;
   },
+
+  // BLOCK
+
   Blockquote: function (props) {
     const { children } = props;
     const render = useChildrenRenderer();
-    return <Blockquote>{render(children)}</Blockquote>;
+    return (
+      <Block>
+        <Blockquote>{render(children)}</Blockquote>
+      </Block>
+    );
+  },
+  CodeBlock: function (props) {
+    return (
+      <Block>
+        <CodeBlock>{props.value}</CodeBlock>
+      </Block>
+    );
+  },
+  Heading: function (props) {
+    const { id, depth, children, blockIndex } = props;
+    const render = useChildrenRenderer();
+    return (
+      <Heading
+        id={id}
+        blockIndex={blockIndex}
+        depth={depth}
+      >
+        {render(children)}
+      </Heading>
+    );
+  },
+  List: function (props) {
+    const { children, ordered } = props;
+    const render = useChildrenRenderer();
+    return (
+      <Block>
+        <List ordered={ordered ?? undefined}>{render(children)}</List>
+      </Block>
+    );
+  },
+  Paragraph: function (props) {
+    const { children } = props;
+    const render = useChildrenRenderer();
+    return (
+      <Block>
+        <Paragraph isLead={props.isLead}>{render(children)}</Paragraph>
+      </Block>
+    );
+  },
+  ThematicBreak: function (_) {
+    return (
+      <Block>
+        <ThematicBreak />
+      </Block>
+    );
   },
   Break: function (_) {
     return <Break />;
-  },
-  CodeBlock: function (props) {
-    return <CodeBlock>{props.value}</CodeBlock>;
   },
   Delete: function (props) {
     const { children } = props;
@@ -88,41 +148,32 @@ export const DefaultTheme: Theme<ViewNode> = {
     const label = "[" + identifier + "]";
     return <Link href={url}>{label}</Link>;
   },
-  Heading: function (props) {
-    const { id, depth, children, blockIndex } = props;
-    const render = useChildrenRenderer();
-    return (
-      <Heading
-        id={id}
-        blockIndex={blockIndex}
-        depth={depth}
-      >
-        {render(children)}
-      </Heading>
-    );
-  },
-  Html: function (props) {
-    const { value, block } = props;
-    const Tag = block ? "div" : "span";
-    return (
-      <Tag
-        dangerouslySetInnerHTML={{ __html: value }}
-      />
-    );
-  },
-  Slot: function (props) {
-    return <>{props.value}</>;
-  },
   Image: function (props) {
     const { url, title, alt } = props;
     return (
-      <Image
-        src={url}
-        alt={alt ?? undefined}
-        title={title ?? undefined}
-      />
+      <Block>
+        <Image
+          src={url}
+          alt={alt ?? undefined}
+          title={title ?? undefined}
+        />
+      </Block>
     );
   },
+  Html: function (props) {
+    const { value, blockIndex } = props;
+    if (blockIndex != null) {
+      return (
+        <Block>
+          <div dangerouslySetInnerHTML={{ __html: value }} />
+        </Block>
+      );
+    }
+    return <span dangerouslySetInnerHTML={{ __html: value }} />;
+  },
+
+  // INLINE
+
   InlineCode: function (props) {
     const { value } = props;
     return <InlineCode>{value}</InlineCode>;
@@ -137,20 +188,10 @@ export const DefaultTheme: Theme<ViewNode> = {
     const render = useChildrenRenderer();
     return <Link href={identifier}>{render(children)}</Link>;
   },
-  List: function (props) {
-    const { children, ordered } = props;
-    const render = useChildrenRenderer();
-    return <List ordered={ordered ?? undefined}>{render(children)}</List>;
-  },
   ListItem: function (props) {
     const { children } = props;
     const render = useChildrenRenderer();
     return <ListItem>{render(children)}</ListItem>;
-  },
-  Paragraph: function (props) {
-    const { children } = props;
-    const render = useChildrenRenderer();
-    return <Paragraph>{render(children)}</Paragraph>;
   },
   Strong: function (props) {
     const { children } = props;
@@ -161,11 +202,9 @@ export const DefaultTheme: Theme<ViewNode> = {
     const { value } = props;
     return <>{value}</>;
   },
-  ThematicBreak: function (_) {
-    return <ThematicBreak />;
-  },
 
   // TODO: implement these
+
   Definition: function (_) {
     return <Unknown type="Definition" />;
   },
