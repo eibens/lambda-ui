@@ -1,15 +1,17 @@
 import { View, ViewNode, ViewProps } from "../theme/view.tsx";
 
-export type ButtonProps = Omit<ViewProps<"a" | "button">, "size" | "icon"> & {
-  label?: ViewNode;
-  icon?: ViewNode;
-  size?: "xs" | "sm" | "md" | "lg";
-  disabled?: boolean;
-  iconPosition?: "left" | "right";
-  color?: string;
-  tint?: boolean;
-  href?: string;
-};
+export type ButtonProps =
+  & Omit<ViewProps<"a" | "button">, "size" | "icon" | "label">
+  & {
+    label?: ViewNode;
+    icon?: ViewNode;
+    size?: "xs" | "sm" | "md" | "lg";
+    disabled?: boolean;
+    iconPosition?: "left" | "right";
+    color?: string;
+    tint?: boolean;
+    href?: string;
+  };
 
 export function Button(props: ButtonProps) {
   const {
