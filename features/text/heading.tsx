@@ -19,7 +19,6 @@ export function Heading(props: HeadingProps) {
   const i = depth - 1;
   const mt = [16, 12, 8, 4, 2, 0][i];
   const mt1 = [8, 4, 0, 0, 0, 0][i];
-  const mb = [5, 4, 3, 2, 1, 0][i];
   const s = [8, 6, 4, 3, 2, 1][i] * 4 + 16;
   const h = [1, 2, 3, 4, 5, 6][i];
   const font = "font-bold";
@@ -31,7 +30,7 @@ export function Heading(props: HeadingProps) {
       viewProps={rest}
       class={[
         "font-sans",
-        `text-[${s}px] pb-${mb} ${font}`,
+        `text-[${s}px] ${font}`,
         isFirst ? `-mt-[${mt1}px]` : `pt-${mt}`,
       ]}
     />
