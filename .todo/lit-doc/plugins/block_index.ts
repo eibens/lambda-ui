@@ -1,20 +1,10 @@
-import { LitPlugin } from "../mod.ts";
+import { Root } from "../types.ts";
 
-/** HELPERS **/
+export function blockIndex(root: Root) {
+  root.children
+    .forEach((child, blockIndex) => {
+      child.blockIndex = blockIndex;
+    });
 
-/** MAIN **/
-
-const plugin: LitPlugin = {
-  name: "block-index",
-  process: (root) => {
-    root.children
-      .forEach((child, blockIndex) => {
-        // @ts-ignore TODO
-        child.blockIndex = blockIndex;
-      });
-
-    return root;
-  },
-};
-
-export default plugin;
+  return root;
+}

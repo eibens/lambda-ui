@@ -1,4 +1,4 @@
-import { LitDoc } from "./core.ts";
+import { Root } from "./types.ts";
 
 export type LitTags = Record<string, (...args: unknown[]) => void>;
 
@@ -7,7 +7,7 @@ export type LitSchema = {
 };
 
 export type LitContext<T extends LitSchema> =
-  & { root: LitDoc }
+  & { root: Root }
   & {
     [K in keyof T["tags"]]: (...args: Parameters<T["tags"][K]>) => void;
   }
@@ -16,17 +16,18 @@ export type LitContext<T extends LitSchema> =
   };
 
 export function lit<T extends LitSchema = LitSchema>(): LitContext<T> {
-  const state: LitDoc = {
-    type: "Doc",
+  const state: Root = {
+    type: "Root",
     children: [],
   };
 
-  function func(tag: string) {
+  function func(name: string) {
     return (...args: unknown[]) => {
       state.children.push({
-        type: "Tag",
-        tag,
+        type: "Call",
+        name,
         args,
+        children: [],
       });
     };
   }

@@ -1,16 +1,14 @@
-import { Node } from "../markdown/types.ts";
-import { LitContext, LitSchema, LitTagNode } from "./core.ts";
+import { LitContext, LitSchema } from "./lit.ts";
+import { Call, Node, Root } from "./types.ts";
 
 /** MAIN **/
 
-export type LitHandler = (node: LitTagNode) => Node | Node[] | null;
+export type Replacer = (node: Node) => Node | Node[] | null;
 
-export type LitProcessor = (root: Node<"Root">) => Node<"Root">;
+export type LitProcessor = (root: Root) => Root;
 
 export type LitPlugin<Schema extends LitSchema = LitSchema> = {
   name?: string;
-  handle?: LitHandler;
-  process?: LitProcessor;
   tags?: Schema;
 };
 
@@ -25,13 +23,13 @@ export function weave<T extends LitSchema>(options: {
   );
 
   const processors = plugins.flatMap(
-    (plugin) => plugin.process ?? ((x: Node<"Root">) => x),
+    (plugin) => plugin.process ?? ((x: Root) => x),
   );
 
-  const root: Node<"Root"> = {
-    type: "root",
+  const root: Root = {
+    type: "Root",
     children: doc.root.children
-      .filter((child): child is LitTagNode => child.type === "tag")
+      .filter((child): child is Call => child.type === "Call")
       .flatMap((child) =>
         handlers.flatMap((handler) => handler(child) ?? [])
       ) as Node[],

@@ -1,23 +1,13 @@
-import { LitPlugin } from "../mod.ts";
+import { Root } from "../types.ts";
 
-/** HELPERS **/
+export function leadParagraph(root: Root) {
+  const [child1, child2] = root.children;
 
-/** MAIN **/
+  if (!child1 || !child2) return root;
+  if (child1.type !== "Heading") return root;
+  if (child2.type !== "Paragraph") return root;
 
-const plugin: LitPlugin = {
-  name: "lead-paragraph",
-  process: (root) => {
-    const [child1, child2] = root.children;
+  child2.isLead = true;
 
-    if (!child1 || !child2) return root;
-    if (child1.type !== "heading") return root;
-    if (child2.type !== "paragraph") return root;
-
-    // @ts-ignore TODO
-    child2.isLead = true;
-
-    return root;
-  },
-};
-
-export default plugin;
+  return root;
+}
