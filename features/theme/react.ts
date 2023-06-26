@@ -1,1 +1,1 @@
-export type { ReactNode } from "react";
+export type { ReactNode } from "https://esm.sh/react@18.2.0";
