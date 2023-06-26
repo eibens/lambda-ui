@@ -14,7 +14,6 @@ export function CodeBlock(props: ViewProps<"pre">) {
         "rounded-md p-4",
         "bg-white dark:bg-gray-900",
         "overflow-auto",
-        "-mx-4",
       ]}
     />
   );
