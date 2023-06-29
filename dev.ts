@@ -1,15 +1,5 @@
-import { build, start } from "./features/website/mod.ts";
+#!/usr/bin/env -S deno run -A --watch=static/,routes/
 
-const [command] = Deno.args;
+import dev from "$fresh/dev.ts";
 
-if (command === "build" || command === "start") {
-  const output = new URL("./docs/", import.meta.url);
-  await build(output);
-
-  if (command === "start") {
-    await start(output);
-  } else {
-    // esbuild process in build function does not exit on its own
-    Deno.exit(0);
-  }
-}
+await dev(import.meta.url, "./main.ts");

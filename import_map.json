@@ -1,12 +1,28 @@
 {
   "imports": {
-    "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/",
-    "react": "https://esm.sh/react@18.2.0",
-    "react/": "https://esm.sh/react@18.2.0/",
-    "react-dom/": "https://esm.sh/react-dom@18.2.0/",
-    "preact": "https://esm.sh/react@18.2.0",
-    "preact/": "https://esm.sh/react@18.2.0/",
-    "preact/hooks": "https://esm.sh/react@18.2.0",
-    "@std/": "https://deno.land/std@1.190.0/"
+    "$fresh/": "https://deno.land/x/fresh@1.1.6/",
+    "preact": "https://esm.sh/preact@10.13.1",
+    "preact/": "https://esm.sh/preact@10.13.1/",
+    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@5.2.6",
+    "@preact/signals": "https://esm.sh/*@preact/signals@1.1.3",
+    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.2.3",
+    "twind": "https://esm.sh/twind@0.16.19",
+    "twind/": "https://esm.sh/twind@0.16.19/",
+    "$std/": "https://deno.land/std@0.187.0/",
+
+    "@/": "./",
+
+    "react": "https://esm.sh/preact@10.13.1/compat",
+    "slate": "https://esm.sh/slate@0.94.0",
+    "slate-react": "https://raw.githubusercontent.com/eibens/slate-preact-port/v1.0.0-alpha/mod.ts",
+    "@juggle/resize-observer": "https://esm.sh/@juggle/resize-observer@3.4.0",
+    "direction": "https://esm.sh/direction@1.0.3",
+    "is-hotkey": "https://esm.sh/is-hotkey@0.1.6",
+    "is-plain-object": "https://esm.sh/is-plain-object@5.0.0",
+    "scroll-into-view-if-needed": "https://esm.sh/scroll-into-view-if-needed@2.2.20",
+    "tiny-invariant": "https://esm.sh/tiny-invariant@1.0.6",
+    "lodash/": "https://esm.sh/lodash@4.17.4/",
+
+    "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/"
   }
 }

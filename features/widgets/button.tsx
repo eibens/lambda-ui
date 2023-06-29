@@ -1,10 +1,10 @@
-import { View, ViewNode, ViewProps } from "../theme/view.tsx";
+import { View, ViewChild, ViewProps } from "../theme/view.tsx";
 
 export type ButtonProps =
   & Omit<ViewProps<"a" | "button">, "size" | "icon" | "label">
   & {
-    label?: ViewNode;
-    icon?: ViewNode;
+    label?: ViewChild;
+    icon?: ViewChild;
     size?: "xs" | "sm" | "md" | "lg";
     disabled?: boolean;
     iconPosition?: "left" | "right";

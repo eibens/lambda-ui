@@ -1,32 +1,26 @@
-import { useState } from "preact/hooks";
-import { useEnv } from "../client/mod.ts";
-import { LitDoc } from "../lit-doc/LitDoc.tsx";
-import { lit } from "../lit-doc/mod.ts";
-import { MarkdownProvider } from "../markdown/mod.ts";
+import { lit } from "@/components/lit.tsx";
+import { useEnv } from "@/features/client/mod.ts";
 import {
-  MonacoProvider,
   useMonacoEditor,
   useMonacoEditorSize,
   useMonacoEditorValue,
   useMonacoTheme,
-} from "../monaco/mod.ts";
-import { useTheme, View } from "../theme/mod.ts";
-import { ViewChildren } from "../theme/view.tsx";
-import { Button } from "../widgets/button.tsx";
+} from "@/features/monaco/mod.ts";
+import { useTheme, View } from "@/features/theme/mod.ts";
+import { ViewChildren } from "@/features/theme/view.tsx";
+import { Button } from "@/features/widgets/button.tsx";
+import { useState } from "preact/hooks";
 
 /** MAIN **/
 
 const githubUrl = "https://github.com/microsoft/monaco-editor";
 const themeIssueUrl = "https://github.com/Microsoft/monaco-editor/issues/338";
 
-const doc = lit<{
-  tags: {
-    doc: (strings: TemplateStringsArray, ...values: unknown[]) => void;
-  };
-}>();
+const { md, editor } = lit();
+export default editor;
 
-doc`
-# @lambda-ui/monaco
+md`
+# lambda-ui/monaco
 
 [Monaco Editor](${githubUrl}) is the code editor that powers VS Code. 
 It is a standalone code editor that can be used in any JavaScript application.
@@ -56,8 +50,7 @@ function MinimalEditor() {
   );
 }
 
-doc`
-
+md`
 ## Hook: \`useMonacoEditorTheme\`
 
 The \`useMonacoEditorTheme\` hook allows to create a theme for the editor.
@@ -116,8 +109,7 @@ function Themed() {
   );
 }
 
-doc`
-
+md`
 ## Hook: \`useMonacoEditorSize\`
 
 The \`useMonacoEditorSize\` hook returns the size of the editor content.
@@ -152,8 +144,7 @@ function AutoHeight() {
   );
 }
 
-doc`
-
+md`
 ## Hook: \`useMonacoEditorValue\`
 
 The \`useMonacoEditorValue\` hook allows to manipulate the editor value.
@@ -209,17 +200,7 @@ function ManipulateValue() {
   );
 }
 
-doc``;
-
-export default function MonacoExample() {
-  return (
-    <MonacoProvider>
-      <MarkdownProvider>
-        <LitDoc events={doc.state.events} />
-      </MarkdownProvider>
-    </MonacoProvider>
-  );
-}
+md``;
 
 /** HELPERS **/
 

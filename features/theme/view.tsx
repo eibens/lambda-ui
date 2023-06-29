@@ -1,14 +1,15 @@
-import { Fragment, JSX } from "preact";
+import { ComponentChild, ComponentChildren, Fragment, JSX } from "preact";
 import { useEffect, useRef } from "preact/hooks";
 import type { Twind } from "./deps.ts";
-import type { ReactNode } from "./react.ts";
 import { useTwind } from "./use_twind.ts";
 
 /** MAIN **/
 
-export type ViewNode = ReactNode;
+export type ViewNode = JSX.Element;
 
-export type ViewChildren = ReactNode | undefined;
+export type ViewChild = ComponentChild;
+
+export type ViewChildren = ComponentChildren;
 
 export type ViewTag = keyof JSX.IntrinsicElements;
 
@@ -61,7 +62,9 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
       viewClassName,
     ]),
     style: {
+      // @ts-ignore TODO: figure out how to type this
       ...(style ?? {}),
+      // @ts-ignore TODO: figure out how to type this
       ...(viewStyle ?? {}),
     },
   };
