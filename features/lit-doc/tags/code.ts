@@ -1,4 +1,4 @@
-import { createEditor, Editor } from "slate";
+import { createEditor } from "slate";
 import { LitEditor } from "../types.ts";
 import * as Template from "../utils/template.ts";
 
@@ -86,6 +86,9 @@ function parse(...args: Template.Args | [string]) {
 export function create(editor: LitEditor) {
   return function (...input: Template.Input) {
     const parsed = parse(...input);
-    Editor.insertFragment(editor, parsed.children);
+    editor.children = [
+      ...editor.children,
+      ...parsed.children,
+    ];
   };
 }

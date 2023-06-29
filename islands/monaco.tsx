@@ -8,7 +8,7 @@ export default function Monaco() {
   return (
     <MonacoProvider>
       <Content
-        editor={editor}
+        editor={editor()}
       />
     </MonacoProvider>
   );

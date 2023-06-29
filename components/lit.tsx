@@ -9,7 +9,7 @@ export type RouteComponent = (props: PageProps) => ViewNode;
 
 export type RenderComponent = (
   props: PageProps & {
-    editor: LitEditor;
+    readonly editor: LitEditor;
   },
 ) => ViewNode;
 
@@ -18,8 +18,21 @@ export function lit() {
     withBasicTheme();
   });
 
+  let normalized = false;
+
   return {
     md: Markdown.create(editor),
-    editor,
+    getEditor: () => {
+      if (!normalized) {
+        normalized = true;
+        editor.children = [{
+          type: "root",
+          children: editor.children,
+        }];
+        editor.normalize({ force: true });
+      }
+
+      return editor;
+    },
   };
 }

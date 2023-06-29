@@ -16,8 +16,8 @@ import { useState } from "preact/hooks";
 const githubUrl = "https://github.com/microsoft/monaco-editor";
 const themeIssueUrl = "https://github.com/Microsoft/monaco-editor/issues/338";
 
-const { md, editor } = lit();
-export default editor;
+const { md, getEditor } = lit();
+export default getEditor;
 
 md`
 # lambda-ui/monaco
