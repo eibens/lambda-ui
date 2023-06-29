@@ -9,6 +9,12 @@ export function Content(props: {
 }) {
   const { editor } = props;
 
+  // TODO: Should not be done here.
+  editor.children = [{
+    type: "root",
+    children: editor.children,
+  }];
+
   return (
     <View class="my-32 px-6 w-full max-w-3xl">
       <Slate

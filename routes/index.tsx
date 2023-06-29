@@ -1,12 +1,17 @@
 import { lit } from "@/components/lit.tsx";
 import { Page } from "@/components/page.tsx";
+import { Content } from "../components/content.tsx";
 
 /** MAIN **/
 
 const { md, editor } = lit();
 
 export default function render() {
-  return <Page editor={editor} />;
+  return (
+    <Page>
+      <Content editor={editor} />
+    </Page>
+  );
 }
 
 md`
