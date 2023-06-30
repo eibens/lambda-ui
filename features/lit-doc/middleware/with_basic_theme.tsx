@@ -194,13 +194,22 @@ export function withBasicTheme() {
       const { attributes, children, element } = props;
       const { id, isInline } = element;
       const slot = editor.slots?.[id];
+
       return (
         <View
           {...attributes}
           tag={isInline ? "span" : "div"}
         >
+          <View
+            contentEditable={false}
+            // See https://github.com/ianstormtaylor/slate/issues/3425#issuecomment-575436724
+            // This prevents error when focusing a Monaco Editor slot.
+            // But it does not prevent error when blurring.
+            data-slate-editor
+          >
+            <>{slot}</>
+          </View>
           {children}
-          {slot}
         </View>
       );
     },
