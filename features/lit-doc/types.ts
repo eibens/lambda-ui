@@ -50,6 +50,7 @@ export type SlotElement = {
 
 export type CodeElement = {
   type: "code";
+  lang?: string;
   children: Node[];
 };
 
