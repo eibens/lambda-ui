@@ -1,5 +1,3 @@
-import { createEditor } from "slate";
-import { LitEditor } from "../types.ts";
 import * as Template from "../utils/template.ts";
 
 /** HELPERS **/
@@ -41,7 +39,9 @@ function trimEmptyLines(lines: string[]): string[] {
   return lines.slice(startIndex, endIndex + 1);
 }
 
-function parse(...args: Template.Args | [string]) {
+/** MAIN **/
+
+export function parse(...args: Template.Input) {
   // Helper to convert string input to TemplateArgs.
   function tag(
     strings: TemplateStringsArray,
@@ -68,27 +68,13 @@ function parse(...args: Template.Args | [string]) {
     ),
   ).join("\n");
 
-  const editor = createEditor();
-
-  editor.children = [{
-    type: "code",
+  return {
     children: [{
-      type: "text",
-      text: formatted,
+      type: "code",
+      children: [{
+        type: "text",
+        text: formatted,
+      }],
     }],
-  }];
-
-  return editor;
-}
-
-/** MAIN **/
-
-export function create(editor: LitEditor) {
-  return function (...input: Template.Input) {
-    const parsed = parse(...input);
-    editor.children = [
-      ...editor.children,
-      ...parsed.children,
-    ];
   };
 }

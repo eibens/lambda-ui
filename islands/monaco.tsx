@@ -7,9 +7,7 @@ import { MonacoProvider } from "../features/monaco/mod.ts";
 export default function Monaco() {
   return (
     <MonacoProvider>
-      <Content
-        editor={editor()}
-      />
+      <Content editor={editor} />
     </MonacoProvider>
   );
 }

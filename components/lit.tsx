@@ -1,30 +1,19 @@
-import { PageProps } from "$fresh/server.ts";
-import {
-  Context,
-  Markdown,
-  Normalizer,
-  withBasicTheme,
-} from "@/features/lit-doc/mod.ts";
-import { LitEditor } from "@/features/lit-doc/types.ts";
-import { ViewNode } from "@/features/theme/view.tsx";
+import { Markdown, Template } from "@/features/lit-doc/mod.ts";
+import { LitElement } from "@/features/lit-doc/types.ts";
 
 /** MAIN **/
 
-export type RouteComponent = (props: PageProps) => ViewNode;
-
-export type RenderComponent = (
-  props: PageProps & {
-    readonly editor: LitEditor;
-  },
-) => ViewNode;
-
 export function lit() {
-  const editor = Context.create(() => {
-    withBasicTheme();
-  });
-
+  const editor = {
+    children: [] as LitElement[],
+    slots: {} as Record<string, unknown>,
+  };
   return {
-    md: Markdown.create(editor),
-    getEditor: Normalizer.create(editor),
+    editor,
+    md: (...input: Template.Input) => {
+      const md = Markdown.parse(...input);
+      editor.children.push(...md.children);
+      Object.assign(editor.slots, md.slots);
+    },
   };
 }

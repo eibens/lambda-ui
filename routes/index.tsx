@@ -4,12 +4,12 @@ import { Content } from "../components/content.tsx";
 
 /** MAIN **/
 
-const { md, getEditor } = lit();
+const { md, editor } = lit();
 
 export default function render() {
   return (
     <Page>
-      <Content editor={getEditor()} />
+      <Content editor={editor} />
     </Page>
   );
 }

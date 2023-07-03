@@ -14,7 +14,7 @@ export type PlainText = {
 
 export type ParagraphElement = {
   type: "paragraph";
-  children: CustomText[];
+  children: LitText[];
   isLead?: boolean;
 };
 
@@ -22,7 +22,7 @@ export type HeadingElement = {
   type: "heading";
   depth: 1 | 2 | 3 | 4 | 5 | 6;
   slug?: string;
-  children: CustomText[];
+  children: LitText[];
 };
 
 export type BlockquoteElement = {
@@ -84,11 +84,11 @@ export type DeleteElement = {
   children: Node[];
 };
 
-export type CustomText =
+export type LitText =
   | PlainText
   | InlineCodeText;
 
-export type CustomElement =
+export type LitElement =
   | RootElement
   | ParagraphElement
   | HeadingElement
@@ -106,8 +106,8 @@ export type CustomElement =
 declare module "slate" {
   interface CustomTypes {
     Editor: BaseEditor;
-    Element: CustomElement;
-    Text: CustomText;
+    Element: LitElement;
+    Text: LitText;
   }
 }
 
@@ -119,17 +119,17 @@ export type LitEditorMixin = {
 
 export type LitEditor = ReactEditor & LitEditorMixin;
 
-export function isElementType<T extends CustomElement["type"]>(
+export function isElementType<T extends LitElement["type"]>(
   node: Node,
   type: T,
 ): node is Extract<Element, { type: T }> {
   return Element.isElement(node) && node.type === type;
 }
 
-export function isTextType<T extends CustomText["type"]>(
+export function isTextType<T extends LitText["type"]>(
   node: Node,
   type: T,
-): node is Extract<CustomText, { type: T }> {
+): node is Extract<LitText, { type: T }> {
   return Text.isText(node) && node.type === type;
 }
 

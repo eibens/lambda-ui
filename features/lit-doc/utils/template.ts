@@ -1,4 +1,4 @@
-import { nanoid } from "https://esm.sh/nanoid@4.0.0";
+import { nanoid } from "../deps.ts";
 import * as Slot from "./slot.ts";
 
 /** HELPERS **/

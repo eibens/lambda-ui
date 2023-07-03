@@ -1,9 +1,6 @@
-import { default as gfm } from "https://esm.sh/remark-gfm@3.0.1";
-import { default as parseRemark } from "https://esm.sh/remark-parse@10.0.1";
-import { unified } from "https://esm.sh/unified@10.1.2";
-import { createEditor, Descendant } from "slate";
+import { gfm, parseRemark, unified } from "../deps.ts";
 import { isInlineParent } from "../mod.ts";
-import { LitEditor } from "../types.ts";
+import { LitElement } from "../types.ts";
 import { Slot, Template, Tree } from "../utils/mod.ts";
 
 /** HELPERS **/
@@ -66,7 +63,9 @@ function fixChildren(root: Tree.Node) {
   }
 }
 
-function parse(...input: Template.Input) {
+/** MAIN **/
+
+export function parse(...input: Template.Input) {
   const { text, slots } = Template.weave(...input);
 
   // Parse the Markdown source into a Markdown AST.
@@ -79,25 +78,9 @@ function parse(...input: Template.Input) {
   fixSlots(markdownRoot, { isInlineParent });
   fixChildren(markdownRoot);
 
-  const editor = createEditor();
-
-  // Cast here to ignore the stricter typings of the Markdown AST.
-  editor.children = markdownRoot.children as unknown as Descendant[];
-
-  // The slots hold the actual values for the slots.
-  // Values cannot be included in the editor, as they might not be JSON-serializable.
-  return Object.assign(editor, { slots });
-}
-
-/** MAIN **/
-
-export function create(editor: LitEditor) {
-  return function (...input: Template.Input) {
-    const parsed = parse(...input);
-    editor.children = [
-      ...editor.children,
-      ...parsed.children,
-    ];
-    Object.assign(editor.slots, parsed.slots);
+  return {
+    // Cast here to ignore the stricter typings of the Markdown AST.
+    children: markdownRoot.children as LitElement[],
+    slots,
   };
 }
