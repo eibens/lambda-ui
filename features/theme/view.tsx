@@ -1,7 +1,6 @@
 import { ComponentChild, ComponentChildren, Fragment, JSX } from "preact";
 import { useEffect, useRef } from "preact/hooks";
-import type { Twind } from "./deps.ts";
-import { useTwind } from "./use_twind.ts";
+import { Twind } from "./deps.ts";
 
 /** MAIN **/
 
@@ -34,9 +33,6 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
     ...rest
   } = { ...props.viewProps, ...props };
 
-  const twind = useTwind();
-  const tw = twind?.tw ?? ((x) => x);
-
   const {
     style: viewStyle,
     class: viewClassName,
@@ -57,7 +53,7 @@ export function View<Tag extends ViewTag = "div">(props: ViewProps<Tag>) {
     ...rest,
     ...viewRest,
     ref,
-    class: tw([
+    class: Twind.apply([
       className,
       viewClassName,
     ]),
