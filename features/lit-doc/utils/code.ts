@@ -70,9 +70,9 @@ export function parse(...args: Template.Input) {
 
   return {
     children: [{
-      type: "code",
+      type: "code" as const,
       children: [{
-        type: "text",
+        type: "text" as const,
         text: formatted,
       }],
     }],
