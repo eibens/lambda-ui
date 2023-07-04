@@ -201,6 +201,7 @@ export function withBasicTheme() {
           tag={isInline ? "span" : "div"}
         >
           <View
+            tag={isInline ? "span" : "div"}
             contentEditable={false}
             // See https://github.com/ianstormtaylor/slate/issues/3425#issuecomment-575436724
             // This prevents error when focusing a Monaco Editor slot.
