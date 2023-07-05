@@ -7,7 +7,7 @@ export function Paragraph(
     isLead?: boolean;
   },
 ) {
-  const { isLead } = props;
+  const { isLead, ...rest } = props;
   return (
     <View
       tag="p"
@@ -16,7 +16,7 @@ export function Paragraph(
         isLead ? "text-2xl" : "text-base",
         isLead ? "leading-[1.5em]" : "leading-[1.75em]",
       ]}
-      viewProps={props}
+      {...rest}
     />
   );
 }
