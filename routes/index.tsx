@@ -9,14 +9,14 @@ import * as library from "../features/mod.ts";
 const { md, editor } = lit<Props>();
 
 md`
-# Lambda UI [Link](${(props) => props.url.toString()})
+# \`@lambda-ui\`
 
 This is Lukas Eibensteiner's personal UI library.
 It is built for TypeScript, Preact, and Deno.
 
 ## Features
 
-The [features](/features) folders export the API of the library.
+The \`features\` folders export the API of the library.
 The following features are available:
 
 ${(props) =>
