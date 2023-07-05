@@ -23,12 +23,7 @@ export function withElementComponents(
   withElementRenderer((props, next) => {
     const { element, attributes } = props;
     const Component = components[element.type] ?? components._;
-    if (!Component) return next();
-
-    const newAttributes = {
-      ...attributes,
-      "data-slate-type": element.type,
-    };
+    if (!Component) return next(props);
 
     return (
       <Component
@@ -36,7 +31,7 @@ export function withElementComponents(
           // deno-lint-ignore no-explicit-any
           ...props as any
         }
-        attributes={newAttributes}
+        attributes={attributes}
       />
     );
   });

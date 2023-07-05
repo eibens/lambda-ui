@@ -2,84 +2,88 @@ import { BaseEditor, Element, Node, Text } from "slate";
 import { ReactEditor, RenderElementProps, RenderLeafProps } from "slate-react";
 import { ViewNode } from "../theme/mod.ts";
 
-export type RootElement = {
+export type NodeBase = {
+  key?: string;
+};
+
+export type RootElement = NodeBase & {
   type: "root";
   children: Node[];
 };
 
-export type PlainText = {
+export type PlainText = NodeBase & {
   type: "text";
   text: string;
 };
 
-export type ParagraphElement = {
+export type ParagraphElement = NodeBase & {
   type: "paragraph";
   children: LitText[];
   isLead?: boolean;
 };
 
-export type HeadingElement = {
+export type HeadingElement = NodeBase & {
   type: "heading";
   depth: 1 | 2 | 3 | 4 | 5 | 6;
   slug?: string;
   children: LitText[];
 };
 
-export type BlockquoteElement = {
+export type BlockquoteElement = NodeBase & {
   type: "blockquote";
   children: Node[];
 };
 
-export type ListElement = {
+export type ListElement = NodeBase & {
   type: "list";
   ordered?: boolean;
   children: Node[];
 };
 
-export type ListItemElement = {
+export type ListItemElement = NodeBase & {
   type: "listItem";
   children: Node[];
 };
 
-export type SlotElement = {
+export type SlotElement = NodeBase & {
   type: "slot";
   id: string;
   isInline?: boolean;
   children: Node[];
 };
 
-export type CodeElement = {
+export type CodeElement = NodeBase & {
   type: "code";
   lang?: string;
   children: Node[];
 };
 
-export type ThematicBreak = {
+export type ThematicBreak = NodeBase & {
   type: "thematicBreak";
 };
 
-export type InlineCodeText = {
+export type InlineCodeText = NodeBase & {
   type: "inlineCode";
   text: string;
 };
 
-export type LinkElement = {
+export type LinkElement = NodeBase & {
   type: "link";
   url: string;
   children: Node[];
 };
 
-export type EmphasisElement = {
+export type EmphasisElement = NodeBase & {
   type: "emphasis";
   children: Node[];
 };
 
-export type StrongElement = {
+export type StrongElement = NodeBase & {
   type: "strong";
   children: Node[];
 };
 
-export type DeleteElement = {
+export type DeleteElement = NodeBase & {
   type: "delete";
   children: Node[];
 };

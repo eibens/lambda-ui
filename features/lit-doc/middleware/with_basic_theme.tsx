@@ -16,15 +16,19 @@ import {
   withElementComponents,
   withIsInline,
   withIsVoid,
+  withKeys,
   withLeadParagraph,
   withLeafComponents,
   withSlugs,
 } from "../mod.ts";
+import { withElementRenderer } from "./with_element_renderer.ts";
 
 /** HELPERS **/
 
 export function withBasicTheme() {
   const editor = withEditor();
+
+  withKeys();
 
   withIsInline(isInline);
 
@@ -238,5 +242,21 @@ export function withBasicTheme() {
         </Delete>
       );
     },
+  });
+
+  // Will be applied before the component renderers.
+  withElementRenderer((props, next) => {
+    const { attributes, element } = props;
+
+    const newAttributes = {
+      ...attributes,
+      "data-slate-type": element.type,
+      "data-slate-key": element.key,
+    };
+
+    return next({
+      ...props,
+      attributes: newAttributes,
+    });
   });
 }

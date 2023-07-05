@@ -4,6 +4,7 @@ export * from "./with_element_components.tsx";
 export * from "./with_element_renderer.ts";
 export * from "./with_is_inline.ts";
 export * from "./with_is_void.ts";
+export * from "./with_keys.ts";
 export * from "./with_lead_paragraph.ts";
 export * from "./with_leaf_components.tsx";
 export * from "./with_leaf_renderer.ts";
