@@ -41,18 +41,8 @@ function trimEmptyLines(lines: string[]): string[] {
 
 /** MAIN **/
 
-export function parse(...args: Template.Input) {
-  // Helper to convert string input to TemplateArgs.
-  function tag(
-    strings: TemplateStringsArray,
-    ...values: unknown[]
-  ): Template.Args {
-    return [strings, ...values];
-  }
-
-  const [strings, ...values] = typeof args[0] === "string"
-    ? tag`${args[0]}`
-    : args;
+export function weave(input: Template.Input<unknown>) {
+  const [strings, ...values] = Template.toArgs(input);
 
   let source = "";
 

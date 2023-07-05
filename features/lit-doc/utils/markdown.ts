@@ -1,3 +1,4 @@
+import { ViewNode } from "../../theme/view.tsx";
 import { gfm, parseRemark, unified } from "../deps.ts";
 import { isInlineParent } from "../mod.ts";
 import { LitElement } from "../types.ts";
@@ -63,12 +64,57 @@ function fixChildren(root: Tree.Node) {
   }
 }
 
+function isViewNode(node: unknown): node is ViewNode {
+  if (typeof node !== "object") return false;
+  if (node === null) return false;
+  const type = Reflect.get(node, "$$typeof");
+  return type === Symbol.for("react.element");
+}
+
 /** MAIN **/
 
-export function parse(...input: Template.Input) {
-  const { text, slots } = Template.weave(...input);
+export type Value<Data> =
+  | string
+  | ViewNode
+  | ((data: Data, id: string) => string);
 
-  // Parse the Markdown source into a Markdown AST.
+export type Input<Data> = Template.Input<Value<Data>>;
+
+export type Options<Data> = {
+  data?: Data;
+};
+
+export type Result = {
+  children: LitElement[];
+  slots: Record<string, unknown>;
+};
+
+export function weave(input: Input<unknown>): Result;
+export function weave<Data>(input: Input<Data>, options: {
+  data: Data;
+}): Result;
+export function weave<Data>(input: Input<Data>, options?: {
+  data: Data;
+}): Result {
+  const { data } = options ?? {};
+
+  const { text, slots } = Template.weave(input, {
+    evaluate: (value, id) => {
+      if (typeof value === "function") {
+        return value(data ?? ({} as Data), id);
+      }
+      if (isViewNode(value)) {
+        return Slot.stringify({ id });
+      }
+      if (value == null) {
+        return "";
+      }
+
+      return String(value);
+    },
+  });
+
+  // Dataarse the Markdown source into a Markdown AST.
   const markdownRoot = unified()
     .use(parseRemark)
     .use(gfm)
@@ -79,7 +125,7 @@ export function parse(...input: Template.Input) {
   fixChildren(markdownRoot);
 
   return {
-    // Cast here to ignore the stricter typings of the Markdown AST.
+    // Can cast here since we fixed the tree.
     children: markdownRoot.children as LitElement[],
     slots,
   };
