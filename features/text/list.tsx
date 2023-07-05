@@ -16,7 +16,7 @@ export function List(
     <View
       tag={tag}
       viewProps={rest}
-      class={`${list} ml-8 flex flex-col`}
+      class={`${list} ml-8`}
     />
   );
 }

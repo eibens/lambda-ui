@@ -175,11 +175,14 @@ export function withBasicTheme() {
           {...attributes}
           tag="li"
           type={type}
-          class={[
-            "flex flex-col gap-2",
-          ]}
         >
-          {children}
+          <View
+            class={[
+              "flex flex-col gap-2",
+            ]}
+          >
+            {children}
+          </View>
         </View>
       );
     },
