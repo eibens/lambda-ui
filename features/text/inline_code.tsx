@@ -10,12 +10,8 @@ export function InlineCode(props: ViewProps<"code">) {
       class={[
         "font-mono",
         "text-gray-600 dark:text-gray-400",
-        "rounded-md p-1",
-        "shadow-sm border-1 border-gray-300 dark:border-gray-700",
+        "color-teal fill-0",
       ]}
-      style={{
-        fontSize: "85%",
-      }}
     />
   );
 }

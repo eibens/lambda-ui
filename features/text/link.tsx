@@ -45,7 +45,7 @@ export function Link(
     <View tag="span">
       <View
         tag="a"
-        class="text-blue-500 hover:underline"
+        class="color-blue fill-0 hover:underline"
         target={external ? "_blank" : undefined}
         href={href}
         onClick={(e) => {

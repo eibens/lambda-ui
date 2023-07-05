@@ -20,7 +20,7 @@ const { md, editor } = lit();
 export default editor;
 
 md`
-# lambda-ui/monaco
+# \`@lambda-ui/monaco\`
 
 [Monaco Editor](${githubUrl}) is the code editor that powers VS Code. 
 It is a standalone code editor that can be used in any JavaScript application.
