@@ -13,10 +13,10 @@ export function Paragraph(
       tag="p"
       class={[
         "text-gray-700 dark:text-gray-300",
-        isLead ? "text-2xl" : "text-base",
+        isLead ? "text-2xl" : "",
         isLead ? "leading-[1.5em]" : "leading-[1.75em]",
       ]}
-      {...rest}
+      viewProps={rest}
     />
   );
 }

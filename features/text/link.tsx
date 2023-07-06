@@ -1,5 +1,9 @@
+import { ArrowRight } from "icons/arrow_right.tsx";
+import { ArrowUp } from "icons/arrow_up.tsx";
 import { External } from "icons/external.tsx";
-import { ViewChildren } from "../theme/mod.ts";
+import { Home } from "icons/home.tsx";
+import { Link as LinkIcon } from "icons/link.tsx";
+import { ViewChildren, ViewProps } from "../theme/mod.ts";
 import { View } from "./view.tsx";
 
 /** HELPERS **/
@@ -8,24 +12,39 @@ function parseUrl(str: string) {
   try {
     const url = new URL(str);
 
-    // TODO: Check against actual host URL.
-    // For SSR, there is no window.location to check against.
-    // This check is really naive and assumes all local URLs are relative.
-    const external = true;
-
     const hostname = url.hostname;
     return {
-      external,
+      target: "external",
       hostname,
     };
   } catch (e) {
     // TypeError is expected if str is a local URL.
     if (!(e instanceof TypeError)) throw e;
 
+    if (str === "/") {
+      return {
+        target: "home",
+        hostname: "",
+      };
+    }
+
+    if (str === "#top") {
+      return {
+        target: "top",
+        hostname: "",
+      };
+    }
+
+    if (str.startsWith("#")) {
+      return {
+        target: "local",
+        hostname: "",
+      };
+    }
+
     return {
-      external: false,
+      target: "internal",
       hostname: "",
-      samePage: str.startsWith("#"),
     };
   }
 }
@@ -33,32 +52,53 @@ function parseUrl(str: string) {
 /** MAIN **/
 
 export function Link(
-  props: {
+  props: ViewProps<"a"> & {
     href: string;
     children: ViewChildren;
   },
 ) {
-  const { href, children } = props;
-  const { external, hostname, samePage } = parseUrl(href);
+  const { href, children, ...rest } = props;
+  const { target, hostname } = parseUrl(href);
+
+  const icon = (function () {
+    if (target === "external") return <External />;
+    if (target === "internal") return <ArrowRight />;
+    if (target === "local") return <LinkIcon />;
+    if (target === "home") return <Home />;
+    if (target === "top") return <ArrowUp />;
+    return <LinkIcon />;
+  })();
+
+  const title = (function () {
+    if (target === "external") return `External link to ${hostname}`;
+    if (target === "internal") return `Internal link`;
+    if (target === "local") return `Local link`;
+    if (target === "home") return `Homepage`;
+    return "Unknown link type";
+  })();
 
   return (
-    <View tag="span">
+    <View {...rest} tag="span">
       <View
         tag="a"
-        class="color-blue fill-0 hover:underline"
-        target={external ? "_blank" : undefined}
+        class={[
+          "color-indigo fill-0 stroke-0 hover:stroke-100 border-b-1",
+          "transition-colors duration-200 ease-in-out",
+        ]}
+        target={target === "external" ? "_blank" : undefined}
         href={href}
         onClick={(e) => {
-          if (samePage) {
+          const isSamePage = ["local", "top"].includes(target);
+          if (isSamePage) {
             e.preventDefault();
             const element = document.getElementById(href.slice(1));
             if (element) {
-              const scrollLogicalPosition =
+              const scrollStart = target === "top" ||
                 ["H1", "H2", "H3", "H4", "H5", "H6"].includes(
-                    element.tagName,
-                  )
-                  ? "start"
-                  : "center";
+                  element.tagName,
+                );
+
+              const scrollLogicalPosition = scrollStart ? "start" : "center";
 
               // smooth scroll to element
               element.scrollIntoView({
@@ -74,17 +114,24 @@ export function Link(
       >
         {children}
       </View>
-      {external && (
+      <View
+        tag="span"
+        class={[
+          "inline-block text-gray-500 cursor-help select-none",
+          `pl-[${0.25}rem]`,
+        ]}
+        title={title}
+      >
         <View
           tag="span"
-          class="inline-block text-gray-500 cursor-help select-none"
-          title={`External link to ${hostname}`}
+          class={[
+            "relative flex w-[0.75lh] h-[0.75lh]",
+            `top-[${0.125}lh]`,
+          ]}
         >
-          <View tag="span" class="flex w-4 h-4">
-            <External />
-          </View>
+          {icon}
         </View>
-      )}
+      </View>
     </View>
   );
 }

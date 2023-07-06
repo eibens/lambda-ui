@@ -10,7 +10,7 @@ export function InlineCode(props: ViewProps<"code">) {
       class={[
         "font-mono",
         "text-gray-600 dark:text-gray-400",
-        "color-teal fill-0",
+        "color-main fill-0",
       ]}
     />
   );

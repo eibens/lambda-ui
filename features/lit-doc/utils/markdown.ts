@@ -6,12 +6,26 @@ import { Slot, Template, Tree } from "../utils/mod.ts";
 
 /** HELPERS **/
 
+function fixPositions(root: Tree.Node) {
+  for (const [node] of Tree.nodes(root)) {
+    delete node.position;
+  }
+}
+
+function fixLinkReferences(root: Tree.Node) {
+  for (const [node] of Tree.nodes(root)) {
+    if (node.type !== "linkReference") continue;
+    console.log(node);
+  }
+}
+
 function fixLiterals(root: Tree.Node) {
   // In Markdown AST, nodes that contain text are typed as Literal.
   for (const [node] of Tree.nodes(root)) {
     // A Literal has a `value` property that contains the text.
     const literal = node as unknown as Record<PropertyKey, unknown>;
-    if (typeof literal.value !== "string") continue;
+    const isLiteral = typeof literal.value !== "string";
+    if (isLiteral) continue;
 
     // Rename the `value` property to `text` for each such node.
     literal.text = literal.value;
@@ -71,12 +85,31 @@ function isViewNode(node: unknown): node is ViewNode {
   return type === Symbol.for("react.element");
 }
 
+function evaluate<Data>(data: Data, value: Value<Data>, id: string): string {
+  if (typeof value === "function") {
+    const result = value(data, id);
+    return evaluate(data, result, id);
+  }
+  if (isViewNode(value)) {
+    return Slot.stringify({ id });
+  }
+  if (Array.isArray(value)) {
+    return value.map((value) => evaluate(data, value, id)).join("");
+  }
+  if (value == null) {
+    return "";
+  }
+
+  return String(value);
+}
+
 /** MAIN **/
 
 export type Value<Data> =
   | string
+  | string[]
   | ViewNode
-  | ((data: Data, id: string) => string);
+  | ((data: Data, id: string) => Value<Data>);
 
 export type Input<Data> = Template.Input<Value<Data>>;
 
@@ -96,30 +129,19 @@ export function weave<Data>(input: Input<Data>, options: {
 export function weave<Data>(input: Input<Data>, options?: {
   data: Data;
 }): Result {
-  const { data } = options ?? {};
+  const { data } = options ?? { data: {} as Data };
 
   const { text, slots } = Template.weave(input, {
-    evaluate: (value, id) => {
-      if (typeof value === "function") {
-        return value(data ?? ({} as Data), id);
-      }
-      if (isViewNode(value)) {
-        return Slot.stringify({ id });
-      }
-      if (value == null) {
-        return "";
-      }
-
-      return String(value);
-    },
+    evaluate: (value, id) => evaluate(data, value, id),
   });
 
-  // Dataarse the Markdown source into a Markdown AST.
   const markdownRoot = unified()
     .use(parseRemark)
     .use(gfm)
     .parse(text) as Tree.Node;
 
+  fixPositions(markdownRoot);
+  fixLinkReferences(markdownRoot);
   fixLiterals(markdownRoot);
   fixSlots(markdownRoot, { isInlineParent });
   fixChildren(markdownRoot);

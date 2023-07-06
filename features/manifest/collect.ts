@@ -1,6 +1,12 @@
 import { toFileUrl, walk } from "./deps.ts";
 
-export async function collect(dir: URL): Promise<URL[]> {
+export async function collect(dir: URL, options?: {
+  filter?: (path: string) => boolean;
+}): Promise<URL[]> {
+  const {
+    filter = () => true,
+  } = options ?? {};
+
   const routes: URL[] = [];
   try {
     // TODO(lucacasonato): remove the extranious Deno.readDir when
@@ -14,9 +20,11 @@ export async function collect(dir: URL): Promise<URL[]> {
       exts: ["tsx", "jsx", "ts", "js"],
     });
     for await (const entry of routesFolder) {
-      if (entry.isFile) {
-        routes.push(toFileUrl(entry.path));
-      }
+      if (!entry.isFile) continue;
+      const url = toFileUrl(entry.path);
+      const path = url.href.substring(dir.href.length);
+      if (!filter(path)) continue;
+      routes.push(toFileUrl(entry.path));
     }
   } catch (err) {
     if (err instanceof Deno.errors.NotFound) {

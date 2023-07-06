@@ -159,7 +159,7 @@ export function withBasicTheme() {
           {...attributes}
           tag={tag}
           class={[
-            "ml-8 flex flex-col gap-2",
+            "ml-8 flex flex-col gap-4",
             style,
           ]}
         >
@@ -178,7 +178,7 @@ export function withBasicTheme() {
         >
           <View
             class={[
-              "flex flex-col gap-2",
+              "flex flex-col gap-4",
             ]}
           >
             {children}
@@ -193,6 +193,14 @@ export function withBasicTheme() {
           {...attributes}
           href={element.url}
         >
+          {children}
+        </Link>
+      );
+    },
+    linkReference: (props) => {
+      const { attributes, children } = props;
+      return (
+        <Link {...attributes} href="#">
           {children}
         </Link>
       );

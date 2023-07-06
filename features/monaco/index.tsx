@@ -13,18 +13,21 @@ import { useState } from "preact/hooks";
 
 /** MAIN **/
 
-const githubUrl = "https://github.com/microsoft/monaco-editor";
-const themeIssueUrl = "https://github.com/Microsoft/monaco-editor/issues/338";
-
-const { md, editor } = lit();
-export default editor;
+const { md, doc } = lit();
+export default doc;
 
 md`
-# \`@lambda-ui/monaco\`
+# \`/\` [\`monaco\`](#)
 
-[Monaco Editor](${githubUrl}) is the code editor that powers VS Code. 
+[Monaco Editor](https://github.com/microsoft/monaco-editor) is the code editor that powers VS Code. 
 It is a standalone code editor that can be used in any JavaScript application.
 This package provides Preact hooks for using Monaco Editor.
+
+## Hooks
+
+### \`useMonacoEditor\`
+
+The \`useMonacoEditor\` creates a new editor.
 
 ${<MinimalEditor />}
 `;
@@ -51,12 +54,12 @@ function MinimalEditor() {
 }
 
 md`
-## Hook: \`useMonacoEditorTheme\`
+### \`useMonacoEditorTheme\`
 
 The \`useMonacoEditorTheme\` hook allows to create a theme for the editor.
 
 > **Note:** The theme is applied to all editors.
-> This is an [architectural limitation](${themeIssueUrl}) of Monaco Editor.
+> This is an [architectural limitation](https://github.com/Microsoft/monaco-editor/issues/338) of Monaco Editor.
 
 ${<Themed />}
 `;
@@ -110,7 +113,7 @@ function Themed() {
 }
 
 md`
-## Hook: \`useMonacoEditorSize\`
+### \`useMonacoEditorSize\`
 
 The \`useMonacoEditorSize\` hook returns the size of the editor content.
 
@@ -145,7 +148,7 @@ function AutoHeight() {
 }
 
 md`
-## Hook: \`useMonacoEditorValue\`
+### \`useMonacoEditorValue\`
 
 The \`useMonacoEditorValue\` hook allows to manipulate the editor value.
 
@@ -173,7 +176,7 @@ function ManipulateValue() {
   const env = useEnv();
 
   return (
-    <View class="flex flex-col color-blue shadow-lg fill-10 pt-4 rounded-lg">
+    <View class="flex flex-col color-gray shadow-lg fill-10 pt-4 rounded-lg">
       <View
         onElement={setElement}
         style={{
@@ -209,7 +212,7 @@ function Example(props: {
 }) {
   const { children } = props;
   return (
-    <View class="color-blue shadow-lg fill-10 py-4 rounded-lg">
+    <View class="color-gray shadow-lg fill-10 py-4 rounded-lg">
       {children}
     </View>
   );

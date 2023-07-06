@@ -73,6 +73,14 @@ export type LinkElement = NodeBase & {
   children: Node[];
 };
 
+export type LinkReferenceElement = NodeBase & {
+  type: "linkReference";
+  children: Node[];
+  label: string;
+  identifier: string;
+  referenceType: string;
+};
+
 export type EmphasisElement = NodeBase & {
   type: "emphasis";
   children: Node[];
@@ -103,6 +111,7 @@ export type LitElement =
   | SlotElement
   | CodeElement
   | LinkElement
+  | LinkReferenceElement
   | EmphasisElement
   | StrongElement
   | DeleteElement;
@@ -114,6 +123,11 @@ declare module "slate" {
     Text: LitText;
   }
 }
+
+export type LitDoc = {
+  children: LitElement[];
+  slots: Record<string, unknown>;
+};
 
 export type LitEditorMixin = {
   slots: Record<string, unknown>;
@@ -143,13 +157,17 @@ export function isInline(node: Element): boolean {
     "emphasis",
     "strong",
     "link",
+    "linkReference",
     "inlineCode",
     "delete",
   ].includes(node.type);
 }
 
 export function isVoid(node: Element): boolean {
-  return ["slot", "hr"].includes(node.type);
+  return [
+    "slot",
+    "hr",
+  ].includes(node.type);
 }
 
 export function isInlineParent(node: {

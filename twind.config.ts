@@ -10,5 +10,8 @@ export default {
     "editor-block": () => {
       return apply`px-4 py-2 my-4`;
     },
+    "color-main": () => {
+      return apply`color-fuchsia`;
+    },
   },
 } as Options;

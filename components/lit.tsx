@@ -1,6 +1,5 @@
 import { Markdown } from "@/features/lit-doc/mod.ts";
-import { LitElement } from "@/features/lit-doc/types.ts";
-import { ViewChild } from "@/features/theme/view.tsx";
+import { LitDoc, LitElement } from "@/features/lit-doc/types.ts";
 
 /** MAIN **/
 
@@ -17,8 +16,8 @@ export function lit<Data>() {
         input,
       });
     },
-    editor: (data: Data) => {
-      const editor = {
+    doc: (data: Data): LitDoc => {
+      const doc = {
         children: [] as LitElement[],
         slots: {} as Record<string, unknown>,
       };
@@ -27,8 +26,8 @@ export function lit<Data>() {
         switch (event.type) {
           case "md": {
             const md = Markdown.weave(event.input, { data });
-            editor.children.push(...md.children);
-            Object.assign(editor.slots, md.slots);
+            doc.children.push(...md.children);
+            Object.assign(doc.slots, md.slots);
             break;
           }
           default: {
@@ -37,7 +36,7 @@ export function lit<Data>() {
         }
       }
 
-      return editor;
+      return doc;
     },
   };
 }

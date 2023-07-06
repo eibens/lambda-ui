@@ -10,3 +10,4 @@ export * from "./with_leaf_components.tsx";
 export * from "./with_leaf_renderer.ts";
 export * from "./with_normalize_node.ts";
 export * from "./with_slugs.ts";
+export * from "./with_template.tsx";

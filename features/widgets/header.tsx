@@ -1,23 +1,22 @@
 import { useEffect, useState } from "preact/hooks";
-import { View, ViewChild } from "../theme/mod.ts";
-import { Button } from "./button.tsx";
-import { ThemeToggle } from "./theme_toggle.tsx";
+import { View, ViewChildren } from "../theme/mod.ts";
 
 /** MAIN **/
 
-export type Breadcrumbs = {
-  href: string;
-  icon?: ViewChild;
-  label?: ViewChild;
-}[];
-
 export type HeaderProps = {
   size?: "xs" | "sm" | "md" | "lg";
-  breadcrumbs?: Breadcrumbs;
+  renderTopLeft?: (props: {
+    size: HeaderProps["size"];
+    scroll: number;
+  }) => ViewChildren;
+  renderTopRight?: (props: {
+    size: HeaderProps["size"];
+    scroll: number;
+  }) => ViewChildren;
 };
 
 export function Header(props: HeaderProps) {
-  const { size = "md", breadcrumbs } = props;
+  const { size = "md", renderTopLeft, renderTopRight } = props;
 
   const [scroll, setScroll] = useState(0);
 
@@ -43,24 +42,14 @@ export function Header(props: HeaderProps) {
         `h-[${height}px]`,
       ]}
     >
-      <View
-        class={[
-          "flex gap-2 rounded-full p-1",
-          scroll > 16 ? "bg-gray-100 dark:bg-gray-900 shadow-lg" : "",
-        ]}
-      >
-        {breadcrumbs && breadcrumbs.map((item) => {
-          return (
-            <Button
-              href={item.href}
-              label={item.label}
-              icon={item.icon}
-              size={size}
-            />
-          );
-        })}
-      </View>
-      <ThemeToggle size={size} />
+      {renderTopLeft?.({
+        size,
+        scroll,
+      })}
+      {renderTopRight?.({
+        size,
+        scroll,
+      })}
     </View>
   );
 }

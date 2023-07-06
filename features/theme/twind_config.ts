@@ -6,12 +6,15 @@ export const DefaultTwindConfig: Omit<Twind.Configuration, "mode" | "sheet"> = {
   darkMode: "class",
   preflight: {
     html: apply`
-      bg-gray-200 text-gray-800 
+      bg-gray-100 text-gray-800 
       font-serif
       transition-colors duration-200
     `,
     "html.dark": apply`
-      bg-gray-800 text-gray-200
+      bg-gray-900 text-gray-200
+    `,
+    body: apply`
+      color-main fill-5
     `,
   },
   theme: {
