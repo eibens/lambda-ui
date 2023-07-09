@@ -16,7 +16,7 @@ import manifest from "../lit.gen.ts";
 const { md, doc } = lit<Props>();
 
 md`
-# [\`@lambda-ui\`](#lambda-ui)
+# [Lambda UI](#lambda-ui)
 
 This is Lukas Eibensteiner's personal UI library.
 It is built for TypeScript, Preact, and Deno.
@@ -26,10 +26,9 @@ It is built for TypeScript, Preact, and Deno.
 The \`features\` folders export the API of the library.
 The following features are available:
 
-- \`@lambda-ui/\`
 ${function (props) {
   return props.data.features.map(({ name, path }) => {
-    return `  - [\`${name}\`](${path})\n`;
+    return `> ### [${name}](${path})\n\n`;
   });
 }}
 `;
@@ -51,11 +50,10 @@ export const handler: Handlers = {
       features: Object.keys(manifest.routes)
         .map((path) => ({
           name: path
-            .substring("./features/".length)
-            .substring(0, path.lastIndexOf("/") - 1),
+            .substring("./features/".length, path.lastIndexOf("/")),
           path: path
             .substring(1)
-            .substring(0, path.lastIndexOf("/") - 1),
+            .substring(0, path.lastIndexOf("/")),
         })),
     };
 
@@ -74,7 +72,7 @@ export default function render(props: Props) {
   return (
     <>
       <Head>
-        <title>@lambda-ui</title>
+        <title>Lambda UI</title>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"

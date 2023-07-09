@@ -15,22 +15,26 @@ export type HeaderProps = {
   }) => ViewChildren;
 };
 
-export function Header(props: HeaderProps) {
-  const { size = "md", renderTopLeft, renderTopRight } = props;
-
-  const [scroll, setScroll] = useState(0);
-
-  const height = 4 * { xs: 8, sm: 12, md: 16, lg: 20 }[size];
-  const padding = 4 * { xs: 1, sm: 2, md: 3, lg: 4 }[size];
+export function useScrollOffset() {
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     const onScroll = () => {
-      const scroll = window.scrollY;
-      setScroll(scroll);
+      const offset = window.scrollY;
+      setOffset(offset);
     };
     addEventListener("scroll", onScroll);
     return () => removeEventListener("scroll", onScroll);
   }, []);
+
+  return offset;
+}
+
+export function Header(props: HeaderProps) {
+  const { size = "md", renderTopLeft, renderTopRight } = props;
+  const height = 4 * { xs: 8, sm: 12, md: 16, lg: 20 }[size];
+  const padding = 4 * { xs: 1, sm: 2, md: 3, lg: 4 }[size];
+  const scroll = useScrollOffset();
 
   return (
     <View

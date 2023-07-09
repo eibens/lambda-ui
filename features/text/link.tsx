@@ -82,8 +82,8 @@ export function Link(
       <View
         tag="a"
         class={[
-          "color-indigo fill-0 stroke-0 hover:stroke-100 border-b-1",
-          "transition-colors duration-200 ease-in-out",
+          "color-sky fill-0 stroke-0 hover:stroke-30 focus:stroke-50 border-b-[0.125em]",
+          "transition-colors duration-200 ease-in-out focus:outline-none",
         ]}
         target={target === "external" ? "_blank" : undefined}
         href={href}

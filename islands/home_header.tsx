@@ -1,5 +1,4 @@
 import { Header } from "@/features/widgets/header.tsx";
-import { InlineCode } from "../features/text/inline_code.tsx";
 import { Link } from "../features/text/mod.ts";
 import { View } from "../features/theme/mod.ts";
 import { ThemeToggle } from "../features/widgets/theme_toggle.tsx";
@@ -20,9 +19,9 @@ export default function HomeHeader() {
             scroll > 0 ? "pointer-events-auto" : "pointer-events-none",
           ]}
         >
-          <View class={[`pill-${size}`]}>
+          <View class={[`pill-${size}`, "font-sans"]}>
             <Link href="#top" class="mx-2">
-              <InlineCode>@lambda-ui</InlineCode>
+              Lambda UI
             </Link>
           </View>
         </View>

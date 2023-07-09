@@ -13,9 +13,6 @@ export const DefaultTwindConfig: Omit<Twind.Configuration, "mode" | "sheet"> = {
     "html.dark": apply`
       bg-gray-900 text-gray-200
     `,
-    body: apply`
-      color-main fill-5
-    `,
   },
   theme: {
     colors: TwindColors,

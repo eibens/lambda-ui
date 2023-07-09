@@ -27,7 +27,7 @@ This package provides Preact hooks for using Monaco Editor.
 
 ### \`useMonacoEditor\`
 
-The \`useMonacoEditor\` creates a new editor.
+The \`useMonacoEditor\` hook creates a new editor.
 
 ${<MinimalEditor />}
 `;
@@ -56,7 +56,7 @@ function MinimalEditor() {
 md`
 ### \`useMonacoEditorTheme\`
 
-The \`useMonacoEditorTheme\` hook allows to create a theme for the editor.
+The \`useMonacoEditorTheme\` hook applies a theme to all editors.
 
 > **Note:** The theme is applied to all editors.
 > This is an [architectural limitation](https://github.com/Microsoft/monaco-editor/issues/338) of Monaco Editor.

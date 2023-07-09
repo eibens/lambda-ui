@@ -9,7 +9,7 @@ export function Blockquote(props: ViewProps<"blockquote">) {
       viewProps={props}
       class={[
         "flex flex-col gap-12 px-4 py-4",
-        "rounded shadow-md border-1 border-gray-300 dark:border-gray-700",
+        "rounded-lg shadow-md color-gray fill-10",
       ]}
     />
   );
