@@ -132,25 +132,6 @@ export function normalize(editor: Editor) {
   };
 }
 
-export function isInline(node: Element): boolean {
-  if (node.type === "slot" && node.isInline) return true;
-  return [
-    "emphasis",
-    "strong",
-    "link",
-    "linkReference",
-    "inlineCode",
-    "delete",
-  ].includes(node.type);
-}
-
-export function isVoid(node: Element): boolean {
-  return [
-    "slot",
-    "hr",
-  ].includes(node.type);
-}
-
 export function isInlineParent(node: {
   type: string;
 }): boolean {

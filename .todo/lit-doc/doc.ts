@@ -16,26 +16,23 @@ type Node = Record<string, unknown> & {
   type?: string;
 };
 
-function* nodes(node: Node, path: Path = []): Generator<Entry> {
-  yield [node, path];
-  if (Array.isArray(node.children)) {
-    for (let i = 0; i < node.children.length; i++) {
-      const child = node.children[i];
-      const childPath = [...path, i];
-      yield* nodes(child, childPath);
-    }
-  }
-}
-
 function fix(props: {
   root: Node;
   path: number[];
   node: Node;
 }) {
-  const { root, path, node } = props;
+  const { root, path, node, values } = props;
 
   // Ignore root node.
   if (path.length === 0) return;
+
+  // All non-text nodes should have children.
+  // Children must contain at least one empty text node.
+  const isText = typeof node.text === "string";
+  const needsChildren = !isText && !Array.isArray(node.children);
+  if (needsChildren) {
+    node.children = [{ type: "text", text: "" }];
+  }
 
   // Locate parent of current node.
   const parentPath = path.slice(0, -1);
@@ -44,6 +41,11 @@ function fix(props: {
     if (!parentNode.children) throw new Error("Parent not found.");
     parentNode = parentNode.children[index];
   }
+
+  // Parent node must exist at this point,
+  // as the root node is ignored.
+  console.assert(parentNode !== null);
+  console.assert(Array.isArray(parentNode.children));
 
   // Markdown parser stores source positions in `position` property.
   // We don't need that, so we delete it.
@@ -59,32 +61,27 @@ function fix(props: {
     delete literal.value;
   }
 
-  // All non-text nodes should have children.
-  // Children must contain at least one empty text node.
-  const isText = typeof node.text === "string";
-  const needsChildren = !isText && !Array.isArray(node.children);
-  if (needsChildren) {
-    node.children = [{ type: "text", text: "" }];
-  }
-
   // HTML nodes may represent slots.
-  // Replace the HTML node with a more explicit slot node.
+  // Replace the HTML node using the replacement algorithm.
   if (node.type === "html" && node.text) {
     const match = /^<slot id="([^"]+)"\/>$/
       .exec(node.text.trim());
     if (match) {
-      if (!parentNode) throw new Error("Parent not found.");
-      parentNode.children ??= [];
-
+      const id = match[1];
       const index = path[path.length - 1];
-      parentNode.children[index] = {
-        type: "slot" as const,
-        id: match[1],
-        children: [{
-          type: "text",
-          text: "",
-        }],
-      };
+      const siblings = parentNode.children ?? [];
+
+      
+      siblings[index] = resolveSlot(id)
+    }
+  }
+
+  // Recurse into children.
+  if (Array.isArray(node.children)) {
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
+      const childPath = [...path, i];
+      fix({ root, path: childPath, node: child, values });
     }
   }
 }
@@ -110,6 +107,43 @@ function encode<Props>(value: Value<Props>, id: string, props: Props): string {
   }
 
   return String(value);
+}
+
+function doc<Props>() {
+  const strings: string[] = [];
+  const slots: Record<string, unknown> = {};
+
+  for (const template of templates) {
+    const { strings, values } = template;
+
+    const parts: string[] = [];
+
+    for (let i = 0; i < strings.length; i++) {
+      parts.push(strings[i]);
+      if (i >= values.length) continue;
+
+      const id = nanoid();
+      slots[id] = values[i];
+      const code = encode(values[i], id, props);
+      parts.push(code);
+    }
+
+    strings.push(parts.join(""));
+  }
+
+  const text = strings.join("");
+
+  const root = unified()
+    .use(parseRemark)
+    .use(gfm)
+    .parse(text) as Node;
+
+  fix({ root, path: [], node: root });
+
+  return {
+    children: root.children ?? [],
+    slots,
+  };
 }
 
 /** MAIN **/
@@ -152,45 +186,6 @@ export function lit<Props>() {
     values: Value<Props>[];
   }[] = [];
 
-  function doc(props: Props) {
-    const strings: string[] = [];
-    const slots: Record<string, unknown> = {};
-
-    for (const template of templates) {
-      const { strings, values } = template;
-
-      const parts: string[] = [];
-
-      for (let i = 0; i < strings.length; i++) {
-        parts.push(strings[i]);
-        if (i >= values.length) continue;
-
-        const id = nanoid();
-        slots[id] = values[i];
-        const code = encode(values[i], id, props);
-        parts.push(code);
-      }
-
-      strings.push(parts.join(""));
-    }
-
-    const text = strings.join("");
-
-    const root = unified()
-      .use(parseRemark)
-      .use(gfm)
-      .parse(text) as Node;
-
-    for (const entry of nodes(root)) {
-      const [node, path] = entry;
-      fix({ root, node, path });
-    }
-
-    return {
-      children: root.children ?? [],
-      slots,
-    };
-  }
 
   return new Proxy({ doc }, {
     get: () => {

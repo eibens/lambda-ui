@@ -1,4 +1,15 @@
-import { Schema} from "./schema.ts"
+import { Blockquote } from "../../text/blockquote.tsx";
+import { CodeBlock } from "../../text/code_block.tsx";
+import { Delete } from "../../text/delete.tsx";
+import { Emphasis } from "../../text/emphasis.tsx";
+import { Heading } from "../../text/heading.tsx";
+import { InlineCode } from "../../text/inline_code.tsx";
+import { Link } from "../../text/link.tsx";
+import { Paragraph } from "../../text/paragraph.tsx";
+import { Strong } from "../../text/strong.tsx";
+import { ThematicBreak } from "../../text/thematic_break.tsx";
+import { View } from "../../theme/mod.ts";
+import { Schema } from "./schema.ts";
 
 const Components: Components<Schema> = {
   text: (props) => {
