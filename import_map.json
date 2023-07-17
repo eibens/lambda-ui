@@ -23,6 +23,8 @@
     "tiny-invariant": "https://esm.sh/tiny-invariant@1.0.6",
     "lodash/": "https://esm.sh/lodash@4.17.4/",
 
+    "@lambda-ui/manifest": "./features/manifest/mod.ts",
+
     "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/"
   }
 }
