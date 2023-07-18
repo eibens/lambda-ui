@@ -5,7 +5,7 @@ import {
   useMonacoEditorValue,
   useMonacoTheme,
 } from "@/features/monaco/mod.ts";
-import { useTheme, View } from "@/features/theme/mod.ts";
+import { View } from "@/features/theme/mod.ts";
 import { ViewChildren } from "@/features/theme/view.tsx";
 import { Button } from "@/features/widgets/button.tsx";
 import { lit } from "litdoc";
@@ -17,7 +17,7 @@ const { md, doc } = lit();
 export default doc;
 
 md`
-# [Monaco](#)
+# [Monaco](#monaco)
 
 [Monaco Editor](https://github.com/microsoft/monaco-editor) is the code editor that powers VS Code. 
 It is a standalone code editor that can be used in any JavaScript application.
@@ -65,19 +65,7 @@ ${<Themed />}
 function Themed() {
   const [element, setElement] = useState<HTMLElement | null>(null);
 
-  const theme = useTheme();
-
-  const lightTheme = useMonacoTheme("light", {
-    base: "vs",
-    inherit: true,
-    rules: [],
-    colors: {
-      "editor.background": "#00000000",
-      "minimap.background": "#00000000",
-    },
-  });
-
-  const darkTheme = useMonacoTheme("dark", {
+  const theme = useMonacoTheme("dark", {
     base: "vs-dark",
     inherit: true,
     rules: [],
@@ -87,15 +75,13 @@ function Themed() {
     },
   });
 
-  const monacoTheme = theme.name === "dark" ? darkTheme : lightTheme;
-
   const editor = useMonacoEditor(element, {
     automaticLayout: true,
-    theme: monacoTheme,
+    theme,
   });
 
   if (editor) {
-    monaco.editor.setTheme(theme.name);
+    monaco.editor.setTheme(theme);
   }
 
   return (
@@ -210,7 +196,7 @@ function Example(props: {
 }) {
   const { children } = props;
   return (
-    <View class="color-gray shadow-lg fill-10 py-4 rounded-lg">
+    <View class="bg-gray-800 shadow-lg py-4 rounded-lg">
       {children}
     </View>
   );

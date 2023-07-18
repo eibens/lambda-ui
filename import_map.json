@@ -23,6 +23,7 @@
     "tiny-invariant": "https://esm.sh/tiny-invariant@1.0.6",
     "lodash/": "https://esm.sh/lodash@4.17.4/",
 
+    "@lambda-ui/fresh": "./features/fresh/mod.ts",
     "@lambda-ui/manifest": "./features/manifest/mod.ts",
     "@lambda-ui/text": "./features/text/mod.ts",
     "litdoc": "./features/litdoc/mod.ts",

@@ -4,7 +4,7 @@ import { View } from "@/features/theme/mod.ts";
 import Feature from "@/islands/feature.tsx";
 import FeatureHeader from "@/islands/feature_header.tsx";
 import * as Manifest from "@lambda-ui/manifest";
-import manifest from "../lit.gen.ts";
+import manifest from "../litdoc.gen.ts";
 
 /** MAIN **/
 

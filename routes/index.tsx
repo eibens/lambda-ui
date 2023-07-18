@@ -5,7 +5,7 @@ import HomeHeader from "@/islands/home_header.tsx";
 import { createLitdocRenderers, lit, withLitdoc } from "litdoc";
 import { createEditor } from "slate";
 import { Editable, Slate, withReact } from "slate-react";
-import manifest from "../lit.gen.ts";
+import manifest from "../litdoc.gen.ts";
 
 /** HELPERS **/
 
@@ -19,7 +19,7 @@ It is built for TypeScript, Preact, and Deno.
 
 > Until further notice, this is a proprietary library.
 
-## Features
+## [Features](#features)
 
 The \`features\` folders export the API of the library.
 The following features are available:

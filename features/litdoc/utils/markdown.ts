@@ -77,13 +77,6 @@ function fixPositions(root: Node) {
   }
 }
 
-function fixLinkReferences(root: Node) {
-  for (const [node] of nodes(root)) {
-    if (node.type !== "linkReference") continue;
-    console.log(node);
-  }
-}
-
 function fixLiterals(root: Node) {
   // In Markdown AST, nodes that contain text are typed as Literal.
   for (const [node] of nodes(root)) {
@@ -130,14 +123,18 @@ function fixSlots(root: Node, options: {
   }
 }
 
-function fixChildren(root: Node) {
-  // Some nodes in Markdown AST have not children.
-  // These need an empty text element for Slate compatibility.
+function fixText(root: Node) {
   for (const [node] of nodes(root)) {
     if (node.type === "text") {
       node.type = "plain";
     }
+  }
+}
 
+function fixChildren(root: Node) {
+  // Some nodes in Markdown AST have not children.
+  // These need an empty text element for Slate compatibility.
+  for (const [node] of nodes(root)) {
     // Ignore elements with child array.
     if (Array.isArray(node.children)) continue;
 
@@ -146,6 +143,16 @@ function fixChildren(root: Node) {
 
     // Add an empty text element to each such node.
     node.children = [];
+  }
+}
+
+function fixCodeBlocks(root: Node) {
+  // Code blocks are literals that need to be converted to elements.
+  for (const [node] of nodes(root)) {
+    if (node.type !== "code") continue;
+    const { text } = node;
+    node.children = [{ type: "plain", text }];
+    delete node.text;
   }
 }
 
@@ -212,10 +219,11 @@ export function weave<Data>(input: Input<Data>, options?: {
     .parse(text) as Node;
 
   fixPositions(markdownRoot);
-  fixLinkReferences(markdownRoot);
+  fixText(markdownRoot);
   fixLiterals(markdownRoot);
-  fixSlots(markdownRoot, { isInlineParent });
+  fixCodeBlocks(markdownRoot);
   fixChildren(markdownRoot);
+  fixSlots(markdownRoot, { isInlineParent });
 
   return {
     // Can cast here since we fixed the tree.

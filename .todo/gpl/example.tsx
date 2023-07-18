@@ -1,13 +1,10 @@
 import { TwindColors } from "../theme/deps.ts";
-import { useTheme } from "../theme/use_theme.ts";
 import { Chart } from "./Chart.tsx";
 import { create } from "./core.ts";
-import Pies from "./examples/pies.ts";
 import Scatter2D from "./examples/scatter2d.ts";
 
 export default function GplExample() {
   const recipe = create(Scatter2D);
-  const theme = useTheme();
   const isDark = theme.name === "dark";
   return (
     <Chart

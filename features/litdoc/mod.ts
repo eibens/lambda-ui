@@ -4,6 +4,8 @@ import { Markdown, Renderers } from "./utils/mod.ts";
 
 /** MAIN **/
 
+export * from "./dev.ts";
+
 export const withLitdoc = Core.create();
 
 export function createLitdocRenderers() {

@@ -1,4 +1,5 @@
-import * as Manifest from "../utils/mod.ts";
+import { ensureMinDenoVersion } from "$fresh/src/dev/mod.ts";
+import * as Manifest from "../manifest/mod.ts";
 
 /** HELPERS **/
 
@@ -61,6 +62,8 @@ export default {
 /** MAIN **/
 
 export async function dev(metaUrl: string, entryPoint: string) {
+  ensureMinDenoVersion();
+
   const baseUrl = new URL("./", metaUrl);
   const mainUrl = new URL(entryPoint, baseUrl);
 

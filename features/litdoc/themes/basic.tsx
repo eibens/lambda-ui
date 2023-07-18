@@ -1,7 +1,7 @@
 import { View } from "@/features/theme/view.tsx";
+import { Code } from "@/features/widgets/code.tsx";
 import {
   Blockquote,
-  CodeBlock,
   Delete,
   Emphasis,
   Heading,
@@ -20,9 +20,14 @@ import { Components, RenderNodeProps } from "../utils/renderers.tsx";
 function getSpacing(a?: Node, b?: Node) {
   if (!a || !b) return 0;
   if (b.type === "heading") return 24;
+
+  if (a.type === "list" && b.type === "paragraph") return 4;
+  if (a.type === "paragraph" && b.type === "list") return 4;
+  if (a.type === "list" && b.type === "listItem") return 8;
+  if (a.type === "listItem" && b.type === "list") return 8;
+
   if (a.type !== b.type) return 12;
-  if (a.type === "listItem") return 2;
-  return 4;
+  return 3;
 }
 
 function Block(props: RenderNodeProps<Node>) {
@@ -66,7 +71,6 @@ const components: Components<Node> = {
       </View>
     );
   },
-
   plain: (props) => {
     const { attributes, children } = props;
     return (
@@ -117,12 +121,20 @@ const components: Components<Node> = {
     );
   },
   code: (props) => {
-    const { children } = props;
+    const { children, node } = props;
+
+    const editor = useSlate();
+    const path = editor.lookup(node.key)!;
+    const value = editor.string(path, { voids: true });
+
     return (
       <Block {...props}>
-        <CodeBlock>
-          {children}
-        </CodeBlock>
+        <Code
+          lang={node.lang}
+          value={value}
+          readOnly
+        />
+        {children}
       </Block>
     );
   },
@@ -145,7 +157,7 @@ const components: Components<Node> = {
     );
   },
   list: (props) => {
-    const { attributes, children, node } = props;
+    const { children, node } = props;
     const { ordered } = node;
     const tag = ordered ? "ol" : "ul";
     const style = ordered ? "list-decimal" : "list-disc";
@@ -165,21 +177,21 @@ const components: Components<Node> = {
   },
   listItem: (props) => {
     const { attributes, children, node } = props;
-    const { type } = node;
     return (
-      <View
-        {...attributes}
-        tag="li"
-        type={type}
-      >
+      <Block {...props}>
         <View
-          class={[
-            "flex flex-col gap-4",
-          ]}
+          {...attributes}
+          tag="li"
         >
-          {children}
+          <View
+            class={[
+              "flex flex-col",
+            ]}
+          >
+            {children}
+          </View>
         </View>
-      </View>
+      </Block>
     );
   },
   link: (props) => {

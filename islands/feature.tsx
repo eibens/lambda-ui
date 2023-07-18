@@ -3,7 +3,7 @@ import { createLitdocRenderers, withLitdoc } from "litdoc";
 import { createEditor, Editor } from "slate";
 import { Editable, Slate, withReact } from "slate-react";
 import { MonacoProvider } from "../features/monaco/mod.ts";
-import manifest from "../lit.gen.ts";
+import manifest from "../litdoc.gen.ts";
 
 /** MAIN **/
 

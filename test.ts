@@ -1,1 +1,1 @@
-import "./lit.gen.ts";
+import "./litdoc.gen.ts";

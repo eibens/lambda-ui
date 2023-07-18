@@ -1,7 +1,6 @@
 #!/usr/bin/env -S deno run -A --watch=static/,routes/
-import * as Manifest from "@lambda-ui/manifest";
+import * as Fresh from "@lambda-ui/fresh";
+import * as Litdoc from "litdoc";
 
-await Manifest.Fresh.dev(
-  import.meta.url,
-  "./main.ts",
-);
+await Litdoc.dev(import.meta.url);
+await Fresh.dev(import.meta.url, "./main.ts");

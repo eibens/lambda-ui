@@ -94,6 +94,7 @@ function isVoid(node: Node): boolean {
   return [
     "slot",
     "hr",
+    "code",
   ].includes(node.type);
 }
 
