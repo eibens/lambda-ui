@@ -1,4 +1,3 @@
-import { lit } from "@/components/lit.tsx";
 import { useEnv } from "@/features/client/mod.ts";
 import {
   useMonacoEditor,
@@ -9,6 +8,7 @@ import {
 import { useTheme, View } from "@/features/theme/mod.ts";
 import { ViewChildren } from "@/features/theme/view.tsx";
 import { Button } from "@/features/widgets/button.tsx";
+import { lit } from "litdoc";
 import { useState } from "preact/hooks";
 
 /** MAIN **/
@@ -17,13 +17,11 @@ const { md, doc } = lit();
 export default doc;
 
 md`
-# \`/\` [\`monaco\`](#)
+# [Monaco](#)
 
 [Monaco Editor](https://github.com/microsoft/monaco-editor) is the code editor that powers VS Code. 
 It is a standalone code editor that can be used in any JavaScript application.
 This package provides Preact hooks for using Monaco Editor.
-
-## Hooks
 
 ### \`useMonacoEditor\`
 

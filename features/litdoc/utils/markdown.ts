@@ -1,27 +1,92 @@
-import { ViewNode } from "../../theme/view.tsx";
-import { gfm, parseRemark, unified } from "../deps.ts";
-import { isInlineParent } from "../mod.ts";
-import { LitElement } from "../types.ts";
-import { Slot, Template, Tree } from "../utils/mod.ts";
+import { ViewNode } from "@/features/theme/view.tsx";
+import gfm from "https://esm.sh/remark-gfm@3.0.1";
+import parseRemark from "https://esm.sh/remark-parse@10.0.1";
+import { unified } from "https://esm.sh/unified@10.1.2";
+import { Element } from "slate";
+import { Template } from "../utils/mod.ts";
 
 /** HELPERS **/
 
-function fixPositions(root: Tree.Node) {
-  for (const [node] of Tree.nodes(root)) {
+type Slot = {
+  id: string;
+};
+
+type Entry = [Node, Path];
+
+type Path = number[];
+
+type Node = {
+  type: string;
+  children?: Node[];
+} & Record<string, unknown>;
+
+function* nodes(node: Node, path: Path = []): Generator<Entry> {
+  yield [node, path];
+
+  if (node.children) {
+    for (let i = 0; i < node.children.length; i++) {
+      const child = node.children[i];
+      const childPath = [...path, i];
+      yield* nodes(child, childPath);
+    }
+  }
+}
+
+function parent(root: Node, path: Path): Node {
+  if (path.length === 0) {
+    throw new Error("Parent not found.");
+  }
+  const parentPath = path.slice(0, -1);
+  let parent: Node | null = root;
+  for (const index of parentPath) {
+    if (!parent.children) {
+      throw new Error("Parent not found.");
+    }
+    parent = parent.children[index];
+  }
+  return parent;
+}
+
+function stringifySlot(data: Slot): string {
+  return `<slot id="${data.id}"/>`;
+}
+
+function parseSlot(str: string): Slot | null {
+  const match = /^<slot id="([^"]+)"\/>$/.exec(str.trim());
+  if (!match) return null;
+  return { id: match[1] };
+}
+
+function isInlineParent(node: {
+  type: string;
+}): boolean {
+  return [
+    "paragraph",
+    "heading",
+    "link",
+    "emphasis",
+    "strong",
+    "delete",
+    "inlineCode",
+  ].includes(node.type);
+}
+
+function fixPositions(root: Node) {
+  for (const [node] of nodes(root)) {
     delete node.position;
   }
 }
 
-function fixLinkReferences(root: Tree.Node) {
-  for (const [node] of Tree.nodes(root)) {
+function fixLinkReferences(root: Node) {
+  for (const [node] of nodes(root)) {
     if (node.type !== "linkReference") continue;
     console.log(node);
   }
 }
 
-function fixLiterals(root: Tree.Node) {
+function fixLiterals(root: Node) {
   // In Markdown AST, nodes that contain text are typed as Literal.
-  for (const [node] of Tree.nodes(root)) {
+  for (const [node] of nodes(root)) {
     // A Literal has a `value` property that contains the text.
     const literal = node as unknown as Record<PropertyKey, unknown>;
     const isLiteral = typeof literal.value !== "string";
@@ -33,40 +98,46 @@ function fixLiterals(root: Tree.Node) {
   }
 }
 
-function fixSlots(root: Tree.Node, options: {
-  isInlineParent: (node: Tree.Node) => boolean;
+function fixSlots(root: Node, options: {
+  isInlineParent: (node: Node) => boolean;
 }) {
   const { isInlineParent } = options;
   // Replace the slots with explicit slot nodes.
-  for (const [node, path] of Tree.nodes(root)) {
+  for (const [node, path] of nodes(root)) {
     const { type, text } = node as unknown as Record<PropertyKey, unknown>;
 
     // Ignore non-slot nodes.
     if (type !== "html") continue;
     if (typeof text !== "string") continue;
-    const data = Slot.parse(text);
+    const data = parseSlot(text);
     if (!data) continue;
 
     // Might need to extend this to other types of parents.
-    const parent = Tree.parent(root, path);
-    const isInline = isInlineParent(parent);
+    const p = parent(root, path);
+    const isInline = isInlineParent(p);
 
     // Replace the HTML node with a more explicit slot node.
-    const slot: Tree.Node = {
+    const slot: Node = {
       type: "slot" as const,
       id: data.id,
       isInline,
-      children: [{ type: "text", text: "" }],
+      children: [{ type: "plain", text: "" }],
     };
 
-    Tree.replace(root, path, slot);
+    if (!p) throw new Error("Parent not found.");
+    const index = path[path.length - 1];
+    p.children![index] = slot;
   }
 }
 
-function fixChildren(root: Tree.Node) {
+function fixChildren(root: Node) {
   // Some nodes in Markdown AST have not children.
   // These need an empty text element for Slate compatibility.
-  for (const [node] of Tree.nodes(root)) {
+  for (const [node] of nodes(root)) {
+    if (node.type === "text") {
+      node.type = "plain";
+    }
+
     // Ignore elements with child array.
     if (Array.isArray(node.children)) continue;
 
@@ -91,7 +162,7 @@ function evaluate<Data>(data: Data, value: Value<Data>, id: string): string {
     return evaluate(data, result, id);
   }
   if (isViewNode(value)) {
-    return Slot.stringify({ id });
+    return stringifySlot({ id });
   }
   if (Array.isArray(value)) {
     return value.map((value) => evaluate(data, value, id)).join("");
@@ -118,7 +189,7 @@ export type Options<Data> = {
 };
 
 export type Result = {
-  children: LitElement[];
+  children: Element[];
   slots: Record<string, unknown>;
 };
 
@@ -138,7 +209,7 @@ export function weave<Data>(input: Input<Data>, options?: {
   const markdownRoot = unified()
     .use(parseRemark)
     .use(gfm)
-    .parse(text) as Tree.Node;
+    .parse(text) as Node;
 
   fixPositions(markdownRoot);
   fixLinkReferences(markdownRoot);
@@ -148,7 +219,7 @@ export function weave<Data>(input: Input<Data>, options?: {
 
   return {
     // Can cast here since we fixed the tree.
-    children: markdownRoot.children as LitElement[],
+    children: markdownRoot.children as Element[],
     slots,
   };
 }

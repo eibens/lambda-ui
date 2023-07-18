@@ -1,5 +1,5 @@
-import { lit } from "@/components/lit.tsx";
 import { View } from "@/features/theme/mod.ts";
+import { lit } from "litdoc";
 import { Crosshair } from "./components/crosshair.tsx";
 import { Cursor } from "./components/cursor.tsx";
 import { Grid } from "./components/grid.tsx";
@@ -10,8 +10,7 @@ const { md, doc } = lit();
 export default doc;
 
 md`
-# \`/\` [\`music\`](#)
-
+# [music](#)
 
 ## Components
 

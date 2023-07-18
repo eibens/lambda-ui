@@ -24,6 +24,8 @@
     "lodash/": "https://esm.sh/lodash@4.17.4/",
 
     "@lambda-ui/manifest": "./features/manifest/mod.ts",
+    "@lambda-ui/text": "./features/text/mod.ts",
+    "litdoc": "./features/litdoc/mod.ts",
 
     "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/"
   }

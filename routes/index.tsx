@@ -1,14 +1,10 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
-import { lit } from "@/components/lit.tsx";
 import { View } from "@/features/theme/mod.ts";
 import HomeHeader from "@/islands/home_header.tsx";
-import { Editable, Slate } from "slate-react";
-import {
-  Context,
-  withBasicTheme,
-  withTemplate,
-} from "../features/lit-doc/mod.ts";
+import { createLitdocRenderers, lit, withLitdoc } from "litdoc";
+import { createEditor } from "slate";
+import { Editable, Slate, withReact } from "slate-react";
 import manifest from "../lit.gen.ts";
 
 /** HELPERS **/
@@ -20,6 +16,8 @@ md`
 
 This is Lukas Eibensteiner's personal UI library.
 It is built for TypeScript, Preact, and Deno.
+
+> Until further notice, this is a proprietary library.
 
 ## Features
 
@@ -62,12 +60,10 @@ export const handler: Handlers = {
 };
 
 export default function render(props: Props) {
-  const editor = Context.create(() => {
-    withTemplate(doc(props));
-    withBasicTheme();
-  });
-
+  const editor = withReact(withLitdoc(createEditor()));
+  editor.addTemplate(doc(props));
   editor.normalize({ force: true });
+  const { renderElement, renderLeaf } = createLitdocRenderers();
 
   return (
     <>
@@ -86,8 +82,8 @@ export default function render(props: Props) {
             initialValue={editor.children}
           >
             <Editable
-              renderElement={editor.renderElement}
-              renderLeaf={editor.renderLeaf}
+              renderElement={renderElement}
+              renderLeaf={renderLeaf}
               readOnly
             />
           </Slate>

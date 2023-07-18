@@ -1,6 +1,4 @@
 export * as Code from "./code.ts";
-export * as Http from "./http.ts";
 export * as Markdown from "./markdown.ts";
-export * as Slot from "./slot.ts";
+export * as Renderers from "./renderers.tsx";
 export * as Template from "./template.ts";
-export * as Tree from "./tree.ts";

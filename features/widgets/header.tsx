@@ -44,16 +44,25 @@ export function Header(props: HeaderProps) {
         "flex justify-between items-center",
         `p-[${padding}px]`,
         `h-[${height}px]`,
+        "pointer-events-none",
       ]}
     >
-      {renderTopLeft?.({
-        size,
-        scroll,
-      })}
-      {renderTopRight?.({
-        size,
-        scroll,
-      })}
+      {renderTopLeft && (
+        <View class="pointer-events-auto">
+          {renderTopLeft({
+            size,
+            scroll,
+          })}
+        </View>
+      )}
+      {renderTopRight && (
+        <View class="pointer-events-auto">
+          {renderTopRight({
+            size,
+            scroll,
+          })}
+        </View>
+      )}
     </View>
   );
 }

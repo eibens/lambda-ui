@@ -1,11 +1,7 @@
-import { Editable, Slate } from "slate-react";
-import {
-  Context,
-  Http,
-  LitDoc,
-  withBasicTheme,
-  withTemplate,
-} from "../features/lit-doc/mod.ts";
+import * as Manifest from "@lambda-ui/manifest";
+import { createLitdocRenderers, withLitdoc } from "litdoc";
+import { createEditor, Editor } from "slate";
+import { Editable, Slate, withReact } from "slate-react";
 import { MonacoProvider } from "../features/monaco/mod.ts";
 import manifest from "../lit.gen.ts";
 
@@ -20,22 +16,20 @@ export default function Feature(props: FeatureProps) {
 
   const { routes } = manifest;
 
-  const route = Http.resolve(routes, "./" + path);
+  const route = Manifest.route(routes, "./" + path);
 
   if (!route) {
     return <div>Not found</div>;
   }
 
   const { default: doc } = route.value as {
-    default: (props: FeatureProps) => LitDoc;
+    default: (props: FeatureProps) => Editor;
   };
 
-  const editor = Context.create(() => {
-    withBasicTheme();
-    withTemplate(doc(props));
-  });
-
+  const editor = withReact(withLitdoc(createEditor()));
+  editor.addTemplate(doc(props));
   editor.normalize({ force: true });
+  const { renderElement, renderLeaf } = createLitdocRenderers();
 
   return (
     <MonacoProvider>
@@ -44,8 +38,8 @@ export default function Feature(props: FeatureProps) {
         initialValue={editor.children}
       >
         <Editable
-          renderElement={editor.renderElement}
-          renderLeaf={editor.renderLeaf}
+          renderElement={renderElement}
+          renderLeaf={renderLeaf}
           readOnly
         />
       </Slate>

@@ -28,7 +28,6 @@ export function Heading(props: HeadingProps) {
       class={[
         "font-sans",
         `text-[${s}px] ${font}`,
-        `pt-${mt}`,
       ]}
     />
   );
