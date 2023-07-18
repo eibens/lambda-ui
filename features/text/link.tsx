@@ -1,3 +1,4 @@
+import { Anchor } from "icons/anchor.tsx";
 import { ArrowRight } from "icons/arrow_right.tsx";
 import { ArrowUp } from "icons/arrow_up.tsx";
 import { External } from "icons/external.tsx";
@@ -63,7 +64,7 @@ export function Link(
   const icon = (function () {
     if (target === "external") return <External />;
     if (target === "internal") return <ArrowRight />;
-    if (target === "local") return <LinkIcon />;
+    if (target === "local") return <Anchor />;
     if (target === "home") return <Home />;
     if (target === "top") return <ArrowUp />;
     return <LinkIcon />;
