@@ -1,3 +1,4 @@
+import { Button } from "@/features/widgets/mod.ts";
 import {
   batch,
   useComputed,
@@ -10,7 +11,7 @@ import { PlayPauseO } from "icons/play_pause_o.tsx";
 import { PlayStop } from "icons/play_stop.tsx";
 import { PlayTrackNext } from "icons/play_track_next.tsx";
 import { PlayTrackPrev } from "icons/play_track_prev.tsx";
-import { View, ViewNode } from "../../theme/mod.ts";
+import { View } from "../../theme/mod.ts";
 import { usePropSignal } from "../hooks/use_prop_signal.ts";
 import { Time } from "./time.tsx";
 
@@ -21,34 +22,8 @@ function Separator() {
     <View
       tag="span"
       class={[
-        "relative border-l-1 h-8",
+        "relative border-l-1",
         "border-black dark:border-white border-opacity-10 dark:border-opacity-10",
-      ]}
-    />
-  );
-}
-
-function Chip(props: {
-  icon: ViewNode;
-  onClick?: () => void;
-  disabled?: boolean;
-}) {
-  const { icon, onClick, disabled } = props;
-  return (
-    <View
-      tag="button"
-      onClick={onClick}
-      disabled={disabled}
-      children={
-        <View class="icon-sm">
-          {icon}
-        </View>
-      }
-      class={[
-        "button-sm",
-        "surface",
-        "rounded-full",
-        disabled ? "button-disabled" : "button-interactive",
       ]}
     />
   );
@@ -191,17 +166,20 @@ export function Player(props: PlayerProps) {
   return (
     <View
       class={[
-        "pill-md gap-2 flex rounded-full",
+        "flex rounded-full",
         "bg-gray-100 dark:bg-gray-900",
+        "p-2 gap-2",
         "shadow-lg",
       ]}
     >
-      <Chip
+      <Button
+        size="md"
         onClick={onJumpMin}
         disabled={jumpMinDisabled.value}
         icon={<PlayTrackPrev />}
       />
-      <Chip
+      <Button
+        size="md"
         onClick={onToggle}
         disabled={disabled.value}
         icon={playing.value
@@ -210,13 +188,15 @@ export function Player(props: PlayerProps) {
           ? <PlayButton />
           : <PlayButtonO />}
       />
-      <Chip
+      <Button
+        size="md"
         onClick={onJumpMax}
         disabled={jumpMaxDisabled.value}
         icon={<PlayTrackNext />}
       />
       <Separator />
-      <Chip
+      <Button
+        size="md"
         disabled={stopDisabled.value}
         onClick={onStop}
         icon={<PlayStop />}
@@ -224,7 +204,7 @@ export function Player(props: PlayerProps) {
       <View
         disabled={disabled.value}
         class={[
-          "pill-sm",
+          "pill-md",
           "surface-transparent",
           "flex items-center",
           "font-mono",

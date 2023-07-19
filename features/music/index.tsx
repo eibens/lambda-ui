@@ -1,3 +1,5 @@
+import { Timeline } from "@/features/music/components/timeline.tsx";
+import { Player } from "@/features/music/mod.ts";
 import { View } from "@/features/theme/mod.ts";
 import { lit } from "litdoc";
 import { Crosshair } from "./components/crosshair.tsx";
@@ -81,6 +83,29 @@ ${(
       threshold={12}
     />
   </View>
+)}
+
+### \`<Player>\`
+
+${(
+  <Player
+    cursor={0}
+    disabled={false}
+    domain={[0, 1]}
+    playing={false}
+  />
+)}
+
+
+### \`<Timeline>\`
+
+${(
+  <Timeline
+    domain={[0, 1]}
+    playing={false}
+    ticks={[0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1]}
+    time={0}
+  />
 )}
 
 `;

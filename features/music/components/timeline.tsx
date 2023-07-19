@@ -5,7 +5,6 @@ import { Crosshair } from "./crosshair.tsx";
 import { Cursor } from "./cursor.tsx";
 import { Grid } from "./grid.tsx";
 import { Time } from "./time.tsx";
-import { Waveform } from "./waveform.tsx";
 
 /** MAIN **/
 
@@ -14,36 +13,24 @@ export type TimelineProps = {
   ticks: number[];
   domain: [number, number];
   playing: boolean;
-  audioBuffer: AudioBuffer;
 };
 
 export function Timeline(props: TimelineProps) {
-  const { ticks, domain, playing, audioBuffer } = props;
+  const { ticks, domain, playing } = props;
 
   const focused = false;
 
-  const size = PairUtils.from([900, 64]);
-
   const [pointer, setPointer] = useState(0);
-
   const [crosshair, setCrosshair] = useState(0);
-
   const [disabled, setDisabled] = useState(true);
-
   const [time, setTime] = useState(0);
 
+  const size = PairUtils.from([900, 64]);
   const outer = PairUtils.fromZero(size[0]);
-
   const range = PairUtils.inset(outer, 32);
-
   const emptyRange = PairUtils.fromZero(0);
-
   const scale = PairUtils.linear(domain, range);
-
-  const invert = PairUtils.linear(
-    range,
-    domain,
-  );
+  const invert = PairUtils.linear(range, domain);
 
   return (
     <View
@@ -67,16 +54,9 @@ export function Timeline(props: TimelineProps) {
           width: size[0],
         }}
       >
-        <Waveform
-          audioBuffer={audioBuffer}
-          domain={domain}
-          color="#888"
-          drawMode="top"
-          size={size}
-        />
         <Grid
           scale={scale}
-          range={range}
+          range={[-8, 8]}
           axis="x"
           ticks={ticks}
         />
@@ -100,7 +80,13 @@ export function Timeline(props: TimelineProps) {
             setCrosshair(value);
           }}
           renderLabel={(props) => {
-            return <Time value={props.scale(props.pointer)} />;
+            return (
+              <View class="relative w-24">
+                <Time
+                  value={props.scale(props.pointer)}
+                />
+              </View>
+            );
           }}
         />
         <Cursor
