@@ -22,10 +22,10 @@ function getSpacing(a?: Node, b?: Node) {
   if (!a || !b) return 0;
   if (b.type === "heading") return 24;
 
-  if (a.type === "list" && b.type === "paragraph") return 4;
-  if (a.type === "paragraph" && b.type === "list") return 4;
-  if (a.type === "list" && b.type === "listItem") return 8;
-  if (a.type === "listItem" && b.type === "list") return 8;
+  if (a.type === "list" && b.type === "paragraph") return 3;
+  if (a.type === "paragraph" && b.type === "list") return 3;
+  if (a.type === "list" && b.type === "listItem") return 3;
+  if (a.type === "listItem" && b.type === "list") return 3;
 
   if (a.type !== b.type) return 12;
   return 3;

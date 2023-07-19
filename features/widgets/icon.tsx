@@ -55,11 +55,11 @@ export function Icon(props: {
   }, []);
 
   return (
-    <View tag="span" class="inline-flex m-1">
+    <View tag="span" class="inline-flex mx-1">
       <View
         tag="span"
         class={[
-          "flex w-[0.6lh] h-[0.6lh] relative top-[3px]",
+          "flex w-[0.8lh] h-[0.8lh] relative top-[5px]",
           status === "loading" && "animate-spin",
           status === "error" && "color-red fill-0",
           status === "loading" && "opacity-50",

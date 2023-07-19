@@ -1,3 +1,4 @@
+import { ToCustomTypes, ToNode, ToNodeMap } from "@/features/litdoc/types.ts";
 import { BaseEditor, Editor, Node } from "slate";
 import * as Plugins from "./mod.ts";
 
@@ -13,10 +14,10 @@ type BaseLeafProps = BaseNodeProps & {
 
 type BaseElementProps = BaseNodeProps & {
   // Cannot use Node here because it is circular
-  children: ToNode<NodeMap<PropMap>>[];
+  children: ToNode<NodeMap>[];
 };
 
-type PropMap = {
+type NodeMap = ToNodeMap<{
   root: BaseElementProps;
   plain: BaseLeafProps;
   paragraph: BaseElementProps;
@@ -52,34 +53,7 @@ type PropMap = {
   icon: BaseElementProps & {
     name: string;
   };
-};
-
-type NodeMap<PropMap> = {
-  [K in keyof PropMap]: {
-    type: K;
-  } & PropMap[K];
-};
-
-type ElementMap<NodeMap> = {
-  [K in keyof NodeMap]: NodeMap[K] extends {
-    children: infer _;
-  } ? NodeMap[K]
-    : never;
-};
-
-type TextMap<NodeMap> = {
-  [K in keyof NodeMap]: NodeMap[K] extends {
-    text: string;
-  } ? NodeMap[K]
-    : never;
-};
-
-type CustomSlateTypes<NodeMap> = {
-  Element: ElementMap<NodeMap>[keyof ElementMap<NodeMap>];
-  Text: TextMap<NodeMap>[keyof TextMap<NodeMap>];
-};
-
-type ToNode<NodeMap> = NodeMap[keyof NodeMap];
+}>;
 
 function isInline(node: Node): boolean {
   if (node.type === "slot" && node.isInline) return true;
@@ -104,7 +78,7 @@ function isVoid(node: Node): boolean {
 }
 
 type LitEditor =
-  & PropMap["root"]
+  & NodeMap["root"]
   & Plugins.Keys.Mixin
   & Plugins.Types.Mixin
   & Plugins.Templates.Mixin
@@ -113,7 +87,7 @@ type LitEditor =
 /** MAIN **/
 
 declare module "slate" {
-  interface CustomTypes extends CustomSlateTypes<NodeMap<PropMap>> {
+  interface CustomTypes extends ToCustomTypes<NodeMap> {
     Editor: LitEditor;
   }
 }

@@ -9,7 +9,7 @@ export * from "./dev.ts";
 export const withLitdoc = Core.create();
 
 export function createLitdocRenderers() {
-  return Renderers.create(Themes.Basic);
+  return Renderers.fromComponents(Themes.Basic);
 }
 
 export function lit<Data>() {
