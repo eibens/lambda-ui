@@ -1,5 +1,6 @@
 import { View } from "@/features/theme/view.tsx";
 import { Code } from "@/features/widgets/code.tsx";
+import { Icon } from "@/features/widgets/icon.tsx";
 import {
   Blockquote,
   Delete,
@@ -118,6 +119,17 @@ const components: Components<Node> = {
           {children}
         </Heading>
       </Block>
+    );
+  },
+  icon: (props) => {
+    const { attributes, children, node } = props;
+    return (
+      <View tag="span" {...attributes}>
+        <Icon
+          name={node.name}
+        />
+        {children}
+      </View>
     );
   },
   code: (props) => {

@@ -49,6 +49,9 @@ type PropMap = {
   emphasis: BaseElementProps;
   strong: BaseElementProps;
   delete: BaseElementProps;
+  icon: BaseElementProps & {
+    name: string;
+  };
 };
 
 type NodeMap<PropMap> = {
@@ -87,6 +90,7 @@ function isInline(node: Node): boolean {
     "linkReference",
     "inlineCode",
     "delete",
+    "icon",
   ].includes(node.type);
 }
 
@@ -95,6 +99,7 @@ function isVoid(node: Node): boolean {
     "slot",
     "hr",
     "code",
+    "icon",
   ].includes(node.type);
 }
 
@@ -116,14 +121,15 @@ declare module "slate" {
 export function create() {
   return (editor: Editor) => {
     const plugins = [
-      Plugins.Templates.create(),
-      Plugins.Keys.create(),
-      Plugins.Types.create(),
-      Plugins.Slugs.create(),
       Plugins.Override.create({
         isInline,
         isVoid,
       }),
+      Plugins.Keys.create(),
+      Plugins.Types.create(),
+      Plugins.Icons.create(),
+      Plugins.Slugs.create(),
+      Plugins.Templates.create(),
     ];
 
     for (const plugin of plugins) {

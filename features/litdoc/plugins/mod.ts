@@ -1,4 +1,5 @@
 export * as Core from "./core.tsx";
+export * as Icons from "./icons.tsx";
 export * as Keys from "./keys.ts";
 export * as Override from "./override.ts";
 export * as Slugs from "./slugs.ts";

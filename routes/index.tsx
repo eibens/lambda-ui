@@ -1,35 +1,9 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
 import { View } from "@/features/theme/mod.ts";
+import Home from "@/islands/home.tsx";
 import HomeHeader from "@/islands/home_header.tsx";
-import { createLitdocRenderers, lit, withLitdoc } from "litdoc";
-import { createEditor } from "slate";
-import { Editable, Slate, withReact } from "slate-react";
 import manifest from "../litdoc.gen.ts";
-
-/** HELPERS **/
-
-const { md, doc } = lit<Props>();
-
-md`
-# [Lambda UI](#lambda-ui)
-
-This is Lukas Eibensteiner's personal UI library.
-It is built for TypeScript, Preact, and Deno.
-
-> Until further notice, this is a proprietary library.
-
-## [Features](#features)
-
-The \`features\` folders export the API of the library.
-The following features are available:
-
-${function (props) {
-  return props.data.features.map(({ name, path }) => {
-    return `> ### [${name}](${path})\n\n`;
-  });
-}}
-`;
 
 /** MAIN **/
 
@@ -60,11 +34,6 @@ export const handler: Handlers = {
 };
 
 export default function render(props: Props) {
-  const editor = withReact(withLitdoc(createEditor()));
-  editor.addTemplate(doc(props));
-  editor.normalize({ force: true });
-  const { renderElement, renderLeaf } = createLitdocRenderers();
-
   return (
     <>
       <Head>
@@ -77,16 +46,7 @@ export default function render(props: Props) {
       <View class="flex justify-center" id="top">
         <HomeHeader />
         <View class="my-32 px-6 w-full max-w-3xl">
-          <Slate
-            editor={editor}
-            initialValue={editor.children}
-          >
-            <Editable
-              renderElement={renderElement}
-              renderLeaf={renderLeaf}
-              readOnly
-            />
-          </Slate>
+          <Home features={props.data.features} />
         </View>
       </View>
     </>

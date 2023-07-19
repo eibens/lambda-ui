@@ -74,6 +74,20 @@ const components: Utils.Renderers.Components<Node> = {
       </View>
     );
   },
+  icon: (props) => {
+    const { attributes, node } = props;
+    const { name } = node;
+    return (
+      <View
+        {...attributes}
+        tag="span"
+      >
+        <Syntax>{":"}</Syntax>
+        <Syntax>{name}</Syntax>
+        <Syntax>{":"}</Syntax>
+      </View>
+    );
+  },
   code: (props) => {
     const { attributes, children, node } = props;
     return (

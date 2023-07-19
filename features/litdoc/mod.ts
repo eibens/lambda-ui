@@ -1,5 +1,5 @@
 import { Core, Templates } from "./plugins/mod.ts";
-import { Basic } from "./themes/mod.ts";
+import * as Themes from "./themes/mod.ts";
 import { Markdown, Renderers } from "./utils/mod.ts";
 
 /** MAIN **/
@@ -9,7 +9,7 @@ export * from "./dev.ts";
 export const withLitdoc = Core.create();
 
 export function createLitdocRenderers() {
-  return Renderers.create(Basic);
+  return Renderers.create(Themes.Basic);
 }
 
 export function lit<Data>() {
