@@ -159,7 +159,11 @@ function fixCodeBlocks(root: Node) {
 /** MAIN **/
 
 export type Value<Data> =
+  | null
+  | undefined
+  | boolean
   | string
+  | number
   | ViewNode
   | Node
   | Value<Data>[]
@@ -206,6 +210,9 @@ export function weave<Data>(
         }).join("");
       }
       if (value == null) {
+        return "";
+      }
+      if (typeof value === "boolean") {
         return "";
       }
       if (typeof value === "object") {

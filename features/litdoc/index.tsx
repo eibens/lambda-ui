@@ -14,6 +14,38 @@ You are currently viewing the documentation for Litdoc,
 `;
 
 md`
+## Templates
+
+Templates in Litdoc can be created with template literals.
+This allows interspersing text with runtime values,
+which can be used to embed and generate dynamic content.
+
+String are inlined into the template source code,
+which means any Markdown formatting will also be applied.
+Numbers are converted to strings using the default representation.
+
+- \`\${"text"}\`: ${"text"}
+- \`\${"**markdown**"}\`: ${"**markdown**"}
+- \`\${12345}\`: ${12345}
+
+Nullish and logical values are converted to empty strings.
+This enables the use of \`||\` and \`&&\` for optional content
+and reflects how React renders such values.
+
+- \`\${null}\`: ${null} 
+- \`\${undefined}\`: ${undefined}
+- \`\${true}\`: ${true} 
+- \`\${false}\`: ${false}
+
+\`\${{ type: "inlineCode", text: "some code" }}\`: ${{
+  type: "inlineCode",
+  text: "some code",
+}}
+
+\`\${<button>html element</button>}\`: ${<button>html element</button>}
+`;
+
+md`
 ### Hierarchy
 
 > # Heading 1
