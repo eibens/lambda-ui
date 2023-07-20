@@ -17,7 +17,7 @@ const { md, doc } = lit();
 export default doc;
 
 md`
-# [Monaco](#monaco)
+# :folder: [Monaco](#monaco)
 
 [Monaco Editor](https://github.com/microsoft/monaco-editor) is the code editor that powers VS Code. 
 It is a standalone code editor that can be used in any JavaScript application.

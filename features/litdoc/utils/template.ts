@@ -16,14 +16,24 @@ export function toArgs<V>(input: Input<V>): Args<V> {
   return [Object.assign(strings, { raw: strings })];
 }
 
-export function weave<V>(input: Input<V>, options: {
-  evaluate: (value: V, key: string) => string;
-}) {
+export function evaluate(
+  slots: Record<string, unknown>,
+  fn: (slot: unknown) => unknown,
+) {
+  for (const id in slots) {
+    const value = slots[id];
+    slots[id] = fn(value);
+  }
+}
+
+export function weave<V>(
+  slots: Record<string, unknown>,
+  input: Input<V>,
+  stringify: (value: V, key: string, slots: Record<string, unknown>) => string,
+) {
   const [strings, ...values] = toArgs(input);
-  const { evaluate } = options;
 
   let text = "";
-  const slots: Record<string, unknown> = {};
 
   for (let i = 0; i < strings.length; i++) {
     text += strings[i];
@@ -36,8 +46,8 @@ export function weave<V>(input: Input<V>, options: {
     slots[id] = value;
 
     // Embed the slot in the source.
-    text += evaluate(value, id);
+    text += stringify(value, id, slots);
   }
 
-  return { text, slots };
+  return text;
 }

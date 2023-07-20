@@ -12,23 +12,35 @@ import {
   Strong,
   ThematicBreak,
 } from "@lambda-ui/text";
-import { Node } from "slate";
+import { Editor, Node, NodeEntry, Path } from "slate";
 import { useSlate } from "slate-react";
 import { Components, RenderNodeProps } from "../utils/renderers.tsx";
 
 /** HELPERS **/
 
-function getSpacing(a?: Node, b?: Node) {
-  if (!a || !b) return 0;
+function getSpacing(editor: Editor, entryA?: NodeEntry, entryB?: NodeEntry) {
+  // No spacing for first and last nodes.
+  if (!entryA || !entryB) return 0;
+
+  const [a, pathA] = entryA ?? [];
+  const [b, pathB] = entryB ?? [];
+
+  if (a.type == b.type) return 3;
+
   if (b.type === "heading") return 24;
 
-  if (a.type === "list" && b.type === "paragraph") return 3;
-  if (a.type === "paragraph" && b.type === "list") return 3;
-  if (a.type === "list" && b.type === "listItem") return 3;
-  if (a.type === "listItem" && b.type === "list") return 3;
+  const isLead = !Path.hasPrevious(pathA);
 
-  if (a.type !== b.type) return 12;
-  return 3;
+  if (isLead) {
+    if (a.type === "heading" && b.type === "paragraph") {
+      return 3;
+    }
+  }
+
+  const narrow = ["paragraph", "listItem", "list"];
+  if (narrow.includes(a.type) && narrow.includes(b.type)) return 3;
+
+  return 12;
 }
 
 function Block(props: RenderNodeProps<Node>) {
@@ -37,7 +49,7 @@ function Block(props: RenderNodeProps<Node>) {
   const editor = useSlate();
   const path = editor.lookup(node.key)!;
   const next = editor.next({ at: path });
-  const spacing = getSpacing(node, next?.[0]);
+  const spacing = getSpacing(editor, [node, path], next);
 
   return (
     <View

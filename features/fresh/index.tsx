@@ -6,7 +6,7 @@ const { md, doc } = lit();
 export default doc;
 
 md`
-# [Fresh](#fresh)
+# :folder: [Fresh](#fresh)
 
 [Deno Fresh](https://fresh.deno.dev) is a web framework for Deno. 
 This module provides helpers and wrappers for Fresh.

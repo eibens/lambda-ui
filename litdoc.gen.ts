@@ -4,15 +4,17 @@
 
 import * as $0 from "./features/fresh/index.tsx";
 import * as $1 from "./features/litdoc/index.tsx";
-import * as $2 from "./features/monaco/index.tsx";
-import * as $3 from "./features/music/index.tsx";
+import * as $2 from "./features/magic/index.tsx";
+import * as $3 from "./features/monaco/index.tsx";
+import * as $4 from "./features/music/index.tsx";
 
 export default {
   baseUrl: import.meta.url,
   routes: {
     "./features/fresh/index.tsx": $0,
     "./features/litdoc/index.tsx": $1,
-    "./features/monaco/index.tsx": $2,
-    "./features/music/index.tsx": $3,
+    "./features/magic/index.tsx": $2,
+    "./features/monaco/index.tsx": $3,
+    "./features/music/index.tsx": $4,
   },
 };

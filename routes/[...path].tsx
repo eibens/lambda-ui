@@ -10,10 +10,11 @@ import manifest from "../litdoc.gen.ts";
 
 export default function render(props: PageProps) {
   const { params } = props;
-  const { path } = params;
 
-  const { routes } = manifest;
-  const route = Manifest.route(routes, "./" + path);
+  const path = Manifest.route(
+    Object.keys(manifest.routes),
+    "./" + params.path,
+  );
 
   return (
     <>
@@ -25,16 +26,12 @@ export default function render(props: PageProps) {
         />
       </Head>
       <View class="flex justify-center" id="top">
-        {route && (
-          <>
-            <FeatureHeader
-              name={route.path}
-            />
-            <View class="my-32 px-6 w-full max-w-3xl">
-              <Feature path={path} />
-            </View>
-          </>
-        )}
+        <FeatureHeader
+          name={path ?? "Not found"}
+        />
+        <View class="my-32 px-6 w-full max-w-3xl">
+          <Feature path={path} />
+        </View>
       </View>
     </>
   );

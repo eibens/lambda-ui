@@ -1,32 +1,18 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
 import { View } from "@/features/theme/mod.ts";
-import Home from "@/islands/home.tsx";
+import Home, { HomeProps } from "@/islands/home.tsx";
 import HomeHeader from "@/islands/home_header.tsx";
 import manifest from "../litdoc.gen.ts";
 
 /** MAIN **/
 
-export type Data = {
-  features: {
-    name: string;
-    path: string;
-  }[];
-};
-
-export type Props = PageProps<Data>;
+export type Props = PageProps<HomeProps>;
 
 export const handler: Handlers = {
   GET: (_, ctx) => {
-    const data: Data = {
-      features: Object.keys(manifest.routes)
-        .map((path) => ({
-          name: path
-            .substring("./features/".length, path.lastIndexOf("/")),
-          path: path
-            .substring(1)
-            .substring(0, path.lastIndexOf("/")),
-        })),
+    const data: HomeProps = {
+      features: Object.keys(manifest.routes),
     };
 
     return ctx.render(data);
@@ -34,6 +20,7 @@ export const handler: Handlers = {
 };
 
 export default function render(props: Props) {
+  const { data } = props;
   return (
     <>
       <Head>
@@ -46,7 +33,7 @@ export default function render(props: Props) {
       <View class="flex justify-center" id="top">
         <HomeHeader />
         <View class="my-32 px-6 w-full max-w-3xl">
-          <Home features={props.data.features} />
+          <Home {...data} />
         </View>
       </View>
     </>

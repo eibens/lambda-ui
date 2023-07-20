@@ -59,7 +59,7 @@ export function Icon(props: {
       <View
         tag="span"
         class={[
-          "flex w-[0.8lh] h-[0.8lh] relative top-[5px]",
+          "flex w-[0.8lh] h-[0.8lh] relative top-[0.125lh]",
           status === "loading" && "animate-spin",
           status === "error" && "color-red fill-0",
           status === "loading" && "opacity-50",

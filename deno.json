@@ -2,7 +2,7 @@
   "lock": false,
   "tasks": {
     "fix": "deno fmt && deno lint && deno test",
-    "start": "deno run -A --unstable --watch=static/,routes/ dev.ts",
+    "start": "deno run -A --unstable --watch=static/,routes/,features/ dev.ts",
     "deploy": "deployctl deploy --project=lambda-ui ./main.ts"
   },
   "importMap": "./import_map.json",

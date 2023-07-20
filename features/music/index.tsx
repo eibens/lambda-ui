@@ -12,7 +12,9 @@ const { md, doc } = lit();
 export default doc;
 
 md`
-# [music](#)
+# :folder: [music](#)
+
+Utilities for working with music.
 
 ## Components
 

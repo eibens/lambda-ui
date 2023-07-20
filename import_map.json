@@ -28,6 +28,8 @@
     "@lambda-ui/text": "./features/text/mod.ts",
     "litdoc": "./features/litdoc/mod.ts",
 
+    "three": "https://esm.sh/three@*",
+
     "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/"
   }
 }

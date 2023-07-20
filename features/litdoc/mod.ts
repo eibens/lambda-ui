@@ -1,3 +1,4 @@
+import { Node } from "slate";
 import { Core, Templates } from "./plugins/mod.ts";
 import * as Themes from "./themes/mod.ts";
 import { Markdown, Renderers } from "./utils/mod.ts";
@@ -13,6 +14,7 @@ export function createLitdocRenderers() {
 }
 
 export function lit<Data>() {
+  const slots: Record<string, unknown> = {};
   const events: {
     type: "md";
     input: Markdown.Input<Data>;
@@ -26,17 +28,13 @@ export function lit<Data>() {
       });
     },
     doc: (data: Data): Templates.Template => {
-      const doc: Templates.Template = {
-        children: [],
-        slots: {} as Record<string, unknown>,
-      };
+      const children: Node[] = [];
 
       for (const event of events) {
         switch (event.type) {
           case "md": {
-            const md = Markdown.weave(event.input, { data });
-            doc.children.push(...md.children);
-            Object.assign(doc.slots, md.slots);
+            const newChildren = Markdown.weave(slots, event.input, { data });
+            children.push(...newChildren);
             break;
           }
           default: {
@@ -45,7 +43,10 @@ export function lit<Data>() {
         }
       }
 
-      return doc;
+      return {
+        children,
+        slots,
+      };
     },
   };
 }
