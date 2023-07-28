@@ -1,7 +1,4 @@
-import { Header } from "@/features/widgets/header.tsx";
-import { Link } from "../features/text/mod.ts";
-import { View } from "../features/theme/mod.ts";
-import { ThemeToggle } from "../features/widgets/theme_toggle.tsx";
+import { Header, Link, ThemeToggle, View } from "@litdoc/ui";
 
 /** MAIN **/
 
@@ -23,7 +20,7 @@ export default function FeatureHeader(props: {
         >
           <View class={[`pill-${size}`]}>
             <Link href="/" class="mx-2">
-              Lambda UI
+              Litdoc
             </Link>
           </View>
 

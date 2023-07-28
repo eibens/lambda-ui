@@ -1,4 +1,4 @@
-import { BaseEditor, Element, NodeEntry, Operation } from "slate";
+import { Editor, Element, NodeEntry, Operation } from "slate";
 
 export type Plugin = Partial<{
   isInline: (element: Element) => boolean;
@@ -10,7 +10,7 @@ export type Plugin = Partial<{
 export function create(
   plugin: Plugin,
 ) {
-  return <E extends BaseEditor>(editor: E) => {
+  return (editor: Editor) => {
     const { isInline, isVoid, normalizeNode, onChange } = editor;
     return Object.assign(editor, {
       isInline: (element: Element) => {

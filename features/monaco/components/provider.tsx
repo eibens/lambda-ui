@@ -1,5 +1,5 @@
+import { ComponentChildren } from "preact";
 import { useEffect, useState } from "preact/hooks";
-import { ViewChildren } from "../../theme/view.tsx";
 import { Context } from "../utils/context.ts";
 import { load } from "../utils/load.ts";
 import { Monaco } from "../utils/types.ts";
@@ -8,7 +8,7 @@ import { Monaco } from "../utils/types.ts";
 
 export function Provider(props: {
   path?: string;
-  children?: ViewChildren;
+  children?: ComponentChildren;
 }) {
   const { path, children } = props;
 

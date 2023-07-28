@@ -2,8 +2,8 @@ import { lit } from "litdoc";
 
 /** MAIN **/
 
-const { md, doc } = lit();
-export default doc;
+export const doc = lit();
+const { md } = doc;
 
 md`
 # :folder: [Litdoc](#litdoc)
@@ -37,8 +37,8 @@ and reflects how React renders such values.
 - \`\${true}\`: ${true} 
 - \`\${false}\`: ${false}
 
-\`\${{ type: "inlineCode", text: "some code" }}\`: ${{
-  type: "inlineCode",
+\`\${{ type: "InlineCode", text: "some code" }}\`: ${{
+  type: "InlineCode",
   text: "some code",
 }}
 

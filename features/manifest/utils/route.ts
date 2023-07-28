@@ -1,16 +1,13 @@
-export function route(paths: string[], path: string) {
-  const entries: Record<string, string> = {};
-
+export function route(paths: string[], path: string): string | undefined {
   for (const key of paths) {
     const endIndex = key.lastIndexOf(".");
     const name = key.substring(0, endIndex);
-    if (("/" + name).endsWith("/index")) {
-      const subName = name.substring(0, name.length - "/index".length);
-      entries[subName] = key;
-    } else {
-      entries[name] = key;
+    const subName = ("/" + name).endsWith("/index")
+      ? name.substring(0, name.length - "index".length) // to not trim slash
+      : name;
+
+    if (subName === path) {
+      return key;
     }
   }
-
-  return entries[path];
 }

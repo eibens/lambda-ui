@@ -10,8 +10,6 @@
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.187.0/",
 
-    "@/": "./",
-
     "react": "https://esm.sh/preact@10.13.1/compat",
     "slate": "https://esm.sh/slate@0.94.0",
     "slate-react": "https://raw.githubusercontent.com/eibens/slate-preact-port/v1.0.0-alpha/mod.ts",
@@ -23,13 +21,20 @@
     "tiny-invariant": "https://esm.sh/tiny-invariant@1.0.6",
     "lodash/": "https://esm.sh/lodash@4.17.4/",
 
-    "@lambda-ui/fresh": "./features/fresh/mod.ts",
-    "@lambda-ui/manifest": "./features/manifest/mod.ts",
-    "@lambda-ui/text": "./features/text/mod.ts",
     "litdoc": "./features/litdoc/mod.ts",
+    "litdoc/lit": "./features/litdoc/lit.ts",
+    "@litdoc/ui": "./features/ui/mod.ts",
+    "@litdoc/dark": "./features/dark/mod.ts",
+    "@litdoc/manifest": "./features/manifest/mod.ts",
+    "@litdoc/monaco": "./features/monaco/mod.ts",
+    "@litdoc/tags": "./features/tags/mod.ts",
+    "@litdoc/templates": "./features/templates/mod.ts",
+    "@litdoc/theme": "./features/theme/mod.ts",
+    "@litdoc/render": "./features/render/mod.ts",
+
+    "@/islands/": "./islands/",
 
     "three": "https://esm.sh/three@*",
-
     "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/"
   }
 }

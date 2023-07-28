@@ -1,20 +1,15 @@
-import { useEnv } from "@/features/client/mod.ts";
 import {
   useMonacoEditor,
   useMonacoEditorSize,
   useMonacoEditorValue,
   useMonacoTheme,
-} from "@/features/monaco/mod.ts";
-import { View } from "@/features/theme/mod.ts";
-import { ViewChildren } from "@/features/theme/view.tsx";
-import { Button } from "@/features/widgets/button.tsx";
+} from "@litdoc/monaco";
+import { Button, View, ViewChildren } from "@litdoc/ui";
 import { lit } from "litdoc";
 import { useState } from "preact/hooks";
 
-/** MAIN **/
-
-const { md, doc } = lit();
-export default doc;
+export const doc = lit();
+const { md } = doc;
 
 md`
 # :folder: [Monaco](#monaco)
@@ -157,7 +152,7 @@ function ManipulateValue() {
     setValue(value.toLowerCase());
   }
 
-  const env = useEnv();
+  const isBrowser = typeof document !== "undefined";
 
   return (
     <View class="flex flex-col color-gray shadow-lg fill-10 pt-4 rounded-lg">
@@ -173,14 +168,14 @@ function ManipulateValue() {
           color="blue"
           label="UPPERCASE"
           tint
-          disabled={!env.isBrowser}
+          disabled={!isBrowser}
         />
         <Button
           onClick={toLower}
           color="pink"
           label="lowercase"
           tint
-          disabled={!env.isBrowser}
+          disabled={!isBrowser}
         />
       </View>
     </View>

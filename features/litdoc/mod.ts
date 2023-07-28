@@ -1,52 +1,62 @@
-import { Node } from "slate";
-import { Core, Templates } from "./plugins/mod.ts";
-import * as Themes from "./themes/mod.ts";
-import { Markdown, Renderers } from "./utils/mod.ts";
+import { BaseEditor, createEditor, Element, Text } from "slate";
+import type { ReactEditor } from "slate-react";
+import * as Plugins from "./plugins/mod.ts";
+import { CustomNodeTypes } from "./schema.ts";
 
-/** MAIN **/
+export { default as dev } from "./dev.ts";
+export { default as lit } from "./lit.ts";
+export { default as TwindConfig } from "./twind.config.ts";
 
-export * from "./dev.ts";
-
-export const withLitdoc = Core.create();
-
-export function createLitdocRenderers() {
-  return Renderers.fromComponents(Themes.Basic);
+declare module "slate" {
+  interface CustomTypes extends CustomNodeTypes {
+    Editor:
+      & { type: "Root"; key?: string }
+      & ReactEditor
+      & Plugins.Keys.Mixin
+      & Plugins.Summary.Mixin
+      & { values: Record<string, unknown> }
+      & BaseEditor;
+  }
 }
 
-export function lit<Data>() {
-  const slots: Record<string, unknown> = {};
-  const events: {
-    type: "md";
-    input: Markdown.Input<Data>;
-  }[] = [];
+export type Manifest = {
+  baseUrl: string;
+  routes: Record<string, unknown>;
+};
 
-  return {
-    md: (...input: Markdown.Input<Data>) => {
-      events.push({
-        type: "md",
-        input,
-      });
-    },
-    doc: (data: Data): Templates.Template => {
-      const children: Node[] = [];
-
-      for (const event of events) {
-        switch (event.type) {
-          case "md": {
-            const newChildren = Markdown.weave(slots, event.input, { data });
-            children.push(...newChildren);
-            break;
-          }
-          default: {
-            throw new Error(`Unknown event type: ${event.type}`);
-          }
-        }
-      }
-
-      return {
-        children,
-        slots,
-      };
-    },
+export function create(options: {
+  children?: (Element | Text)[];
+  values?: Record<string, unknown>;
+}) {
+  const mixin = {
+    type: "Root",
+    values: options.values ?? {},
   };
+
+  const editor = Object.assign(
+    createEditor(),
+    mixin,
+  );
+
+  const plugins = [
+    // Must come first to enable path look ups.
+    Plugins.Keys.create(),
+
+    // Add type prop, which is used for normalizations and transforms.
+    Plugins.Types.create(),
+
+    // Useful extensions.
+    Plugins.Icons.create(),
+    Plugins.Slugs.create(),
+    Plugins.Summary.create(),
+  ];
+
+  for (const plugin of plugins) {
+    plugin(editor);
+  }
+
+  editor.children = options.children ?? [];
+  editor.normalize({ force: true });
+
+  return editor;
 }

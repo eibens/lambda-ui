@@ -1,9 +1,9 @@
 import { Head } from "$fresh/src/runtime/head.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
-import { View } from "@/features/theme/mod.ts";
-import Feature from "@/islands/feature.tsx";
+import Doc from "@/islands/doc.tsx";
 import FeatureHeader from "@/islands/feature_header.tsx";
-import * as Manifest from "@lambda-ui/manifest";
+import * as Manifest from "@litdoc/manifest";
+import { View } from "@litdoc/ui";
 import manifest from "../litdoc.gen.ts";
 
 /** MAIN **/
@@ -19,7 +19,7 @@ export default function render(props: PageProps) {
   return (
     <>
       <Head>
-        <title>@lambda-ui</title>
+        <title>Litdoc</title>
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
@@ -30,7 +30,7 @@ export default function render(props: PageProps) {
           name={path ?? "Not found"}
         />
         <View class="my-32 px-6 w-full max-w-3xl">
-          <Feature path={path} />
+          <Doc path={path} />
         </View>
       </View>
     </>

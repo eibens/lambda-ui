@@ -1,39 +1,34 @@
 import { Editor, Node, Transforms } from "slate";
 import * as Override from "./override.ts";
 
-function* parseIcons(text: string): Generator<Node> {
+/** HELPERS **/
+
+function* parseIcons(str: string): Generator<Node> {
   const iconRegex = /:([-_a-zA-Z0-9]+):/g;
 
+  const text = (text = "") => ({
+    type: "Text" as const,
+    text,
+  });
+
+  const icon = (name: string) => ({
+    type: "Icon" as const,
+    name,
+    children: [text()],
+  });
+
   let lastIndex = 0;
-
   let match;
-  while ((match = iconRegex.exec(text)) !== null) {
+  while ((match = iconRegex.exec(str)) !== null) {
     const [_, name] = match;
-
-    yield {
-      type: "plain",
-      text: text.slice(lastIndex, match.index),
-    };
-
-    yield {
-      type: "icon",
-      name,
-      children: [
-        {
-          type: "plain",
-          text: "",
-        },
-      ],
-    };
-
+    yield text(str.slice(lastIndex, match.index));
+    yield icon(name);
     lastIndex = iconRegex.lastIndex;
   }
-
-  yield {
-    type: "plain",
-    text: text.slice(lastIndex),
-  };
+  yield text(str.slice(lastIndex));
 }
+
+/** MAIN **/
 
 export function create() {
   return (editor: Editor) => {
@@ -41,7 +36,7 @@ export function create() {
       normalizeNode: (entry, next) => {
         const [node, path] = entry;
 
-        if (node.type !== "plain") return next();
+        if (node.type !== "Text") return next();
 
         const text = node.text;
         if (!text.trim()) return next();

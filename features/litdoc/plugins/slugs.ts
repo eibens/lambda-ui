@@ -8,7 +8,7 @@ export function create() {
       normalizeNode: (entry, next) => {
         const [node, path] = entry;
         if (!Element.isElement(node)) return next();
-        if (node.type !== "heading") return next();
+        if (node.type !== "Heading") return next();
 
         const slug = kebabCase(Node.string(node));
 

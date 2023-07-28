@@ -1,8 +1,6 @@
-# Lambda UI
+# Litdoc
 
-My personal web UI library.
-
-- [Website](https://eibens.github.io/lambda-ui/)
+Litdoc is a library for writing TypeScript documentation.
 
 ## Structure
 

@@ -8,6 +8,7 @@
   "editor.formatOnSave": true,
   "editor.tabSize": 2,
   "cSpell.words": [
+    "darkmode",
     "litdoc",
     "preact",
     "twind"

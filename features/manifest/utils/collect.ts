@@ -40,18 +40,11 @@ export type CollectEntry = WalkEntry & {
   varName: string;
 };
 
-export type Index = {
-  ids: string[];
-  entries: Record<string, CollectEntry>;
-};
+export type Index = Record<string, CollectEntry>;
 
 export type IndexMap<T> = {
   [key in keyof T]: Index;
 };
-
-export function toEntries(index: Index) {
-  return index.ids.map((id) => index.entries[id]);
-}
 
 export async function collect<T>(
   baseUrl: URL,
@@ -68,10 +61,7 @@ export async function collect<T>(
     const options = config[key];
     const entries = await walk(baseUrl, options);
 
-    const index: Index = {
-      ids: [],
-      entries: {},
-    };
+    const index: Index = {};
 
     for (const entry of entries) {
       if (lookup[entry.path] == null) {
@@ -83,9 +73,7 @@ export async function collect<T>(
         };
         lookup[entry.path] = collectEntry;
       }
-
-      index.ids.push(entry.path);
-      index.entries[entry.path] = lookup[entry.path];
+      index[entry.path] = lookup[entry.path];
     }
 
     indexes[key] = index;

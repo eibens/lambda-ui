@@ -1,10 +1,9 @@
 import { AppProps } from "$fresh/src/server/types.ts";
-import { COOKIES } from "./_middleware.ts";
+import * as Dark from "@litdoc/dark";
 
 export default function App({ Component }: AppProps) {
-  const isDark = COOKIES.theme === "dark";
   return (
-    <html class={isDark ? "dark" : ""}>
+    <html class={Dark.store.value ? "dark" : ""}>
       <Component />
     </html>
   );
