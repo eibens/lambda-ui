@@ -9,8 +9,6 @@ const inlineTypes: NodeType[] = [
   "Emphasis",
   "Strong",
   "Link",
-  "LinkReference",
-  "InlineCode",
   "Delete",
   "Icon",
 ];
@@ -24,6 +22,7 @@ const voidTypes: NodeType[] = [
   "Html",
   "Break",
   "FootnoteReference",
+  "LinkReference",
 ];
 
 /** MAIN **/
@@ -41,6 +40,7 @@ export function create() {
         Transforms.setNodes(editor, { type: "Unknown" }, { at: path });
       },
       isInline: (node) => {
+        if ("isInline" in node) return Boolean(node.isInline);
         if (inlineTypes.includes(node.type)) return true;
         return false;
       },

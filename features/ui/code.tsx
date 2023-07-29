@@ -90,10 +90,7 @@ export function Code(props: {
   const size = useMonacoEditorSize(editor);
 
   return (
-    <View
-      class="color-gray shadow-lg fill-10 py-4 rounded-md"
-      contentEditable={false}
-    >
+    <View class="color-gray shadow-lg fill-10 py-4 rounded-md">
       <View
         onElement={setElement}
         style={{

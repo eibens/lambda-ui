@@ -1,6 +1,6 @@
 import { Head } from "$fresh/src/runtime/head.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
-import Doc from "@/islands/doc.tsx";
+import Content from "@/islands/content.tsx";
 import FeatureHeader from "@/islands/feature_header.tsx";
 import * as Manifest from "@litdoc/manifest";
 import { View } from "@litdoc/ui";
@@ -16,6 +16,8 @@ export default function render(props: PageProps) {
     "./" + params.path,
   );
 
+  const content = path ? <Content path={path} /> : <View>404 - Not Found</View>;
+
   return (
     <>
       <Head>
@@ -30,7 +32,7 @@ export default function render(props: PageProps) {
           name={path ?? "Not found"}
         />
         <View class="my-32 px-6 w-full max-w-3xl">
-          <Doc path={path} />
+          {content}
         </View>
       </View>
     </>

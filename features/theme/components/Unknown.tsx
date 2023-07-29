@@ -14,6 +14,7 @@ export function Unknown(props: RenderNodeProps<"Unknown">) {
       tag={isInline ? "span" : "div"}
       viewProps={props}
       class="color-red fill-10 stroke-50"
+      contentEditable={false}
     >
       {children}
     </View>

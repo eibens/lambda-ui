@@ -1,8 +1,8 @@
 #!/usr/bin/env -S deno run -A --watch=static/,routes/,features/
 import dev from "$fresh/dev.ts";
-import * as Litdoc from "litdoc";
+import devLitdoc from "litdoc/dev";
 
-await Litdoc.dev(import.meta.url, {
+await devLitdoc(import.meta.url, {
   routes: {
     match: [
       /\/index\.tsx?$/,

@@ -39,60 +39,71 @@ type BaseElementProps = BaseNodeProps & {
   children: ToNode<NodeMap>[];
 };
 
+type BaseInlineBlockProps = BaseElementProps & {
+  isInline?: boolean;
+};
+
 type NodeMap = ToNodeMap<{
   // Structural nodes
   Root: BaseElementProps;
-  Value: BaseElementProps & {
-    id: string;
-  };
-  Unknown: BaseElementProps;
   Text: BaseLeafProps;
 
-  // Custom extension
-  Icon: BaseElementProps & {
-    name: string;
-    title?: string;
-    alt?: string;
+  // Inline Blocks
+  // Can be marked either as inline or block element.
+  // Determined by type of parent.
+  Html: BaseInlineBlockProps;
+  Value: BaseInlineBlockProps & {
+    id: string;
   };
+  Call: BaseInlineBlockProps & {
+    name: string;
+    args: unknown[];
+  };
+  Code: BaseInlineBlockProps & {
+    lang?: string;
+  };
+  Unknown: BaseInlineBlockProps;
 
-  // Markdown
+  // Blocks
   Paragraph: BaseElementProps;
+  Blockquote: BaseElementProps;
   Heading: BaseElementProps & {
     depth: 1 | 2 | 3 | 4 | 5 | 6;
     slug?: string;
   };
-  Blockquote: BaseElementProps;
   List: BaseElementProps & {
     ordered?: boolean;
   };
   ListItem: BaseElementProps;
-  Code: BaseElementProps & {
-    lang?: string;
-  };
-  ThematicBreak: BaseElementProps;
-  InlineCode: BaseLeafProps;
-  Link: BaseElementProps & {
-    url: string;
-  };
-  LinkReference: BaseElementProps & {
-    label: string;
-    identifier: string;
-    referenceType: string;
-  };
   Image: BaseElementProps & {
     url: string;
     title?: string;
     alt?: string;
   };
-  Emphasis: BaseElementProps;
-  Strong: BaseElementProps;
-  Delete: BaseElementProps;
+  ThematicBreak: BaseElementProps;
+  LinkReference: BaseElementProps & {
+    label: string;
+    identifier: string;
+    referenceType: string;
+  };
   FootnoteReference: BaseElementProps & {
     identifier: string;
     label?: string;
   };
-  Html: BaseElementProps;
+
+  // Inline
+  Emphasis: BaseElementProps;
+  Strong: BaseElementProps;
+  Delete: BaseElementProps;
   Break: BaseElementProps;
+  Link: BaseElementProps & {
+    url: string;
+  };
+  Icon: BaseElementProps & {
+    name: string;
+    title?: string;
+    alt?: string;
+  };
 }>;
 
 /** MAIN **/

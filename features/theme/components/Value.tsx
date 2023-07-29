@@ -39,7 +39,7 @@ export function Value(props: RenderNodeProps<"Value">) {
   }
 
   return (
-    <Block {...props}>
+    <Block {...props} contentEditable={false}>
       {content}
     </Block>
   );

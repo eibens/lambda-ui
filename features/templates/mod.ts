@@ -5,14 +5,16 @@ import { nanoid } from "https://esm.sh/nanoid@4.0.0";
 export type TemplateArgs<V> = [TemplateStringsArray, ...V[]];
 
 export type TemplateString = {
-  type: "string";
+  type: "Text";
   raw?: string;
   text: string;
 };
 
 export type TemplateValue = {
-  type: "value";
+  type: "Value";
   id: string;
+  // deno-lint-ignore no-explicit-any
+  children: any[];
 };
 
 export type TemplateChild =
@@ -45,14 +47,17 @@ export function tagged<V>(...args: TemplateArgs<V>): Template<V> {
 
   for (let i = 0; i < strings.length; i++) {
     const text = strings[i];
-    template.children.push({ type: "string", text });
+    template.children.push({ type: "Text", text });
 
-    if (i >= values.length) continue;
-
-    const value = values[i];
-    const id = nanoid();
-    template.values[id] = value;
-    template.children.push({ type: "value", id });
+    if (i < values.length) {
+      const id = nanoid();
+      template.values[id] = values[i];
+      template.children.push({
+        type: "Value",
+        id,
+        children: [{ type: "Text", text: "" }],
+      });
+    }
   }
 
   return template;
@@ -78,11 +83,11 @@ export function inline<V>(
   return {
     ...template,
     children: template.children.map((child) => {
-      if (child.type === "string") return child;
+      if (child.type === "Text") return child;
       const { id } = child;
       const value = values[id];
       const text = stringify(value, id, values);
-      return { type: "string", text };
+      return { type: "Text", text };
     }),
   };
 }
@@ -93,7 +98,7 @@ export function stringify<V>(
 ): string {
   return inline(template, stringify)
     .children
-    .filter((child) => child.type === "string")
+    .filter((child) => child.type === "Text")
     .map((child) => child as TemplateString)
     .map((child) => child.text)
     .join("");

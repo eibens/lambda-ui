@@ -1,4 +1,4 @@
-import { lit } from "litdoc";
+import lit from "litdoc/lit";
 
 /** MAIN **/
 

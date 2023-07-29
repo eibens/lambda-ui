@@ -23,14 +23,17 @@
 
     "litdoc": "./features/litdoc/mod.ts",
     "litdoc/lit": "./features/litdoc/lit.ts",
+    "litdoc/dev": "./features/litdoc/dev.ts",
     "@litdoc/ui": "./features/ui/mod.ts",
     "@litdoc/dark": "./features/dark/mod.ts",
+    "@litdoc/debug": "./features/debug/mod.ts",
     "@litdoc/manifest": "./features/manifest/mod.ts",
     "@litdoc/monaco": "./features/monaco/mod.ts",
     "@litdoc/tags": "./features/tags/mod.ts",
     "@litdoc/templates": "./features/templates/mod.ts",
     "@litdoc/theme": "./features/theme/mod.ts",
     "@litdoc/render": "./features/render/mod.ts",
+    "@litdoc/web": "./features/web/mod.ts",
 
     "@/islands/": "./islands/",
 

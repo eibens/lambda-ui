@@ -1,10 +1,27 @@
 import { RenderNodeProps } from "@litdoc/render";
-import { Code as CodeView } from "@litdoc/ui";
+import { Code as CodeView, View } from "@litdoc/ui";
 import { ReactEditor, useSlate } from "slate-react";
 import { Block } from "./Block.tsx";
 
 export function Code(props: RenderNodeProps<"Code">) {
-  const { children, node } = props;
+  const { children, node, attributes } = props;
+
+  if (node.isInline) {
+    return (
+      <View
+        {...attributes}
+        tag="code"
+        viewProps={props}
+        class={[
+          "font-mono",
+          "hover:border-black dark:hover:border-white",
+          "transition-colors duration-200 ease-in-out",
+        ]}
+      >
+        {children}
+      </View>
+    );
+  }
 
   const editor = useSlate();
   const path = ReactEditor.findPath(editor, node);

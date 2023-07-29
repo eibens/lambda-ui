@@ -20,7 +20,7 @@ export function Html(props: RenderNodeProps<"Html">) {
   }
 
   return (
-    <Block {...props}>
+    <Block {...props} contentEditable={false}>
       <div dangerouslySetInnerHTML={{ __html: value }} />
     </Block>
   );

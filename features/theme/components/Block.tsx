@@ -32,8 +32,12 @@ function getSpacing(editor: Editor, entryA?: NodeEntry, entryB?: NodeEntry) {
 
 /** MAIN **/
 
-export function Block(props: RenderNodeProps) {
-  const { attributes, children, node } = props;
+export function Block(
+  props: RenderNodeProps & {
+    contentEditable?: boolean;
+  },
+) {
+  const { attributes, children, node, contentEditable } = props;
 
   const editor = useSlate();
   const path = ReactEditor.findPath(editor, node);
@@ -46,6 +50,7 @@ export function Block(props: RenderNodeProps) {
       {...{
         "data-slate-type": node.type,
         "data-slate-key": node.key,
+        contentEditable,
       }}
     >
       {children}
