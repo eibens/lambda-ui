@@ -2,7 +2,6 @@ import { BaseEditor } from "slate";
 import type { ReactEditor } from "slate-react";
 import * as Plugins from "./plugins/mod.ts";
 import { CustomNodeTypes } from "./utils/schema.ts";
-export * from "./components/Doc.tsx";
 export * from "./utils/editor.ts";
 
 declare module "slate" {

@@ -1,7 +1,7 @@
 import { Head } from "$fresh/src/runtime/head.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
-import Content from "@/islands/content.tsx";
-import FeatureHeader from "@/islands/feature_header.tsx";
+import Doc from "@/islands/Doc.tsx";
+import FeatureHeader from "@/islands/FeatureHeader.tsx";
 import * as Manifest from "@litdoc/manifest";
 import { View } from "@litdoc/ui";
 import manifest from "../litdoc.gen.ts";
@@ -16,7 +16,7 @@ export default function render(props: PageProps) {
     "./" + params.path,
   );
 
-  const content = path ? <Content path={path} /> : <View>404 - Not Found</View>;
+  const content = path ? <Doc path={path} /> : <View>404 - Not Found</View>;
 
   return (
     <>
