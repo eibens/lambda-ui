@@ -3,6 +3,7 @@ import { fromComponents } from "@litdoc/render";
 import * as Theme from "@litdoc/theme";
 import { createFromManifest } from "litdoc";
 import { Editable, Slate, withReact } from "slate-react";
+import { Debugger } from "../features/debug/components/Debugger.tsx";
 import manifest from "../litdoc.gen.ts";
 
 export default function Content(props: {
@@ -38,6 +39,7 @@ export default function Content(props: {
           readOnly
         />
       </Slate>
+      <Debugger editor={editor} />
     </MonacoProvider>
   );
 }
