@@ -3,8 +3,10 @@ import { TagsState } from "litdoc/lit";
 import { createEditor, Editor, Element, Node, Path, Text } from "slate";
 import * as Icons from "./icons.tsx";
 import * as Markdown from "./markdown.ts";
+import * as Slots from "./slots.ts";
 import * as Slugs from "./slugs.ts";
 import * as Types from "./types.ts";
+import * as Values from "./values.ts";
 
 export type DocModule = {
   doc: () => TagsState;
@@ -32,10 +34,11 @@ export function create(options: {
   for (const plugin of plugins) {
     plugin(editor);
   }
-
   editor.children = options.children ?? [];
+  Values.replaceAll(editor);
   Markdown.replaceAll(editor);
   Icons.replaceAll(editor);
+  Slots.replaceAll(editor);
 
   return editor;
 }
@@ -75,10 +78,10 @@ export function createFromManifest(options: {
   return createFromTags(state);
 }
 
-export function getTitle(editor: Editor, options: {
-  at: Path;
+export function getTitle(editor: Editor, options?: {
+  at?: Path;
 }) {
-  const { at } = options;
+  const { at = [] } = options ?? {};
 
   const nodes = Editor.nodes(editor, {
     at,
@@ -92,10 +95,10 @@ export function getTitle(editor: Editor, options: {
   return null;
 }
 
-export function getLead(editor: Editor, options: {
-  at: Path;
+export function getLead(editor: Editor, options?: {
+  at?: Path;
 }) {
-  const { at } = options;
+  const { at = [] } = options ?? {};
 
   const nodes = Editor.nodes(editor, {
     at,

@@ -13,7 +13,7 @@ export default function render(props: PageProps) {
 
   const path = Manifest.route(
     Object.keys(manifest.routes),
-    "./" + params.path,
+    params.path.length ? "./" + params.path : ".",
   );
 
   const content = path ? <Doc path={path} /> : <View>404 - Not Found</View>;

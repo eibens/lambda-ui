@@ -56,8 +56,11 @@ export function tagged<V>(...args: TemplateArgs<V>): Template<V> {
       template.children.push({
         type: "Value",
         id,
-        children: [{ type: "Text", text: "" }],
         isInline: true,
+        children: [{
+          type: "Text",
+          text: `{{id:${id}}}`,
+        }],
       });
     }
   }

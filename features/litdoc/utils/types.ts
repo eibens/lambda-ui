@@ -12,7 +12,6 @@ const inlineTypes: NodeType[] = [
 ];
 
 const voidTypes: NodeType[] = [
-  "Value",
   "ThematicBreak",
   "Icon",
   "Image",

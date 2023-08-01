@@ -18,7 +18,6 @@ It is built for TypeScript, Preact, and Deno.
 The \`features\` folders export the API of the library.
 The following features are available:
 
----
 ${function () {
   return Object.keys(manifest.routes)
     .filter((path) => path.startsWith("./features"))
@@ -26,10 +25,10 @@ ${function () {
     .flatMap((path) => {
       const sub = LitdocEditor.createFromManifest({ manifest, path });
       if (!sub) return [];
-      return [
-        LitdocEditor.getTitle(sub, { at: [] }),
-        LitdocEditor.getLead(sub, { at: [] }),
-      ];
+      const title = LitdocEditor.getTitle(sub);
+      const lead = LitdocEditor.getLead(sub);
+      const url = path.substring(0, path.length - "/index.tsx".length);
+      return `> ### :folder: [${title}](${url})\n> ${lead}\n\n`;
     });
 }}
 `;
