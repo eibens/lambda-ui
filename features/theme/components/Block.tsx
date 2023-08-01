@@ -25,7 +25,7 @@ function getSpacing(editor: Editor, entryA?: NodeEntry, entryB?: NodeEntry) {
   }
 
   const narrow = ["Paragraph", "ListItem", "List"];
-  if (narrow.includes(a.type) && narrow.includes(b.type)) return 3;
+  if (narrow.includes(a.type) && narrow.includes(b.type)) return 12;
 
   return 12;
 }

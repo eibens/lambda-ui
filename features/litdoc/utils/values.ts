@@ -29,11 +29,11 @@ export function replaceAll(
     const value = editor.values[node.id];
     const text = stringify(value);
 
-    editor.removeNodes({ at: path });
     editor.insertNodes([{
       type: "Text",
       text,
     }], { at: path });
+    editor.removeNodes({ at: path });
 
     delete editor.values[node.id];
 

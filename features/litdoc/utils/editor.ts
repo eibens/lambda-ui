@@ -89,7 +89,7 @@ export function getTitle(editor: Editor, options?: {
   });
 
   for (const [node] of nodes) {
-    return Node.string(node);
+    return Node.string(node).trim();
   }
 
   return null;
@@ -106,7 +106,7 @@ export function getLead(editor: Editor, options?: {
   });
 
   for (const [node] of nodes) {
-    return Node.string(node);
+    return Node.string(node).trim();
   }
 
   return null;
