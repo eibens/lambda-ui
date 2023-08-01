@@ -49,7 +49,6 @@ export function Block(
       {...attributes}
       {...{
         "data-slate-type": node.type,
-        "data-slate-key": node.key,
         contentEditable,
       }}
     >

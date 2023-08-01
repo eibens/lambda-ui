@@ -22,10 +22,6 @@ export default function render(props: PageProps) {
     <>
       <Head>
         <title>Litdoc</title>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap"
-        />
       </Head>
       <View class="flex justify-center" id="top">
         <FeatureHeader

@@ -1,4 +1,4 @@
-import { createFromManifest } from "litdoc";
+import { LitdocEditor } from "litdoc";
 import lit from "litdoc/lit";
 import manifest from "./litdoc.gen.ts";
 
@@ -24,11 +24,11 @@ ${function () {
     .filter((path) => path.startsWith("./features"))
     .sort((a, b) => a.localeCompare(b))
     .flatMap((path) => {
-      const sub = createFromManifest({ manifest, path });
+      const sub = LitdocEditor.createFromManifest({ manifest, path });
       if (!sub) return [];
       return [
-        sub.getTitle({ at: [] }),
-        sub.getLead({ at: [] }),
+        LitdocEditor.getTitle(sub, { at: [] }),
+        LitdocEditor.getLead(sub, { at: [] }),
       ];
     });
 }}

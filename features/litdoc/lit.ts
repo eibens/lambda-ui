@@ -1,5 +1,3 @@
-/** MAIN **/
-
 export type TemplateArgs<Value> = [
   TemplateStringsArray,
   ...Value[],
@@ -7,7 +5,7 @@ export type TemplateArgs<Value> = [
 
 export type TemplateFunction<Value> = (
   ...args: TemplateArgs<Value>
-) => Node;
+) => TemplateCall<Value>;
 
 export type TemplateCall<Value> = {
   type: "Call";

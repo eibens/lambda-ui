@@ -1,7 +1,5 @@
 import lit from "litdoc/lit";
 
-/** MAIN **/
-
 export const doc = lit();
 const { md } = doc;
 

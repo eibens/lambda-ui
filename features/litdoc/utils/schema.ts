@@ -27,7 +27,8 @@ type ToCustomTypes<NodeMap> = {
 };
 
 type BaseNodeProps = {
-  key?: string;
+  // NOTE: This can be removed once there is at least one other prop.
+  __unused?: never;
 };
 
 type BaseLeafProps = BaseNodeProps & {
@@ -109,3 +110,5 @@ type NodeMap = ToNodeMap<{
 /** MAIN **/
 
 export type CustomNodeTypes = ToCustomTypes<NodeMap>;
+
+export type NodeType = keyof NodeMap;

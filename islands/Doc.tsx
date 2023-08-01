@@ -1,7 +1,7 @@
 import { MonacoProvider } from "@litdoc/monaco";
 import { fromComponents } from "@litdoc/render";
 import * as Theme from "@litdoc/theme";
-import { createFromManifest } from "litdoc";
+import { LitdocEditor } from "litdoc";
 import { Editable, Slate, withReact } from "slate-react";
 import { Debugger } from "../features/debug/components/Debugger.tsx";
 import manifest from "../litdoc.gen.ts";
@@ -11,7 +11,7 @@ export default function Content(props: {
 }) {
   const { path } = props;
 
-  const editor = createFromManifest({
+  const editor = LitdocEditor.createFromManifest({
     path,
     manifest,
   });

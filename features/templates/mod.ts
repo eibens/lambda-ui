@@ -13,6 +13,7 @@ export type TemplateString = {
 export type TemplateValue = {
   type: "Value";
   id: string;
+  isInline?: boolean;
   // deno-lint-ignore no-explicit-any
   children: any[];
 };
@@ -56,6 +57,7 @@ export function tagged<V>(...args: TemplateArgs<V>): Template<V> {
         type: "Value",
         id,
         children: [{ type: "Text", text: "" }],
+        isInline: true,
       });
     }
   }

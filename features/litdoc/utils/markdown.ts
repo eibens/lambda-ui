@@ -1,7 +1,7 @@
 import gfm from "https://esm.sh/remark-gfm@3.0.1";
 import parseRemark from "https://esm.sh/remark-parse@10.0.1";
 import { unified } from "https://esm.sh/unified@10.1.2";
-import { Element, Node } from "slate";
+import { Editor, Element, Node, NodeEntry } from "slate";
 
 /** HELPERS **/
 
@@ -67,6 +67,20 @@ function fixLiterals(root: Node) {
   }
 }
 
+function fixInlineCode(root: Node) {
+  // Replace the slots with explicit slot nodes.
+  for (const [node] of nodes(root)) {
+    const code = node as unknown as Record<PropertyKey, unknown>;
+
+    // Ignore non-slot nodes.
+    if (code.type !== "InlineCode") continue;
+
+    node.type = "Code";
+    code.children = [{ type: "Text", text: code.text }];
+    delete code.text;
+  }
+}
+
 function fixSlots(root: Node) {
   // Replace the slots with explicit slot nodes.
   for (const [node, path] of nodes(root)) {
@@ -125,22 +139,47 @@ function fixCodeBlocks(root: Node) {
   }
 }
 
-function parse(markdown: string) {
+/** MAIN **/
+
+export function parse(str: string): Node[] {
   const root = unified()
     .use(parseRemark)
     .use(gfm)
-    .parse(markdown) as unknown as Extract<Node, { type: "Root" }>;
+    .parse(str) as unknown as Extract<Node, { type: "Root" }>;
 
   fixTypes(root);
   fixPositions(root);
   fixLiterals(root);
   fixSlots(root);
+  fixInlineCode(root);
   fixChildren(root);
   fixCodeBlocks(root);
 
-  return root;
+  return root.children;
 }
 
-/** MAIN **/
+export function replace(editor: Editor, entry: NodeEntry) {
+  const [_, path] = entry;
+  const str = editor.string(path);
+  const parsed = parse(str);
 
-export { parse };
+  editor.removeNodes({ at: path });
+  editor.insertNodes(parsed, { at: path });
+}
+
+export function replaceAll(
+  editor: Editor,
+) {
+  const nodes = editor.nodes({
+    at: [],
+    voids: true,
+    match: (node) =>
+      Element.isElement(node) &&
+      node.type === "Code" &&
+      node.lang === "md",
+  });
+
+  for (const entry of nodes) {
+    replace(editor, entry);
+  }
+}

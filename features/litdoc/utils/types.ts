@@ -1,22 +1,19 @@
-import { Editor, Node, Transforms } from "slate";
+import { Editor, Node, Text } from "slate";
 import * as Override from "./override.ts";
 
 /** HELPERS **/
 
-type NodeType = Node["type"];
-
 const inlineTypes: NodeType[] = [
   "Emphasis",
   "Strong",
-  "Link",
   "Delete",
+  "Link",
   "Icon",
 ];
 
 const voidTypes: NodeType[] = [
   "Value",
   "ThematicBreak",
-  "Code",
   "Icon",
   "Image",
   "Html",
@@ -27,7 +24,9 @@ const voidTypes: NodeType[] = [
 
 /** MAIN **/
 
-export function create() {
+export type NodeType = Node["type"];
+
+export function plugin() {
   return (base: Editor) => {
     const editor = Object.assign(base, {
       type: "Root",
@@ -37,7 +36,9 @@ export function create() {
       normalizeNode: (entry, next) => {
         const [node, path] = entry;
         if (node.type) return next();
-        Transforms.setNodes(editor, { type: "Unknown" }, { at: path });
+        const isEmptyText = Text.isText(node) && editor.string(path) === "";
+        const type = isEmptyText ? "Text" : "Unknown";
+        editor.setNodes({ type }, { at: path });
       },
       isInline: (node) => {
         if ("isInline" in node) return Boolean(node.isInline);
