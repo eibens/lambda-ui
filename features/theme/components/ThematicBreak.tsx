@@ -7,7 +7,6 @@ export function ThematicBreak(props: RenderNodeProps<"ThematicBreak">) {
     <Block {...props}>
       <View
         tag="hr"
-        viewProps={props}
         class="border-gray-300 dark:border-gray-700"
       />
     </Block>

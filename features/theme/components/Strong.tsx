@@ -7,7 +7,6 @@ export function Strong(props: RenderNodeProps<"Strong">) {
     <View
       {...attributes}
       tag="strong"
-      viewProps={props}
       class="font-serif text-black dark:text-white"
     >
       {children}

@@ -8,7 +8,6 @@ export function Blockquote(props: RenderNodeProps<"Blockquote">) {
     <Block {...props}>
       <View
         tag="blockquote"
-        viewProps={props}
         class={[
           "flex flex-col px-4 py-3",
           "rounded-lg",

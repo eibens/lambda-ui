@@ -11,7 +11,6 @@ export function Code(props: RenderNodeProps<"Code">) {
       <View
         {...attributes}
         tag="code"
-        viewProps={props}
         class={[
           "font-mono",
           "hover:border-black dark:hover:border-white",

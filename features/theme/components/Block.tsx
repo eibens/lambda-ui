@@ -55,7 +55,6 @@ export function Block(
       {children}
       {next && (
         <View
-          contentEditable={false}
           class={[
             "flex",
             `h-${spacing}`,
