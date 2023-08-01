@@ -4,7 +4,7 @@ import { Trash } from "icons/trash.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { Editor, Element, Node, Range } from "slate";
 import { ObjectValue } from "./ObjectValue.tsx";
-import { Tag } from "./tag.tsx";
+import { Tag } from "./Tag.tsx";
 
 function DebuggerNode(props: {
   editor: Editor;
@@ -21,7 +21,8 @@ function DebuggerNode(props: {
   const isEmptyText = !isElement && editor.string(path) === "";
   const isVoid = isElement && editor.isVoid(node);
   const showProps = useSignal(false);
-  const isSelected = editor.selection && Range.includes(editor.selection, path);
+  const isSelected = !isEditor && editor.selection &&
+    Range.includes(editor.selection, path);
 
   return (
     <>
@@ -126,9 +127,11 @@ export function Debugger(props: {
   return (
     <View
       class={[
-        "flex flex-col gap-1 w-[400px]",
-        "absolute",
-        "right-4 top-16",
+        "flex flex-col gap-1 w-[420px]",
+        "fixed",
+        "right-0 top-0 bottom-0",
+        "overflow-scroll",
+        "p-2",
       ]}
     >
       <View class="p-2 color-gray rounded-md fill-10">
