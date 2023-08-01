@@ -1,4 +1,5 @@
-import { Editor, NodeEntry } from "slate";
+import { Editor } from "slate";
+import { mapped } from "./mapped.ts";
 
 function stringify(
   value: unknown,
@@ -17,35 +18,40 @@ function stringify(
   return String(value);
 }
 
-export function replace(editor: Editor, entry: NodeEntry) {
-  const [node, path] = entry;
+export function replaceAll(
+  editor: Editor,
+) {
+  mapped(editor, (entry) => {
+    const [node, path] = entry;
 
-  if (node.type !== "Value") return false;
+    if (node.type !== "Value") return false;
 
-  const value = editor.values[node.id];
+    const value = editor.values[node.id];
+    const text = stringify(value);
 
-  const isVdom = value !== null &&
-    typeof value === "object" &&
-    "$$typeof" in value;
-  if (isVdom) return false;
+    editor.removeNodes({ at: path });
+    editor.insertNodes([{
+      type: "Text",
+      text,
+    }], { at: path });
 
-  const text = stringify(value);
+    delete editor.values[node.id];
 
-  editor.select(path);
-  editor.insertNodes([{
-    type: "Text",
-    text,
-  }], { at: path });
-  delete editor.values[node.id];
-}
-
-export function replaceAll(editor: Editor) {
-  const nodes = editor.nodes({
+    return true;
+  }, {
     at: [],
     voids: true,
-    match: (node) => node.type === "Value",
+    match: (node) => {
+      if (node.type !== "Value") return false;
+
+      const value = editor.values[node.id];
+      const isVDom = value !== null &&
+        typeof value === "object" &&
+        "$$typeof" in value;
+
+      if (isVDom) return false;
+
+      return true;
+    },
   });
-  for (const entry of nodes) {
-    replace(editor, entry);
-  }
 }

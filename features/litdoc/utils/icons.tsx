@@ -1,4 +1,5 @@
 import { Editor, Node, NodeEntry } from "slate";
+import { mapped } from "./mapped.ts";
 import * as Override from "./override.ts";
 
 /** MAIN **/
@@ -47,14 +48,10 @@ export function replace(editor: Editor, entry: NodeEntry) {
 }
 
 export function replaceAll(editor: Editor) {
-  const nodes = editor.nodes({
+  mapped(editor, (entry) => replace(editor, entry), {
     at: [],
     match: (x) => x.type === "Text",
   });
-
-  for (const entry of nodes) {
-    replace(editor, entry);
-  }
 }
 
 export function getNames(editor: Editor) {

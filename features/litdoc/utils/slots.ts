@@ -1,4 +1,5 @@
 import { Editor, Node, NodeEntry } from "slate";
+import { mapped } from "./mapped.ts";
 
 export function parse(str: string) {
   function* generator(str: string): Generator<Node> {
@@ -51,14 +52,12 @@ export function replace(editor: Editor, entry: NodeEntry) {
   return true;
 }
 
-export function replaceAll(editor: Editor) {
-  const nodes = editor.nodes({
+export function replaceAll(
+  editor: Editor,
+) {
+  mapped(editor, (entry) => replace(editor, entry), {
     at: [],
     voids: true,
     match: (node) => node.type === "Text",
   });
-
-  for (const entry of nodes) {
-    replace(editor, entry);
-  }
 }

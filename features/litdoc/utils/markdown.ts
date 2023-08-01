@@ -2,6 +2,7 @@ import gfm from "https://esm.sh/remark-gfm@3.0.1";
 import parseRemark from "https://esm.sh/remark-parse@10.0.1";
 import { unified } from "https://esm.sh/unified@10.1.2";
 import { Editor, Element, Node, NodeEntry } from "slate";
+import { mapped } from "./mapped.ts";
 
 /** HELPERS **/
 
@@ -69,12 +70,14 @@ export function replace(editor: Editor, entry: NodeEntry) {
 
   editor.removeNodes({ at: path });
   editor.insertNodes(parsed, { at: path });
+
+  return true;
 }
 
 export function replaceAll(
   editor: Editor,
 ) {
-  const nodes = editor.nodes({
+  mapped(editor, (entry) => replace(editor, entry), {
     at: [],
     voids: true,
     match: (node) =>
@@ -82,8 +85,4 @@ export function replaceAll(
       node.type === "Code" &&
       node.lang === "md",
   });
-
-  for (const entry of [...nodes]) {
-    replace(editor, entry);
-  }
 }
