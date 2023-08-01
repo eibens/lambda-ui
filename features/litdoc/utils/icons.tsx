@@ -54,23 +54,6 @@ export function replaceAll(editor: Editor) {
   });
 }
 
-export function getNames(editor: Editor) {
-  const icons = new Set<string>();
-
-  const nodes = editor.nodes({
-    at: [],
-    match: (x) => x.type === "Icon",
-  });
-
-  for (const entry of nodes) {
-    const [node] = entry;
-    if (node.type !== "Icon") continue;
-    icons.add(node.name);
-  }
-
-  return icons;
-}
-
 export function plugin() {
   return (editor: Editor) => {
     const override = Override.create({

@@ -6,7 +6,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :shape-hexagon: [Litdoc](#litdoc)
+# :hexagon: [Litdoc](#litdoc)
 
 This is Lukas Eibensteiner's personal UI library.
 It is built for TypeScript, Preact, and Deno.

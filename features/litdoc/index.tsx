@@ -55,15 +55,26 @@ md`
 `;
 
 md`
-### :smile-mouth-open: Icons
+### :mood: Icons
 
 Icons can be specified using the following syntax:
 
 ~~~md
-Can you see the forest for the :trees:?
+Can you see the :forest: for the :park:?
 ~~~
 
-> Can you see the forest for the :trees:?
+> Can you see the :forest: for the :park:?
 
 > :info: This is an info icon.
+
+> # :info: Heading 1
+> ## :info: Heading 2
+> ### :info: Heading 3
+> #### :info: Heading 4
+> ##### :info: Heading 5
+> ###### :info: Heading 6
+> :info: Paragraph.
+> - :info: List item
+>   - :info: List item
+>     - :info: List item
 `;
