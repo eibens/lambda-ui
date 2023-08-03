@@ -60,7 +60,7 @@ export function parse(str: string): Node[] {
   fix(root as unknown as Record<string, unknown>);
 
   // Assume all compatibility problems have now been fixed in order to cast.
-  return root.children as unknown as Node[];
+  return (root as unknown as Element).children;
 }
 
 export function replace(editor: Editor, entry: NodeEntry) {
