@@ -28,7 +28,7 @@ ${function () {
       const title = LitdocEditor.getTitle(sub);
       const lead = LitdocEditor.getLead(sub);
       const url = path.substring(0, path.length - "/index.tsx".length);
-      return `> ### :folder: [${title}](${url})\n> ${lead}\n\n`;
+      return `> ###### :folder: [${title}](${url})\n> ${lead}\n\n`;
     });
 }}
 `;

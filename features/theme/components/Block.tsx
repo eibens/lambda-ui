@@ -12,7 +12,7 @@ function getSpacing(editor: Editor, entryA?: NodeEntry, entryB?: NodeEntry) {
   const [a, pathA] = entryA ?? [];
   const [b, pathB] = entryB ?? [];
 
-  if (a.type == b.type) return 3;
+  if (a.type == b.type) return 4;
 
   if (b.type === "Heading") return 24;
 
@@ -20,12 +20,12 @@ function getSpacing(editor: Editor, entryA?: NodeEntry, entryB?: NodeEntry) {
 
   if (isLead) {
     if (a.type === "Heading" && b.type === "Paragraph") {
-      return 3;
+      return 2;
     }
   }
 
   const narrow = ["Paragraph", "ListItem", "List"];
-  if (narrow.includes(a.type) && narrow.includes(b.type)) return 3;
+  if (narrow.includes(a.type) && narrow.includes(b.type)) return 4;
 
   return 12;
 }

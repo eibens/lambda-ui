@@ -54,6 +54,30 @@ md`
 > - List item
 `;
 
+const t = "This is placeholder paragraph that is extra large.";
+
+md`
+### Cards
+
+> # :info: Heading 1
+> ${t}
+
+> ## :info: Heading 2
+> ${t}
+
+> ### :info: Heading 3
+> ${t}
+
+> #### :info: Heading 4
+> ${t}
+
+> ##### :info: Heading 5
+> ${t}
+
+> ###### :info: Heading 6
+> ${t}
+`;
+
 md`
 ### :mood: Icons
 
