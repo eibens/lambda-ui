@@ -1,55 +1,61 @@
-import { Anchor } from "icons/anchor.tsx";
-import { ArrowRight } from "icons/arrow_right.tsx";
-import { ArrowUp } from "icons/arrow_up.tsx";
-import { External } from "icons/external.tsx";
-import { Home } from "icons/home.tsx";
-import { Link as LinkIcon } from "icons/link.tsx";
+import { MdIcon } from "./md_icon.tsx";
 import { View, ViewChildren, ViewProps } from "./view.tsx";
 
 /** HELPERS **/
 
-function parseUrl(str: string) {
+function getTarget(str: string): LinkTarget {
   try {
     const url = new URL(str);
-
-    const hostname = url.hostname;
-    return {
-      target: "external",
-      hostname,
-    };
+    return "external";
   } catch (e) {
     // TypeError is expected if str is a local URL.
     if (!(e instanceof TypeError)) throw e;
 
     if (str === "/") {
-      return {
-        target: "home",
-        hostname: "",
-      };
+      return "home";
     }
 
     if (str === "#top") {
-      return {
-        target: "top",
-        hostname: "",
-      };
+      return "top";
     }
 
     if (str.startsWith("#")) {
-      return {
-        target: "local",
-        hostname: "",
-      };
+      return "local";
     }
 
-    return {
-      target: "internal",
-      hostname: "",
-    };
+    return "internal";
   }
 }
 
+function getHostname(str: string): string {
+  try {
+    const url = new URL(str);
+    return url.hostname;
+  } catch (e) {
+    // TypeError is expected if str is a local URL.
+    if (!(e instanceof TypeError)) throw e;
+
+    return "";
+  }
+}
+
+function getByTarget<T>(
+  options: Partial<Record<LinkTarget, T>> & {
+    default: T;
+  },
+  target: LinkTarget,
+): T {
+  return options[target] ?? options["default"];
+}
+
 /** MAIN **/
+
+export type LinkTarget =
+  | "external"
+  | "internal"
+  | "local"
+  | "home"
+  | "top";
 
 export function Link(
   props: ViewProps<"a"> & {
@@ -58,75 +64,96 @@ export function Link(
   },
 ) {
   const { href, children, ...rest } = props;
-  const { target, hostname } = parseUrl(href);
+  const target = getTarget(href);
 
-  const icon = (function () {
-    if (target === "external") return <External />;
-    if (target === "internal") return <ArrowRight />;
-    if (target === "local") return <Anchor />;
-    if (target === "home") return <Home />;
-    if (target === "top") return <ArrowUp />;
-    return <LinkIcon />;
-  })();
+  const hostname = getHostname(href);
 
-  const title = (function () {
-    if (target === "external") return `External link to ${hostname}`;
-    if (target === "internal") return `Internal link`;
-    if (target === "local") return `Local link`;
-    if (target === "home") return `Homepage`;
-    return "Unknown link type";
-  })();
+  const icon = getByTarget({
+    external: <MdIcon>open_in_new</MdIcon>,
+    internal: <MdIcon>arrow_forward</MdIcon>,
+    local: <MdIcon>tag</MdIcon>,
+    home: <MdIcon>home</MdIcon>,
+    top: <MdIcon>arrow_upward</MdIcon>,
+    default: <MdIcon>link</MdIcon>,
+  }, target);
+
+  const title = getByTarget({
+    external: `External link to ${hostname}`,
+    internal: `Internal link`,
+    local: `Local link`,
+    home: `Homepage`,
+    default: "Unknown link type",
+  }, target);
+
+  const color = getByTarget({
+    external: "sky",
+    internal: "blue",
+    local: "gray",
+    home: "gray",
+    default: "gray",
+  }, target);
+
+  const handleClick = (e: Event) => {
+    const isSamePage = ["local", "top"].includes(target);
+    if (isSamePage) {
+      e.preventDefault();
+      const element = document.getElementById(href.slice(1));
+      if (element) {
+        const scrollStart = target === "top" ||
+          ["H1", "H2", "H3", "H4", "H5", "H6"].includes(
+            element.tagName,
+          );
+
+        const scrollLogicalPosition = scrollStart ? "start" : "center";
+
+        // smooth scroll to element
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: scrollLogicalPosition,
+          inline: scrollLogicalPosition,
+        });
+      }
+
+      // Update URL without reloading page
+      history.pushState({}, "", href);
+    }
+  };
+
+  const opacity = [
+    "border-opacity-0",
+    "hover:border-opacity-50",
+    "focus:border-opacity-50",
+  ].join(" ");
 
   return (
     <View {...rest} tag="span">
       <View
         tag="a"
         class={[
-          "color-sky fill-0 stroke-0 hover:stroke-30 focus:stroke-50 border-b-[0.125em]",
-          "transition-colors duration-200 ease-in-out focus:outline-none",
+          `border-${color}-600 dark:border-${color}-400`,
+          `${opacity} dark:(${opacity})`,
+          "border-b-[0.125em]",
+          "outline-none focus:outline-none",
         ]}
         target={target === "external" ? "_blank" : undefined}
         href={href}
-        onClick={(e) => {
-          const isSamePage = ["local", "top"].includes(target);
-          if (isSamePage) {
-            e.preventDefault();
-            const element = document.getElementById(href.slice(1));
-            if (element) {
-              const scrollStart = target === "top" ||
-                ["H1", "H2", "H3", "H4", "H5", "H6"].includes(
-                  element.tagName,
-                );
-
-              const scrollLogicalPosition = scrollStart ? "start" : "center";
-
-              // smooth scroll to element
-              element.scrollIntoView({
-                behavior: "smooth",
-                block: scrollLogicalPosition,
-                inline: scrollLogicalPosition,
-              });
-            }
-            // Update URL without reloading page
-            history.pushState({}, "", href);
-          }
-        }}
+        onClick={handleClick}
       >
         {children}
       </View>
       <View
         tag="span"
         class={[
-          "inline-block text-gray-500 cursor-help select-none",
+          "inline-block opacity-30 cursor-help select-none hover:opacity-70",
           `pl-[${0.25}rem]`,
+          "transition-opacity",
         ]}
         title={title}
       >
         <View
           tag="span"
           class={[
-            "relative flex w-[0.75lh] h-[0.75lh]",
-            `top-[${0.125}lh]`,
+            "w-[0.75lh] h-[0.75lh]",
           ]}
         >
           {icon}

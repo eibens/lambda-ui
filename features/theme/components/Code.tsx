@@ -14,7 +14,7 @@ export function Code(props: RenderNodeProps<"Code">) {
         class={[
           "font-mono",
           "hover:border-black dark:hover:border-white",
-          "transition-colors duration-200 ease-in-out",
+          "transition-colors",
         ]}
       >
         {children}

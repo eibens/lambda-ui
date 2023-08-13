@@ -1,6 +1,5 @@
-import { Button, View } from "@litdoc/ui";
+import { Button, MdIcon, View } from "@litdoc/ui";
 import { useSignal } from "@preact/signals";
-import { Trash } from "icons/trash.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { Editor, Element, Node, Range } from "slate";
 import { ObjectValue } from "./ObjectValue.tsx";
@@ -62,7 +61,7 @@ function DebuggerNode(props: {
             }}
           />
           <Button
-            icon={<Trash />}
+            icon={<MdIcon>delete</MdIcon>}
             tint
             size="xs"
             onClick={(event: Event) => {

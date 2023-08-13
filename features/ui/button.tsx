@@ -37,7 +37,7 @@ export function Button(props: ButtonProps) {
       class={[
         "font-sans",
         `pill-${size} rounded-full gap-1`,
-        "transition-all duration-300",
+        "transition-all",
         disabled ? "fill-20 opacity-50" : `hover:fill-20`,
         disabled ? "cursor-not-allowed" : "cursor-pointer",
         "border-1 not-focus:(stroke-0) focus:(not-active:stroke-50)",

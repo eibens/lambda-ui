@@ -33,11 +33,6 @@
     "@litdoc/templates": "./features/templates/mod.ts",
     "@litdoc/theme": "./features/theme/mod.ts",
     "@litdoc/render": "./features/render/mod.ts",
-    "@litdoc/web": "./features/web/mod.ts",
-
-    "@/islands/": "./islands/",
-
-    "three": "https://esm.sh/three@*",
-    "icons/": "https://raw.githubusercontent.com/eibens/css.gg/master/icons/tsx-esm/"
+    "@litdoc/web": "./features/web/mod.ts"
   }
 }

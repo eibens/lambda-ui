@@ -1,6 +1,6 @@
 import * as Dark from "@litdoc/dark";
-import { DarkMode } from "icons/dark_mode.tsx";
 import { Button, ButtonProps } from "./button.tsx";
+import { MdIcon } from "./md_icon.tsx";
 
 export function ThemeToggle(props: {
   size?: ButtonProps["size"];
@@ -9,7 +9,9 @@ export function ThemeToggle(props: {
     <Button
       tag="button"
       onClick={() => Dark.store.value = !Dark.store.value}
-      icon={<DarkMode />}
+      icon={Dark.store.value
+        ? <MdIcon>light_mode</MdIcon>
+        : <MdIcon>dark_mode</MdIcon>}
       iconPosition="right"
       size={props.size}
     />

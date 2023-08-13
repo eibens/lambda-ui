@@ -1,9 +1,9 @@
 import { Head } from "$fresh/src/runtime/head.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
-import Doc from "@/islands/Doc.tsx";
-import FeatureHeader from "@/islands/FeatureHeader.tsx";
 import * as Manifest from "@litdoc/manifest";
 import { View } from "@litdoc/ui";
+import Doc from "../islands/Doc.tsx";
+import FeatureHeader from "../islands/FeatureHeader.tsx";
 import manifest from "../litdoc.gen.ts";
 
 /** MAIN **/
@@ -27,7 +27,10 @@ export default function render(props: PageProps) {
           rel="stylesheet"
         />
       </Head>
-      <View class="flex justify-center" id="top">
+      <View
+        class="flex justify-center"
+        id="top"
+      >
         <FeatureHeader
           name={path ?? "Not found"}
         />

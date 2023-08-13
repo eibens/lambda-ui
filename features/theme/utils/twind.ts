@@ -9,7 +9,7 @@ const config: Omit<Twind.Configuration, "mode" | "sheet"> = {
     html: apply`
       bg-gray-100 text-gray-800 
       font-serif
-      transition-colors duration-200
+      transition-colors
     `,
     "html.dark": apply`
       bg-gray-900 text-gray-200
