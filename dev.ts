@@ -6,6 +6,7 @@ await devLitdoc(import.meta.url, {
   routes: {
     match: [
       /\/index\.tsx?$/,
+      /docs\/.*\.tsx?$/,
     ],
     skip: [
       /\/\.todo\//,

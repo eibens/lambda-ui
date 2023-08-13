@@ -7,7 +7,7 @@ const { md } = doc;
 
 function getFeatures() {
   return Object.keys(manifest.routes)
-    .filter((path) => path.startsWith("./features"))
+    .filter((path) => /\/features\/[^/]+\/index.tsx$/.test(path))
     .sort((a, b) => a.localeCompare(b))
     .flatMap((path) => {
       const sub = LitdocEditor.createFromManifest({ manifest, path });

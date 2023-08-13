@@ -1,16 +1,19 @@
 import { RenderNodeProps } from "@litdoc/render";
-import { View } from "@litdoc/ui";
+import { MdIcon, Span, View } from "@litdoc/ui";
 import { Block } from "./Block.tsx";
 
 export function ListItem(props: RenderNodeProps<"ListItem">) {
-  const { attributes, children } = props;
+  const { attributes, children, node } = props;
   return (
     <Block {...props}>
       <View
         {...attributes}
         tag="li"
-        class="list-none"
+        class="list-none flex"
       >
+        <Span>
+          <MdIcon>{node.icon ?? "circle"}</MdIcon>
+        </Span>
         <View
           class={[
             "flex flex-col",

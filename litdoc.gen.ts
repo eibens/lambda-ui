@@ -2,17 +2,19 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./features/litdoc/index.tsx";
-import * as $1 from "./features/monaco/index.tsx";
-import * as $2 from "./index.tsx";
-import * as $3 from "./routes/index.tsx";
+import * as $0 from "./features/litdoc/docs/templates.tsx";
+import * as $1 from "./features/litdoc/index.tsx";
+import * as $2 from "./features/monaco/index.tsx";
+import * as $3 from "./index.tsx";
+import * as $4 from "./routes/index.tsx";
 
 export default {
   baseUrl: import.meta.url,
   routes: {
-    "./features/litdoc/index.tsx": $0,
-    "./features/monaco/index.tsx": $1,
-    "./index.tsx": $2,
-    "./routes/index.tsx": $3,
+    "./features/litdoc/docs/templates.tsx": $0,
+    "./features/litdoc/index.tsx": $1,
+    "./features/monaco/index.tsx": $2,
+    "./index.tsx": $3,
+    "./routes/index.tsx": $4,
   },
 };
