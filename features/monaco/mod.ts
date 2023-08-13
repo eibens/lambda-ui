@@ -1,4 +1,3 @@
-export { Provider as MonacoProvider } from "./components/provider.tsx";
 export { useEditor as useMonacoEditor } from "./hooks/use_editor.ts";
 export { useEvent as useMonacoEditorEvent } from "./hooks/use_event.ts";
 export { useFocus as useMonacoEditorFocus } from "./hooks/use_focus.ts";

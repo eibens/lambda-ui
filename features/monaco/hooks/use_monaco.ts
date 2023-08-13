@@ -1,14 +1,21 @@
-import { useContext } from "preact/hooks";
-import { Context } from "../utils/context.ts";
-
 /** MAIN **/
 
-export function useMonaco() {
-  const context = useContext(Context);
-  if (context === undefined) {
-    throw new Error(
-      "useMonaco() must be used inside MonacoProvider",
-    );
-  }
-  return context;
+import { useSignalEffect } from "@preact/signals";
+import { useEffect, useState } from "preact/hooks";
+import { load, store } from "../utils/load.ts";
+import { Monaco } from "../utils/types.ts";
+
+export function useMonaco(): Monaco | undefined {
+  const [instance, setInstance] = useState<Monaco | undefined>(undefined);
+
+  useEffect(() => {
+    // Auto-load monaco if not already loaded.
+    load();
+  }, []);
+
+  useSignalEffect(() => {
+    setInstance(store.value);
+  });
+
+  return instance;
 }

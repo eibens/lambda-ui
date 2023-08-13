@@ -1,4 +1,3 @@
-import { MonacoProvider } from "@litdoc/monaco";
 import { fromComponents } from "@litdoc/render";
 import * as Theme from "@litdoc/theme";
 import { LitdocEditor } from "litdoc";
@@ -28,7 +27,7 @@ export default function Content(props: {
   } = fromComponents(Theme);
 
   return (
-    <MonacoProvider>
+    <>
       <Slate
         editor={reactEditor}
         initialValue={editor.children}
@@ -40,6 +39,6 @@ export default function Content(props: {
         />
       </Slate>
       <Debugger editor={editor} />
-    </MonacoProvider>
+    </>
   );
 }
