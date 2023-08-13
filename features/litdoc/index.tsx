@@ -12,31 +12,59 @@ You are currently viewing the documentation for Litdoc,
 `;
 
 md`
-## Templates
+## [Templates](#templates)
 
 Templates in Litdoc can be created with template literals.
 This allows interspersing text with runtime values,
 which can be used to embed and generate dynamic content.
 
+~~~ts
+import { lit } from "litdoc/lit"
+
+export const doc = lit();
+const { md } = doc;
+
+md\`
+# :folder: [Litdoc](#litdoc)
+\`
+~~~
+
 Strings are inlined into the template source code,
 which means any Markdown formatting will also be applied.
+
+> \`\${"plain text"}\`: ${"plain text"}
+>
+> \`\${"with **markdown**"}\`: ${"with **markdown**"}
+
 Numbers are converted to strings using the default representation.
-Nullish and logical values are converted to empty strings.
+
+> \`\${12345}\`: ${12345}
+>
+> \`\${0.12345}\`: ${0.12345}
+
+
+Nullish and boolean values are converted to empty strings.
 This enables the use of \`||\` and \`&&\` for optional content
 and reflects how React renders such values.
 
-- \`\${"text"}\`: ${"text"}
-- \`\${"**markdown**"}\`: ${"**markdown**"}
-- \`\${12345}\`: ${12345}
-- \`\${null}\`: ${null} 
-- \`\${undefined}\`: ${undefined}
-- \`\${true}\`: ${true} 
-- \`\${false}\`: ${false}
-- \`\${{ type: "InlineCode", text: "some code" }}\`: ${{
+> \`\${null}\`: ${null}  *:arrow_left_alt: empty*
+>
+> \`\${undefined}\`: ${undefined} *:arrow_left_alt: empty*
+>
+> \`\${true}\`: ${true} *:arrow_left_alt: empty*
+>
+> \`\${false}\`: ${false} *:arrow_left_alt: empty*
+
+> ### :warning: TODO
+
+> \`\${{ type: "InlineCode", text: "some code" }}\`: ${{
   type: "InlineCode",
   text: "some code",
 }}
-- \`\${<button>html element</button>}\`: ${<button>html element</button>}
+>
+> \`\${<button>html element</button>}\`: ${<button>html element</button>}
+
+
 `;
 
 md`
@@ -59,23 +87,23 @@ const t = "This is placeholder paragraph that is extra large.";
 md`
 ### Cards
 
-> # :info: Heading 1
-> ${t}
-
-> ## :info: Heading 2
-> ${t}
-
-> ### :info: Heading 3
-> ${t}
-
-> #### :info: Heading 4
-> ${t}
-
-> ##### :info: Heading 5
-> ${t}
-
-> ###### :info: Heading 6
-> ${t}
+>> # :info: Heading 1
+>> ${t}
+>
+>> ## :info: Heading 2
+>> ${t}
+>
+>> ### :info: Heading 3
+>> ${t}
+>
+>> #### :info: Heading 4
+>> ${t}
+>
+>> ##### :info: Heading 5
+>> ${t}
+>
+>> ###### :info: Heading 6
+>> ${t}
 `;
 
 md`

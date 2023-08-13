@@ -4,10 +4,9 @@ export function MdIcon(props: {
   const { children } = props;
   return (
     <span
-      class="material-symbols-outlined"
+      class="material-symbols-outlined align-middle"
       style={{
         fontSize: "inherit",
-        verticalAlign: "middle",
       }}
     >
       {children}

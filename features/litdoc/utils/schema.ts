@@ -75,7 +75,9 @@ type NodeMap = ToNodeMap<{
   List: BaseElementProps & {
     ordered?: boolean;
   };
-  ListItem: BaseElementProps;
+  ListItem: BaseElementProps & {
+    icon?: string;
+  };
   Image: BaseElementProps & {
     url: string;
     title?: string;

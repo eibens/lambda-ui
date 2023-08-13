@@ -88,9 +88,7 @@ export function Link(
   const color = getByTarget({
     external: "sky",
     internal: "blue",
-    local: "gray",
-    home: "gray",
-    default: "gray",
+    default: undefined,
   }, target);
 
   const handleClick = (e: Event) => {
@@ -130,10 +128,15 @@ export function Link(
       <View
         tag="a"
         class={[
-          `border-${color}-600 dark:border-${color}-400`,
+          color
+            ? `border-${color}-600 dark:border-${color}-400`
+            : "border-black dark:border-white",
+          color
+            ? `text-${color}-600 dark:text-${color}-400`
+            : "text-black dark:text-white",
           `${opacity} dark:(${opacity})`,
-          "border-b-[0.125em]",
           "outline-none focus:outline-none",
+          "border-b-[0.125em]",
         ]}
         target={target === "external" ? "_blank" : undefined}
         href={href}
@@ -141,11 +144,11 @@ export function Link(
       >
         {children}
       </View>
+      <span>{" "}</span>
       <View
         tag="span"
         class={[
           "inline-block opacity-30 cursor-help select-none hover:opacity-70",
-          `pl-[${0.25}rem]`,
           "transition-opacity",
         ]}
         title={title}

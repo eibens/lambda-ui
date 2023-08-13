@@ -9,9 +9,9 @@ export function Blockquote(props: RenderNodeProps<"Blockquote">) {
       <View
         tag="blockquote"
         class={[
-          "flex flex-col px-4 py-3",
-          "rounded-lg",
-          "shadow-sm color-gray stroke-20 fill-0 border-1",
+          "flex flex-col p-4",
+          "rounded-xl",
+          "shadow-sm color-gray stroke-10 fill-0 border-4",
         ]}
       >
         {children}

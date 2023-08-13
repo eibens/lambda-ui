@@ -25,8 +25,6 @@ md`
 This is Lukas Eibensteiner's personal UI library.
 It is built for TypeScript, Preact, and Deno.
 
-> Until further notice, this is a proprietary library.
-
 ## [Features](#features)
 
 The \`features\` folders export the API of the library.

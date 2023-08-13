@@ -1,6 +1,13 @@
-export function Span(props: {
-  children: string;
-}) {
-  const { children } = props;
-  return <span class="align-middle">{children}</span>;
+import { View, ViewProps } from "./view.tsx";
+
+export function Span(
+  props: ViewProps<"span">,
+) {
+  return (
+    <View
+      tag="span"
+      class="align-middle"
+      viewProps={props}
+    />
+  );
 }

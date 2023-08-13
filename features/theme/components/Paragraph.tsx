@@ -15,9 +15,6 @@ function getFontSize(editor: Editor, entry: NodeEntry) {
   const [prevNode, prevPath] = prevEntry;
   if (prevNode.type !== "Heading") return baseSize;
 
-  const isLead = prevPath[path.length - 1] === 0;
-  if (!isLead) return baseSize;
-
   const level = prevNode.depth;
   return baseSize + (6 - level) * 2;
 }

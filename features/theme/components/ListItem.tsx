@@ -9,6 +9,7 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
       <View
         {...attributes}
         tag="li"
+        class="list-none"
       >
         <View
           class={[

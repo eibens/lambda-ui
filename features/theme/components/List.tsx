@@ -13,7 +13,7 @@ export function List(props: RenderNodeProps<"List">) {
       <View
         tag={tag}
         class={[
-          "ml-8 flex flex-col",
+          "flex flex-col",
           style,
         ]}
       >
