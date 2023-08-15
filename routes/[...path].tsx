@@ -22,10 +22,10 @@ export default function render(props: PageProps) {
     <>
       <Head>
         <title>Litdoc</title>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400"
-          rel="stylesheet"
-        />
+        <link href="/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+        <link href="/fontawesome/css/solid.min.css" rel="stylesheet" />
+        <link href="/fontawesome/css/brands.min.css" rel="stylesheet" />
+        <link href="/fontawesome/css/regular.min.css" rel="stylesheet" />
       </Head>
       <View
         class="flex justify-center"

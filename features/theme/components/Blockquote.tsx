@@ -17,8 +17,10 @@ export function Blockquote(props: RenderNodeProps<"Blockquote">) {
         "flex flex-col p-4",
         "rounded-xl",
         "shadow-sm color-gray stroke-10 fill-0 border-4",
-        `mb-${spacing}`,
       ]}
+      style={{
+        marginBottom: spacing + "px",
+      }}
     >
       {children}
     </View>

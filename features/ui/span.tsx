@@ -6,7 +6,6 @@ export function Span(
   return (
     <View
       tag="span"
-      class="align-middle"
       viewProps={props}
     />
   );

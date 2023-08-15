@@ -1,78 +1,38 @@
+import { LitdocEditor } from "litdoc";
 import lit from "litdoc/lit";
+import manifest from "../../litdoc.gen.ts";
+
+/** HELPERS **/
+
+function getDocs() {
+  return Object.keys(manifest.routes)
+    .filter((path) => /\/features\/litdoc\/docs\/[^/.]+.tsx$/.test(path))
+    .sort((a, b) => a.localeCompare(b))
+    .flatMap((path) => {
+      const sub = LitdocEditor.createFromManifest({ manifest, path });
+      if (!sub) return [];
+      const title = LitdocEditor.getTitle(sub);
+      const icon = LitdocEditor.getIcon(sub);
+      const url = path.substring(1, path.length - ".tsx".length);
+      return { title, url, icon };
+    });
+}
+
+/** MAIN **/
 
 export const doc = lit();
 const { md } = doc;
 
 md`
-# :folder: [Litdoc](#litdoc)
+# :book: [Litdoc](#litdoc)
 
 Litdoc is a document generator for Deno.
 You are currently viewing the documentation for Litdoc,
   which is written in Litdoc itself.
 
-- [Templates](./litdoc/docs/templates)
-`;
-
-md`
-### Hierarchy
-
-> # Heading 1
-> ## Heading 2
-> ### Heading 3
-> #### Heading 4
-> ##### Heading 5
-> ###### Heading 6
-> Paragraph.
-> - List item
-> - List item
-> - List item
-`;
-
-const t = "This is placeholder paragraph that is extra large.";
-
-md`
-### Cards
-
->> # :info: Heading 1
->> ${t}
->
->> ## :info: Heading 2
->> ${t}
->
->> ### :info: Heading 3
->> ${t}
->
->> #### :info: Heading 4
->> ${t}
->
->> ##### :info: Heading 5
->> ${t}
->
->> ###### :info: Heading 6
->> ${t}
-`;
-
-md`
-### :mood: Icons
-
-Icons can be specified using the following syntax:
-
-~~~md
-Can you see the :forest: for the :park:?
-~~~
-
-> Can you see the :forest: for the :park:?
-
-> :info: This is an info icon.
-
-> # :info: Heading 1
-> ## :info: Heading 2
-> ### :info: Heading 3
-> #### :info: Heading 4
-> ##### :info: Heading 5
-> ###### :info: Heading 6
-> :info: Paragraph.
-> - :info: List item
->   - :info: List item
->     - :info: List item
+  ${() =>
+  getDocs().map(({ icon, title, url }) =>
+    `> - ### :${icon}: [${title}](${url})\n\n`
+  )}  
+  
 `;

@@ -27,16 +27,46 @@ export function getSpacing(editor: Editor, node: Node) {
   if (!next) return 0;
 
   const [a, b] = [node, next[0]];
-  if (a.type === "Heading" && b.type === "Heading") return 4;
-  if (b.type === "Heading") return 24;
-  if (a.type === "Heading") return 4;
+  if (a.type === "Heading" && b.type === "Heading") return 16;
+  if (b.type === "Heading") return 96;
+  if (a.type === "Heading") return 16;
 
-  if (isLead(editor, [node, path])) return 12;
+  if (isLead(editor, [node, path])) return 48;
 
-  if (a.type == b.type) return 4;
+  if (a.type == b.type) return 16;
 
   const narrow = ["Paragraph", "ListItem", "List"];
-  if (narrow.includes(a.type) && narrow.includes(b.type)) return 4;
+  if (narrow.includes(a.type) && narrow.includes(b.type)) return 16;
 
-  return 12;
+  return 48;
+}
+
+export function getFontSize(editor: Editor, node: Node) {
+  if (node.type === "Heading") {
+    const i = node.depth - 1;
+    const s = [8, 6, 4, 3, 2, 1][i] * 4 + 16;
+    return s;
+  }
+
+  if (node.type === "ListItem") {
+    const firstChild = node.children[0];
+    return getFontSize(editor, firstChild);
+  }
+
+  const path = ReactEditor.findPath(editor, node);
+
+  const baseSize = 16;
+
+  const prevEntry = editor.previous({ at: path });
+  if (!prevEntry) return baseSize;
+
+  const [prevNode] = prevEntry;
+  if (prevNode.type !== "Heading") return baseSize;
+
+  const level = prevNode.depth;
+  return baseSize + (6 - level) * 2;
+}
+
+export function getLineHeight(editor: Editor, node: Node) {
+  return getFontSize(editor, node) * 1.5;
 }

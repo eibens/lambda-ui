@@ -47,10 +47,12 @@ export function Button(props: ButtonProps) {
         `color-${color}`,
         tint ? "fill-10" : "fill-0",
         iconPosition === "left" ? "flex-row" : "flex-row-reverse",
+        "justify-center items-center",
+        "align-middle",
       ]}
     >
       {icon && (
-        <View class={`icon-${size}`}>
+        <View class="flex">
           {icon}
         </View>
       )}

@@ -1,4 +1,4 @@
-import { MdIcon } from "./md_icon.tsx";
+import { FaIcon } from "./fa_icon.tsx";
 import { View, ViewChildren, ViewProps } from "./view.tsx";
 
 /** HELPERS **/
@@ -69,12 +69,12 @@ export function Link(
   const hostname = getHostname(href);
 
   const icon = getByTarget({
-    external: <MdIcon>open_in_new</MdIcon>,
-    internal: <MdIcon>arrow_forward</MdIcon>,
-    local: <MdIcon>tag</MdIcon>,
-    home: <MdIcon>home</MdIcon>,
-    top: <MdIcon>arrow_upward</MdIcon>,
-    default: <MdIcon>link</MdIcon>,
+    external: <FaIcon name="arrow-up-right-from-square" />,
+    internal: <FaIcon name="arrow-right" />,
+    local: <FaIcon name="hashtag" />,
+    home: <FaIcon name="house" />,
+    top: <FaIcon name="arrow-up" />,
+    default: <FaIcon name="link" />,
   }, target);
 
   const title = getByTarget({
@@ -131,12 +131,11 @@ export function Link(
           color
             ? `border-${color}-600 dark:border-${color}-400`
             : "border-black dark:border-white",
-          color
-            ? `text-${color}-600 dark:text-${color}-400`
-            : "text-black dark:text-white",
+          "text-black dark:text-white",
           `${opacity} dark:(${opacity})`,
           "outline-none focus:outline-none",
           "border-b-[0.125em]",
+          "transition-colors",
         ]}
         target={target === "external" ? "_blank" : undefined}
         href={href}
@@ -148,19 +147,12 @@ export function Link(
       <View
         tag="span"
         class={[
-          "inline-block opacity-30 cursor-help select-none hover:opacity-70",
+          "opacity-30 cursor-help select-none hover:opacity-70",
           "transition-opacity",
         ]}
         title={title}
       >
-        <View
-          tag="span"
-          class={[
-            "w-[0.75lh] h-[0.75lh]",
-          ]}
-        >
-          {icon}
-        </View>
+        {icon}
       </View>
     </View>
   );

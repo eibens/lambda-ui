@@ -22,9 +22,9 @@ export function Block(
         "data-slate-type": node.type,
         contentEditable,
       }}
-      class={[
-        `mb-${spacing}`,
-      ]}
+      style={{
+        marginBottom: spacing + "px",
+      }}
     >
       {children}
     </View>

@@ -1,27 +1,58 @@
 import { RenderNodeProps } from "@litdoc/render";
-import { MdIcon, Span, View } from "@litdoc/ui";
-import { Block } from "./Block.tsx";
+import { View } from "@litdoc/ui";
+import { LitdocEditor } from "litdoc";
+import { Editor, Node } from "slate";
+import { ReactEditor, useSlate } from "slate-react";
+import { FaIcon } from "../../ui/fa_icon.tsx";
+import { getFontSize, getLineHeight, getSpacing } from "../utils/theme.ts";
+
+function getIconSize(editor: Editor, node: Node) {
+  const path = ReactEditor.findPath(editor, node);
+  // check
+}
 
 export function ListItem(props: RenderNodeProps<"ListItem">) {
   const { attributes, children, node } = props;
+
+  const editor = useSlate();
+  const spacing = getSpacing(editor, node);
+  const size = getFontSize(editor, node);
+  const lineHeight = getLineHeight(editor, node);
+  const path = ReactEditor.findPath(editor, node);
+  const icon = LitdocEditor.getIcon(editor, { at: path });
+
   return (
-    <Block {...props}>
+    <View
+      {...attributes}
+      tag="li"
+      class={[
+        "flex flex-row gap-4",
+      ]}
+      style={{
+        marginBottom: spacing + "px",
+      }}
+    >
       <View
         {...attributes}
-        tag="li"
-        class="list-none flex"
+        tag="p"
+        class={[
+          "text-gray-700 dark:text-gray-300",
+          "whitespace-normal",
+        ]}
+        style={{
+          lineHeight: lineHeight + "px",
+          fontSize: size + "px",
+        }}
       >
-        <Span>
-          <MdIcon>{node.icon ?? "circle"}</MdIcon>
-        </Span>
-        <View
-          class={[
-            "flex flex-col",
-          ]}
-        >
-          {children}
-        </View>
+        <FaIcon name={icon ?? "minus"} />
       </View>
-    </Block>
+      <View
+        class={[
+          "flex flex-col",
+        ]}
+      >
+        {children}
+      </View>
+    </View>
   );
 }

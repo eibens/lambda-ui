@@ -4,7 +4,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :data_object: [Templates](#templates)
+# :code: [Templates](#templates)
 
 Templates in Litdoc can be created with template literals.
 This allows interspersing text with runtime values,
@@ -39,13 +39,13 @@ Nullish and boolean values are converted to empty strings.
 This enables the use of \`||\` and \`&&\` for optional content
 and reflects how React renders such values.
 
-> \`\${null}\`: ${null}  *:arrow_left_alt: empty*
+> \`\${null}\`: ${null}  *:arrow-left: empty*
 >
-> \`\${undefined}\`: ${undefined} *:arrow_left_alt: empty*
+> \`\${undefined}\`: ${undefined} *:arrow-left: empty*
 >
-> \`\${true}\`: ${true} *:arrow_left_alt: empty*
+> \`\${true}\`: ${true} *:arrow-left: empty*
 >
-> \`\${false}\`: ${false} *:arrow_left_alt: empty*
+> \`\${false}\`: ${false} *:arrow-left: empty*
 
 > ### :warning: TODO
 

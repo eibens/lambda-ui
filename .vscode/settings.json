@@ -9,8 +9,12 @@
   "editor.tabSize": 2,
   "cSpell.words": [
     "darkmode",
+    "fontawesome",
     "litdoc",
     "preact",
     "twind"
-  ]
+  ],
+  "[css]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  }
 }

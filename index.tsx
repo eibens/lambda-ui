@@ -2,8 +2,7 @@ import { LitdocEditor } from "litdoc";
 import lit from "litdoc/lit";
 import manifest from "./litdoc.gen.ts";
 
-export const doc = lit();
-const { md } = doc;
+/** HELPERS **/
 
 function getFeatures() {
   return Object.keys(manifest.routes)
@@ -19,8 +18,13 @@ function getFeatures() {
     });
 }
 
+/** MAIN **/
+
+export const doc = lit();
+const { md } = doc;
+
 md`
-# :hexagon: [Litdoc](#litdoc)
+# :cube: [Litdoc](#litdoc)
 
 This is Lukas Eibensteiner's personal UI library.
 It is built for TypeScript, Preact, and Deno.

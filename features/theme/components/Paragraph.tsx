@@ -1,43 +1,31 @@
 import { RenderNodeProps } from "@litdoc/render";
 import { View } from "@litdoc/ui";
-import { Editor, NodeEntry } from "slate";
-import { ReactEditor, useSlate } from "slate-react";
-import { Block } from "./Block.tsx";
-
-function getFontSize(editor: Editor, entry: NodeEntry) {
-  const [node, path] = entry;
-
-  const baseSize = 16;
-
-  const prevEntry = editor.previous({ at: path });
-  if (!prevEntry) return baseSize;
-
-  const [prevNode, prevPath] = prevEntry;
-  if (prevNode.type !== "Heading") return baseSize;
-
-  const level = prevNode.depth;
-  return baseSize + (6 - level) * 2;
-}
+import { useSlate } from "slate-react";
+import { getFontSize, getLineHeight, getSpacing } from "../utils/theme.ts";
 
 export function Paragraph(props: RenderNodeProps<"Paragraph">) {
-  const { children, node } = props;
+  const { attributes, children, node } = props;
 
   const editor = useSlate();
-  const path = ReactEditor.findPath(editor, node);
-  const size = getFontSize(editor, [node, path]);
+  const size = getFontSize(editor, node);
+  const spacing = getSpacing(editor, node);
+  const lineHeight = getLineHeight(editor, node);
 
   return (
-    <Block {...props}>
-      <View
-        tag="p"
-        class={[
-          `text-[${size}px]`,
-          "text-gray-700 dark:text-gray-300",
-          "whitespace-normal",
-        ]}
-      >
-        {children}
-      </View>
-    </Block>
+    <View
+      {...attributes}
+      tag="p"
+      class={[
+        "text-gray-700 dark:text-gray-300",
+        "whitespace-normal",
+      ]}
+      style={{
+        lineHeight: lineHeight + "px",
+        fontSize: size + "px",
+        marginBottom: spacing + "px",
+      }}
+    >
+      {children}
+    </View>
   );
 }

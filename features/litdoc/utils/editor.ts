@@ -111,3 +111,23 @@ export function getLead(editor: Editor, options?: {
 
   return null;
 }
+
+export function getIcon(editor: Editor, options?: {
+  at?: Path;
+}) {
+  const { at = [] } = options ?? {};
+
+  const nodes = Editor.nodes(editor, {
+    at,
+    voids: true,
+    match: (node) => node.type === "Icon",
+  });
+
+  for (const [node] of nodes) {
+    if (node.type === "Icon") {
+      return node.name;
+    }
+  }
+
+  return null;
+}
