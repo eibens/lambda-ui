@@ -1,15 +1,14 @@
 import { RenderNodeProps } from "@litdoc/render";
 import { View } from "@litdoc/ui";
 import { LitdocEditor } from "litdoc";
-import { Editor, Node } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
 import { FaIcon } from "../../ui/fa_icon.tsx";
-import { getFontSize, getLineHeight, getSpacing } from "../utils/theme.ts";
-
-function getIconSize(editor: Editor, node: Node) {
-  const path = ReactEditor.findPath(editor, node);
-  // check
-}
+import {
+  getFontSize,
+  getLineHeight,
+  getListIndent,
+  getSpacing,
+} from "../utils/theme.ts";
 
 export function ListItem(props: RenderNodeProps<"ListItem">) {
   const { attributes, children, node } = props;
@@ -26,25 +25,20 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
       {...attributes}
       tag="li"
       class={[
-        "flex flex-row gap-4",
+        "flex flex-row",
       ]}
       style={{
         marginBottom: spacing + "px",
       }}
     >
       <View
-        {...attributes}
-        tag="p"
-        class={[
-          "text-gray-700 dark:text-gray-300",
-          "whitespace-normal",
-        ]}
         style={{
           lineHeight: lineHeight + "px",
           fontSize: size + "px",
+          width: getListIndent(editor, node) + "px",
         }}
       >
-        <FaIcon name={icon ?? "minus"} />
+        {!icon && <FaIcon name={icon ?? "minus"} />}
       </View>
       <View
         class={[
