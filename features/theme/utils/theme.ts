@@ -71,7 +71,7 @@ export function getLineHeight(editor: Editor, node: Node) {
   return getFontSize(editor, node) * 1.5;
 }
 
-export function getListIndent(editor: Editor, node: Node) {
+export function getListIndent(_editor: Editor, _node: Node) {
   // should be equal to largest font size
   // otherwise icons will not fit in the space
   return 48;
