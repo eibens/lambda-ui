@@ -43,7 +43,7 @@ These are examples of lists in Litdoc.
 
 ## [Hierarchical List](#hierarchical-list)
 
-> - ## :minus: :minus: Heading 2
+> - ## :star: Heading 2
 >   - Paragraph
 >   - Paragraph
 > - ## :star: Heading 2

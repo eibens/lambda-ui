@@ -26,3 +26,21 @@ md`
 >> ###### :circle-info: Heading 6
 >> ${t}
 `;
+
+md`
+# Info Boxes
+
+>> - # :circle-info: This is an info box.
+>
+>> - ## :circle-info: This is an info box.
+>
+>> - ### :circle-info: This is an info box.
+>
+>> - #### :circle-info: This is an info box.
+>
+>> - ##### :circle-info: This is an info box.
+>
+>> - ###### :circle-info: This is an info box.
+>
+>> - :circle-info: This is an info box.
+`;

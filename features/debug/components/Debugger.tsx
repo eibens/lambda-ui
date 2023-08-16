@@ -1,8 +1,7 @@
-import { Button, View } from "@litdoc/ui";
+import { Button, FaIcon, View } from "@litdoc/ui";
 import { useSignal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 import { Editor, Element, Node, Range } from "slate";
-import { FaIcon } from "../../ui/fa_icon.tsx";
 import { ObjectValue } from "./ObjectValue.tsx";
 import { Tag } from "./Tag.tsx";
 

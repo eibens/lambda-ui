@@ -1,8 +1,6 @@
 import { RenderNodeProps } from "@litdoc/render";
-import { View } from "@litdoc/ui";
-import { LitdocEditor } from "litdoc";
-import { ReactEditor, useSlate } from "slate-react";
-import { FaIcon } from "../../ui/fa_icon.tsx";
+import { FaIcon, View } from "@litdoc/ui";
+import { useSlate } from "slate-react";
 import {
   getFontSize,
   getLineHeight,
@@ -17,8 +15,6 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
   const spacing = getSpacing(editor, node);
   const size = getFontSize(editor, node);
   const lineHeight = getLineHeight(editor, node);
-  const path = ReactEditor.findPath(editor, node);
-  const icon = LitdocEditor.getIcon(editor, { at: path });
 
   return (
     <View
@@ -36,9 +32,13 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
           lineHeight: lineHeight + "px",
           fontSize: size + "px",
           width: getListIndent(editor, node) + "px",
+          // NOTE: For some reason, the icon would not be aligned
+          // with an icon in the body of the list item.
+          // e.g. using something like: - :minus: :minus: item
+          transform: "translateY(-0.053em)",
         }}
       >
-        {!icon && <FaIcon name={icon ?? "minus"} />}
+        <FaIcon name={node.icon ?? "minus"} />
       </View>
       <View
         class={[

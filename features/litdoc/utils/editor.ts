@@ -1,6 +1,7 @@
 import * as Templates from "@litdoc/templates";
 import { TagsState } from "litdoc/lit";
 import { createEditor, Editor, Element, Node, Path, Text } from "slate";
+import * as IconLists from "./icon_lists.tsx";
 import * as Icons from "./icons.tsx";
 import * as Markdown from "./markdown.ts";
 import * as Slots from "./slots.ts";
@@ -39,6 +40,9 @@ export function create(options: {
   Markdown.replaceAll(editor);
   Icons.replaceAll(editor);
   Slots.replaceAll(editor);
+  IconLists.replaceAll(editor);
+
+  editor.normalize({ force: true });
 
   return editor;
 }

@@ -16,7 +16,7 @@ export function Blockquote(props: RenderNodeProps<"Blockquote">) {
       class={[
         "flex flex-col p-4",
         "rounded-xl",
-        "shadow-sm color-gray stroke-10 fill-0 border-4",
+        "color-gray stroke-10 fill-0 border-4",
       ]}
       style={{
         marginBottom: spacing + "px",

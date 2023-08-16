@@ -68,13 +68,15 @@ export function Link(
 
   const hostname = getHostname(href);
 
+  const renderIcon = (name: string) => <FaIcon name={name} scale={0.9} />;
+
   const icon = getByTarget({
-    external: <FaIcon name="arrow-up-right-from-square" />,
-    internal: <FaIcon name="arrow-right" />,
-    local: <FaIcon name="hashtag" />,
-    home: <FaIcon name="house" />,
-    top: <FaIcon name="arrow-up" />,
-    default: <FaIcon name="link" />,
+    external: renderIcon("arrow-up-right-from-square"),
+    internal: renderIcon("arrow-right"),
+    local: renderIcon("hashtag"),
+    home: renderIcon("house"),
+    top: renderIcon("arrow-up"),
+    default: renderIcon("link"),
   }, target);
 
   const title = getByTarget({
@@ -146,11 +148,11 @@ export function Link(
       <span>{" "}</span>
       <View
         tag="span"
+        title={title}
         class={[
           "opacity-30 cursor-help select-none hover:opacity-70",
           "transition-opacity",
         ]}
-        title={title}
       >
         {icon}
       </View>
