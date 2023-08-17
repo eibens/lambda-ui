@@ -11,25 +11,42 @@ export function replace(editor: Editor, entry: NodeEntry) {
   if (node.type !== "ListItem") return false;
   if (node.icon != null) return false;
 
-  // Check for an empty text node at [..., 0, 0]
-  const textPath = [...path, 0, 0];
-  const [textNode] = Editor.node(editor, textPath);
-  if (textNode == null) return false;
-  if (textNode.type !== "Text") return false;
-  if (textNode.text !== "") return false;
+  const p0 = [...path, 0, 0];
+  const p1 = [...path, 0, 1];
+  const p2 = [...path, 0, 2];
 
-  // Check for an icon node at [..., 0, 1]
-  const iconPath = [...path, 0, 1];
-  const [iconNode] = Editor.node(editor, iconPath);
-  if (iconNode == null) return false;
-  if (iconNode.type !== "Icon") return false;
+  const [n0] = editor.node(p0);
+  if (n0 == null) return false;
+  if (n0.type !== "Text") return false;
+  if (n0.text !== "") return false;
+  const [n1] = editor.node(p1);
 
-  // Remove the icon node from the list item.
-  editor.removeNodes({ at: iconPath });
+  if (n1 == null) return false;
+  if (n1.type !== "Icon") return false;
+
+  const [n2] = editor.node(p2);
+  if (!n2) return false;
+  if (n2.type !== "Text") return false;
+
+  // Trim white space from the following text node.
+  const text = n2.text;
+  const distance = text.length - text.trimStart().length;
+  editor.delete({
+    at: {
+      anchor: {
+        path: p0,
+        offset: 0,
+      },
+      focus: {
+        path: p2,
+        offset: distance,
+      },
+    },
+  });
 
   // Set the icon name on the list item.
   editor.setNodes({
-    icon: iconNode.name,
+    icon: n1.name,
   }, {
     at: path,
   });

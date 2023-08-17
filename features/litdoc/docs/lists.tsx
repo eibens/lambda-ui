@@ -22,7 +22,7 @@ These are examples of lists in Litdoc.
 
 ## [Icon List](#icon-list)
 
-> - :circle-info: List item
+> - :circle-info: *List item*
 > - :warning: List item
 > - :tree: List item
 
