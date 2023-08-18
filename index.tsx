@@ -36,7 +36,7 @@ The following features are available:
 
 ${() =>
   getFeatures().map((feature) =>
-    `> ###### :folder: [${feature.title}](${feature.url})\n> ${feature.lead}\n\n`
+    `> - ##### :folder: [${feature.title}](${feature.url})\n>   ${feature.lead}\n\n`
   )}  
 
 

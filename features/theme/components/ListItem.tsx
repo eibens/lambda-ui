@@ -15,7 +15,7 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
   const spacing = getSpacing(editor, node);
   const size = getFontSize(editor, node);
   const lineHeight = getLineHeight(editor, node);
-
+  const indent = getListIndent(editor, node);
   return (
     <View
       {...attributes}
@@ -29,16 +29,24 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
     >
       <View
         style={{
-          lineHeight: lineHeight + "px",
-          fontSize: size + "px",
-          width: getListIndent(editor, node) + "px",
-          // NOTE: For some reason, the icon would not be aligned
-          // with an icon in the body of the list item.
-          // e.g. using something like: - :minus: :minus: item
-          transform: "translateY(-0.053em)",
+          display: "flex",
+          flexShrink: 0,
+          flexDirection: "column",
+          width: indent + "px",
         }}
       >
-        <FaIcon name={node.icon ?? "minus"} />
+        <View
+          style={{
+            lineHeight: lineHeight + "px",
+            fontSize: size + "px",
+            // NOTE: For some reason, the icon would not be aligned
+            // with an icon in the body of the list item.
+            // e.g. using something like: - :minus: :minus: item
+            transform: "translateY(-0.053em)",
+          }}
+        >
+          <FaIcon name={node.icon ?? "minus"} />
+        </View>
       </View>
       <View
         class={[
