@@ -53,3 +53,13 @@ export function setFromRequest(request: Request) {
 
   store.value = value === Mode.Dark;
 }
+
+/**
+ * Get the class name to apply to the document element.
+ *
+ * It is "dark" if the store value is true, otherwise "".
+ * This is compatible with Tailwind's class-based dark mode.
+ */
+export function getClassName() {
+  return store.value ? "dark" : "";
+}

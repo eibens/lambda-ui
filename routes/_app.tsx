@@ -3,7 +3,7 @@ import * as Dark from "@litdoc/dark";
 
 export default function App({ Component }: AppProps) {
   return (
-    <html class={Dark.store.value ? "dark" : ""}>
+    <html class={Dark.getClassName()}>
       <Component />
     </html>
   );
