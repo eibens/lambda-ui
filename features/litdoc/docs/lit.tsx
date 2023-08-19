@@ -1,4 +1,4 @@
-import { tags as lit } from "@litdoc/tags";
+import lit from "litdoc/lit";
 
 /** MAIN **/
 
@@ -6,25 +6,31 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :folder: [Tags](#tags)
+# :folder: [Lit](#lit)
 
-Tags are a way of adding documentation to TypeScript code.
+A lightweight mechanism for adding documentation to TypeScript files
+using template literals. 
 `;
 
 md`
-Tags can be created using the \`tags\` function.
+Tags can be created using the \`lit\` function.
+The returned value is a Proxy that returns a template function for each property.
+
+> - :info-circle: All common ways of accessing properties are supported,
+although destructuring is the recommended way.
 `;
 
-import { tags } from "@litdoc/tags";
-
-const colors = tags();
-
-const { blue } = colors;
-const red = colors["r" + "ed"];
+const tags = lit();
+const { blue, red } = tags;
 
 red`This is red text.`;
 blue`This is blue text.`;
 blue`This is blue text with ${red`red text inside`}.`;
+
+md`
+The only exception is the \`state\` property,
+which is used to store the state of the template function.
+`;
 
 md`
 ## Typed Tags
@@ -32,7 +38,7 @@ md`
 A template function can be typed by using the generic parameter of the \`tags\` function.
 `;
 
-const types = tags<{
+const types = lit<{
   str: string;
   num: number;
 }>();
