@@ -9,21 +9,22 @@ import * as Slugs from "./slugs.ts";
 import * as Types from "./types.ts";
 import * as Values from "./values.ts";
 
-export type DocModule = {
-  doc: () => TagsState;
-};
+/** MAIN **/
 
-export function create(options: {
+export function create(options?: {
   children?: (Element | Text)[];
   values?: Record<string, unknown>;
-}) {
+}): Editor {
+  const editor = createEditor();
+
   const mixin = {
     type: "Root",
-    values: options.values ?? {},
+    values: options?.values ?? {},
+    children: options?.children ?? [],
   };
 
-  const editor = Object.assign(
-    createEditor(),
+  Object.assign(
+    editor,
     mixin,
   );
 
@@ -35,7 +36,7 @@ export function create(options: {
   for (const plugin of plugins) {
     plugin(editor);
   }
-  editor.children = options.children ?? [];
+
   Values.replaceAll(editor);
   Markdown.replaceAll(editor);
   Icons.replaceAll(editor);
@@ -47,7 +48,7 @@ export function create(options: {
   return editor;
 }
 
-export function createFromTags(state: TagsState) {
+export function createFromTags(state: TagsState): Editor {
   const values = {};
   return create({
     values,
@@ -63,28 +64,9 @@ export function createFromTags(state: TagsState) {
   });
 }
 
-export function createFromManifest(options: {
-  path?: string;
-  manifest: {
-    routes: Record<string, unknown>;
-  };
-}): Editor | null {
-  const { path, manifest } = options;
-
-  const mod = manifest.routes[path as keyof typeof manifest.routes];
-  const { doc } = mod as DocModule;
-
-  if (typeof doc !== "function") {
-    return null;
-  }
-
-  const state = doc();
-  return createFromTags(state);
-}
-
 export function getTitle(editor: Editor, options?: {
   at?: Path;
-}) {
+}): string | undefined {
   const { at = [] } = options ?? {};
 
   const nodes = Editor.nodes(editor, {
@@ -95,13 +77,11 @@ export function getTitle(editor: Editor, options?: {
   for (const [node] of nodes) {
     return Node.string(node).trim();
   }
-
-  return null;
 }
 
 export function getLead(editor: Editor, options?: {
   at?: Path;
-}) {
+}): string | undefined {
   const { at = [] } = options ?? {};
 
   const nodes = Editor.nodes(editor, {
@@ -112,13 +92,11 @@ export function getLead(editor: Editor, options?: {
   for (const [node] of nodes) {
     return Node.string(node).trim();
   }
-
-  return null;
 }
 
 export function getIcon(editor: Editor, options?: {
   at?: Path;
-}) {
+}): string | undefined {
   const { at = [] } = options ?? {};
 
   const nodes = Editor.nodes(editor, {
@@ -132,6 +110,4 @@ export function getIcon(editor: Editor, options?: {
       return node.name;
     }
   }
-
-  return null;
 }

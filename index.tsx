@@ -1,22 +1,6 @@
-import { LitdocEditor } from "litdoc";
+import { Manifest } from "litdoc";
 import lit from "litdoc/lit";
 import manifest from "./litdoc.gen.ts";
-
-/** HELPERS **/
-
-function getFeatures() {
-  return Object.keys(manifest.routes)
-    .filter((path) => /\/features\/[^/]+\/index.tsx$/.test(path))
-    .sort((a, b) => a.localeCompare(b))
-    .flatMap((path) => {
-      const sub = LitdocEditor.createFromManifest({ manifest, path });
-      if (!sub) return [];
-      const title = LitdocEditor.getTitle(sub);
-      const lead = LitdocEditor.getLead(sub);
-      const url = path.substring(0, path.length - "/index.tsx".length);
-      return { title, lead, url };
-    });
-}
 
 /** MAIN **/
 
@@ -35,9 +19,9 @@ The \`features\` folders export the API of the library.
 The following features are available:
 
 ${() =>
-  getFeatures().map((feature) =>
-    `> - ##### :folder: [${feature.title}](${feature.url})\n>   ${feature.lead}\n\n`
+  Manifest.createIndex(manifest, {
+    match: /\/features\/[^/]+\/index.tsx$/,
+  }).map((doc) =>
+    `> - ##### :folder: [${doc.title}](${doc.url})\n>   ${doc.lead}\n\n`
   )}  
-
-
 `;

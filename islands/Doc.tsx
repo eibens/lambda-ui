@@ -1,6 +1,6 @@
 import { fromComponents } from "@litdoc/render";
 import * as Theme from "@litdoc/theme";
-import { LitdocEditor } from "litdoc";
+import { Manifest } from "litdoc";
 import { Editable, Slate, withReact } from "slate-react";
 import { Debugger } from "../features/debug/components/Debugger.tsx";
 import manifest from "../litdoc.gen.ts";
@@ -10,16 +10,13 @@ export default function Content(props: {
 }) {
   const { path } = props;
 
-  const editor = LitdocEditor.createFromManifest({
-    path,
-    manifest,
-  });
+  const page = Manifest.createPage(manifest, path);
 
-  if (!editor) {
-    return <div class="color-red">Path not found: {path}</div>;
+  if (!page) {
+    return <div class="color-red">Page not found: {path}</div>;
   }
 
-  const reactEditor = withReact(editor);
+  const reactEditor = withReact(page.editor);
 
   const {
     renderElement,
@@ -30,7 +27,7 @@ export default function Content(props: {
     <>
       <Slate
         editor={reactEditor}
-        initialValue={editor.children}
+        initialValue={page.editor.children}
       >
         <Editable
           renderElement={renderElement}
@@ -38,7 +35,7 @@ export default function Content(props: {
           readOnly
         />
       </Slate>
-      <Debugger editor={editor} />
+      <Debugger editor={page.editor} />
     </>
   );
 }

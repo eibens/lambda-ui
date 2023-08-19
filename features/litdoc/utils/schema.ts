@@ -20,7 +20,7 @@ type ToTextMap<NodeMap> = {
 
 type ToNode<NodeMap> = NodeMap[keyof NodeMap];
 
-type ToCustomTypes<NodeMap> = {
+type ToCustomNodeTypes<NodeMap> = {
   Node: ToNode<NodeMap>;
   Element: ToNode<ToElementMap<NodeMap>>;
   Text: ToNode<ToTextMap<NodeMap>>;
@@ -46,7 +46,9 @@ type BaseInlineBlockProps = BaseElementProps & {
 
 type NodeMap = ToNodeMap<{
   // Structural nodes
-  Root: BaseElementProps;
+  Root: BaseElementProps & {
+    values: Record<string, unknown>;
+  };
   Text: BaseLeafProps;
 
   // Inline Blocks
@@ -111,6 +113,8 @@ type NodeMap = ToNodeMap<{
 
 /** MAIN **/
 
-export type CustomNodeTypes = ToCustomTypes<NodeMap>;
+export type ToCustomTypes<Editor> = ToCustomNodeTypes<NodeMap> & {
+  Editor: Editor & NodeMap["Root"];
+};
 
 export type NodeType = keyof NodeMap;
