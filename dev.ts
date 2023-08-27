@@ -1,12 +1,12 @@
 #!/usr/bin/env -S deno run -A --watch=static/,routes/,features/
-import dev from "$fresh/dev.ts";
-import devLitdoc from "litdoc/dev";
+import fresh from "$fresh/dev.ts";
+import litdoc from "litdoc/dev/mod.ts";
 
-await devLitdoc(import.meta.url, {
+await litdoc(import.meta.url, {
   routes: {
     match: [
-      /\/index\.tsx?$/,
-      /docs\/.*\.tsx?$/,
+      /example\.tsx$/,
+      ///src\/.*\/index\.tsx$/,
     ],
     skip: [
       /\/\.todo\//,
@@ -15,4 +15,4 @@ await devLitdoc(import.meta.url, {
   },
 });
 
-await dev(import.meta.url, "./main.ts");
+await fresh(import.meta.url, "./main.ts");

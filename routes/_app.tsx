@@ -1,9 +1,9 @@
 import { AppProps } from "$fresh/src/server/types.ts";
-import * as Dark from "@litdoc/dark";
+import { getClassName } from "litdoc/dark/mod.ts";
 
 export default function App({ Component }: AppProps) {
   return (
-    <html class={Dark.getClassName()}>
+    <html class={getClassName()}>
       <Component />
     </html>
   );
