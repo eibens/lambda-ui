@@ -6,6 +6,7 @@ import {
   Node,
   Program,
   Script,
+  TaggedTemplateExpression,
 } from "litdoc/swc/mod.ts";
 
 export type WeaveCall = {
@@ -64,11 +65,32 @@ export function weave(program: Program, calls: WeaveCall[]): WeaveResult {
     },
   };
 
+  const detectTemplateCall: Rule<Node, TaggedTemplateExpression> = {
+    match: (ctx) => {
+      return ctx.node.type === "TaggedTemplateExpression";
+    },
+    apply: function (ctx) {
+      const { tag } = ctx.node;
+      if (tag.type !== "Identifier") return;
+
+      const call = queue[0];
+      if (tag.value !== call.name) return;
+
+      queue.shift();
+      result.push({ path: ctx.path });
+    },
+  };
+
   traverse(program, [
     descendTopLevel,
     descendExpressionStatements,
     detectCall,
+    detectTemplateCall,
   ]);
+
+  if (queue.length > 0) {
+    throw new Error(`Could not find ${queue.length} function calls.`);
+  }
 
   return result.map(({ path }) => path);
 }

@@ -23,14 +23,13 @@ Deno.test("weave finds top-level function call", () => {
   const program = ts`
     foo("test");
   `;
-  console.log(program);
 
   const calls: WeaveCall[] = [
     { name: "foo" },
   ];
 
   const expected: WeaveResult = [
-    ["body", 0, "expression", "callee"],
+    ["body", 0, "expression"],
   ];
 
   const actual = weave(program, calls);
@@ -49,8 +48,8 @@ Deno.test("weave finds multiple top-level function call", () => {
   ];
 
   const expected: WeaveResult = [
-    ["body", 0, "expression", "callee"],
-    ["body", 1, "expression", "callee"],
+    ["body", 0, "expression"],
+    ["body", 1, "expression"],
   ];
 
   const actual = weave(program, calls);
@@ -96,7 +95,7 @@ Deno.test("weave finds tagged template literals", () => {
   ];
 
   const expected: WeaveResult = [
-    ["body", 0, "expression", "tag"],
+    ["body", 0, "expression"],
   ];
 
   const actual = weave(program, calls);

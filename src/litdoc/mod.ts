@@ -1,7 +1,7 @@
 import { toHashString } from "$std/crypto/to_hash_string.ts";
 import { extname } from "$std/path/mod.ts";
-import * as Swc from "litdoc/swc/mod.ts";
 import type { Call } from "litdoc/tags/mod.ts";
+import { parseAst } from "./utils/ast.ts";
 import { weave } from "./utils/weave.ts";
 
 /** HELPERS **/
@@ -24,46 +24,6 @@ function getTagCalls(value: unknown) {
   return doc() as Call[];
 }
 
-async function getAst(options: {
-  file: string;
-  source: string;
-  hash: string;
-  cache: Deno.Kv;
-}): Promise<Swc.Program> {
-  const { file, source, hash, cache } = options;
-
-  const key = ["litdoc-swc-cache", file];
-  const entry = await cache.get<string>(key);
-
-  if (entry.versionstamp !== null) {
-    const data = JSON.parse(entry.value) as {
-      hash: string;
-      payload: string;
-    };
-
-    if (data.hash === hash) {
-      console.log(`SWC cache hit: ${file}#${hash.slice(0, 8)}...`);
-      return JSON.parse(data.payload);
-    }
-  }
-
-  // NOTE: Must reload SWC for every parse operation.
-  // Otherwise, the spans accumulate.
-  const parse = await Swc.create();
-
-  const ast = parse(source, {
-    syntax: "typescript",
-  });
-
-  const data = JSON.stringify({
-    hash,
-    payload: JSON.stringify(ast),
-  });
-
-  await cache.set(key, data);
-  return ast;
-}
-
 /** MAIN **/
 
 export default async function litdoc(options: {
@@ -83,14 +43,14 @@ export default async function litdoc(options: {
     if (!isScript) continue;
 
     const calls = getTagCalls(value);
-    const ast = await getAst({
+    const ast = await parseAst({
       file,
       source,
       hash,
       cache,
     });
 
-    console.log(calls);
+    console.log({ file, calls });
     const result = weave(ast, calls);
     console.log(result);
   }
