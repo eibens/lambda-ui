@@ -7,5 +7,8 @@
 .env.production.local
 .env.local
 
+# Fresh build directory
+_fresh/
+
 # litdoc cache
 .litdoc/

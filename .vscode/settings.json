@@ -1,6 +1,5 @@
 {
   "deno.enable": true,
-  "deno.unstable": true,
   "editor.codeActionsOnSave": {
     "source.organizeImports": true
   },
@@ -17,5 +16,17 @@
   ],
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
   }
 }
