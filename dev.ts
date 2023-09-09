@@ -2,7 +2,7 @@
 
 import dev from "$fresh/dev.ts";
 import "$std/dotenv/load.ts";
-import litdoc from "litdoc/dev/mod.ts";
+import { dev as litdoc } from "litdoc/mod.ts";
 import config from "./fresh.config.ts";
 
 await litdoc(import.meta.url, {

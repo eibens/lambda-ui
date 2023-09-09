@@ -37,8 +37,3 @@ Add the following entry to your import map:
 }
 ~~~
 `;
-
-function embedFile(path: string) {
-  const url = new URL(path, import.meta.url);
-  return Deno.readTextFile(url);
-}

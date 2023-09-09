@@ -1,4 +1,3 @@
-import { Path, Rule, traverse } from "litdoc/graphs/mod.ts";
 import {
   CallExpression,
   ExpressionStatement,
@@ -6,6 +5,7 @@ import {
   Program,
   TaggedTemplateExpression,
 } from "litdoc/swc/mod.ts";
+import { Path, Rule, traverse } from "./graphs.ts";
 
 /** HELPERS **/
 

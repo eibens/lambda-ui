@@ -1,7 +1,7 @@
 import gfm from "https://esm.sh/remark-gfm@3.0.1";
 import parseRemark from "https://esm.sh/remark-parse@10.0.1";
 import { unified } from "https://esm.sh/unified@10.1.2";
-import { Element, Node } from "slate";
+import { Root } from "litdoc/doc/mod.ts";
 
 /** HELPERS **/
 
@@ -22,11 +22,11 @@ function fix(node: Record<string, unknown>) {
     delete node.value;
   }
 
-  // Convert InlineCode nodes to inline Code elements.
-  if (node.type === "InlineCode" || node.type === "Code") {
+  // Convert InlineCode nodes to Code elements.
+  if (node.type === "InlineCode") {
     node.type = "Code";
-    node.children = [{ type: "Text", text: node.text }];
     node.isInline = true;
+    node.children = [{ type: "Text", text: node.text }];
     delete node.text;
   }
 
@@ -50,7 +50,7 @@ function fix(node: Record<string, unknown>) {
 
 /** MAIN **/
 
-export function parse(str: string): Node[] {
+export function parse(str: string): Root {
   const root = unified()
     .use(parseRemark)
     .use(gfm)
@@ -59,5 +59,5 @@ export function parse(str: string): Node[] {
   fix(root as unknown as Record<string, unknown>);
 
   // Assume all compatibility problems have now been fixed in order to cast.
-  return (root as unknown as Element).children;
+  return root as unknown as Root;
 }

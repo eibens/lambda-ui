@@ -1,7 +1,7 @@
 import type { Program } from "litdoc/swc/mod.ts";
 import { Call } from "litdoc/tags/mod.ts";
-import * as Templates from "litdoc/templates/mod.ts";
 import { link } from "../utils/link.ts";
+import * as Templates from "./templates.ts";
 
 /** HELPERS **/
 

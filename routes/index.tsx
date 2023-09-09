@@ -1,9 +1,10 @@
-import { PageProps } from "$fresh/server.ts";
+import { RouteContext } from "$fresh/server.ts";
 import renderPath from "./[...path].tsx";
 
-export default function render(props: PageProps) {
-  return renderPath({
-    ...props,
-    params: { path: "" },
-  });
+export default async function render(ctx: RouteContext) {
+  return await renderPath(Object.assign(ctx, {
+    params: {
+      path: "",
+    },
+  }));
 }

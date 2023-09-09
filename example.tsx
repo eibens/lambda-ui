@@ -6,11 +6,11 @@ const { md } = doc;
 md`
 # Example Heading
 
-This is an example of a litdoc document.
+This is an example of a **Litdoc** document.
 `;
 
-const answer = (10 * 2 + 1) * 2;
+const answer = 7 * 3 * 2;
 
 md`
-The answer to life, the universe, and everything is *${answer}*.
+The answer to life, the universe, and everything is \`${answer}\`.
 `;

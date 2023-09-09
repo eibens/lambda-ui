@@ -1,13 +1,16 @@
+import { RouteContext } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
-import { PageProps } from "$fresh/src/server/types.ts";
-import Litdoc from "litdoc/mod.ts";
-import { View } from "litdoc/view/mod.ts";
+import * as Litdoc from "litdoc/mod.ts";
+import * as LitdocTheme from "litdoc/theme/mod.ts";
+import { View } from "litdoc/ui/mod.ts";
+import { createEditor } from "slate";
+import { Editable, Slate, withReact } from "slate-react";
 import * as Example from "../example.tsx";
 
 /** MAIN **/
 
-export default async function render(props: PageProps) {
-  const { params } = props;
+export default async function render(ctx: RouteContext) {
+  const { params } = ctx;
   const { path = "" } = params;
 
   const litdoc = Litdoc.create();
@@ -16,7 +19,9 @@ export default async function render(props: PageProps) {
     "./example.tsx": Example,
   });
 
-  const md = await litdoc.getMarkdown("./example.tsx");
+  const doc = await litdoc.getDoc("./example.tsx");
+  const editor = withReact(createEditor());
+  const editable = LitdocTheme.create();
 
   return (
     <>
@@ -32,12 +37,17 @@ export default async function render(props: PageProps) {
         id="top"
       >
         <View class="my-32 px-6 w-full max-w-3xl">
-          <h1 class="text-4xl font-bold">Litdoc</h1>
-          <code>
-            <pre>
-              {md}
-            </pre>
-          </code>
+          <Slate
+            editor={editor}
+            initialValue={[doc]}
+          >
+            <Editable
+              style={{
+                padding: "16px",
+              }}
+              {...editable}
+            />
+          </Slate>
         </View>
       </View>
     </>

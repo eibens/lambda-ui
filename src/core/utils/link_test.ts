@@ -2,8 +2,8 @@ import { assertEquals } from "$std/assert/assert_equals.ts";
 import { assertThrows } from "$std/assert/assert_throws.ts";
 import * as Swc from "litdoc/swc/mod.ts";
 import { Program } from "litdoc/swc/mod.ts";
-import * as Templates from "litdoc/templates/mod.ts";
 import { Call, link, LinkResult } from "./link.ts";
+import * as Templates from "./templates.ts";
 
 /** HELPERS **/
 
