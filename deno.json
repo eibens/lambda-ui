@@ -8,32 +8,6 @@
     "preview": "deno run -A main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
-  "fmt": {
-    "exclude": [
-      "_fresh",
-      "static/",
-      ".todo"
-    ]
-  },
-  "lint": {
-    "rules": {
-      "tags": [
-        "fresh",
-        "recommended"
-      ]
-    },
-    "exclude": [
-      "_fresh",
-      "static/",
-      ".todo"
-    ]
-  },
-  "test": {
-    "exclude": [
-      "static/",
-      ".todo"
-    ]
-  },
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.4.3/",
     "preact": "https://esm.sh/preact@10.13.1",
@@ -61,5 +35,31 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "preact"
+  },
+  "fmt": {
+    "exclude": [
+      "_fresh",
+      "static/",
+      ".todo"
+    ]
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "fresh",
+        "recommended"
+      ]
+    },
+    "exclude": [
+      "_fresh",
+      "static/",
+      ".todo"
+    ]
+  },
+  "test": {
+    "exclude": [
+      "static/",
+      ".todo"
+    ]
   }
 }
