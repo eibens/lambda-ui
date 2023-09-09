@@ -1,7 +1,7 @@
 {
   "lock": false,
   "tasks": {
-    "fix": "deno fmt && deno lint && deno test --allow-read=.",
+    "fix": "deno fmt && deno lint && deno test --allow-read=. --unstable",
     "start": "deno run -A --unstable --watch=static/,routes/,features/ dev.ts",
     "deploy": "deployctl deploy --project=lambda-ui ./main.ts"
   },

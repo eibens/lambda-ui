@@ -3,7 +3,7 @@ import { assertThrows } from "$std/assert/assert_throws.ts";
 import * as Swc from "litdoc/swc/mod.ts";
 import { Program } from "litdoc/swc/mod.ts";
 import * as Templates from "litdoc/templates/mod.ts";
-import { weave, WeaveCall, WeaveResult } from "./weave.ts";
+import { Call, link, LinkResult } from "./link.ts";
 
 /** HELPERS **/
 
@@ -19,85 +19,85 @@ function ts(...args: Templates.Args): Program {
 
 /** MAIN **/
 
-Deno.test("weave finds top-level function call", () => {
+Deno.test("link finds top-level function call", () => {
   const program = ts`
     foo("test");
   `;
 
-  const calls: WeaveCall[] = [
+  const calls: Call[] = [
     { name: "foo" },
   ];
 
-  const expected: WeaveResult = [
+  const expected: LinkResult = [
     ["body", 0, "expression"],
   ];
 
-  const actual = weave(program, calls);
+  const actual = link(program, calls);
   assertEquals(actual, expected);
 });
 
-Deno.test("weave finds multiple top-level function call", () => {
+Deno.test("link finds multiple top-level function call", () => {
   const program = ts`
     foo("test");
     bar("test");
   `;
 
-  const calls: WeaveCall[] = [
+  const calls: Call[] = [
     { name: "foo" },
     { name: "bar" },
   ];
 
-  const expected: WeaveResult = [
+  const expected: LinkResult = [
     ["body", 0, "expression"],
     ["body", 1, "expression"],
   ];
 
-  const actual = weave(program, calls);
+  const actual = link(program, calls);
   assertEquals(actual, expected);
 });
 
-Deno.test("weave throws if there are too many function calls", () => {
+Deno.test("link throws if there are too many function calls", () => {
   const program = ts`
     // no function calls
   `;
 
-  const calls: WeaveCall[] = [
+  const calls: Call[] = [
     { name: "foo" },
   ];
 
   assertThrows(() => {
-    weave(program, calls);
+    link(program, calls);
   });
 });
 
-Deno.test("weave ignores function calls in other contexts", () => {
+Deno.test("link ignores function calls in other contexts", () => {
   const program = ts`
     if (true) {
       foo("test");
     }
   `;
 
-  const calls: WeaveCall[] = [];
+  const calls: Call[] = [];
 
-  const expected: WeaveResult = [];
+  const expected: LinkResult = [];
 
-  const actual = weave(program, calls);
+  const actual = link(program, calls);
   assertEquals(actual, expected);
 });
 
-Deno.test("weave finds tagged template literals", () => {
+Deno.test("link finds tagged template literals", () => {
   const program = ts`
     foo\`test\`;
   `;
 
-  const calls: WeaveCall[] = [
+  const calls: Call[] = [
     { name: "foo" },
   ];
 
-  const expected: WeaveResult = [
+  const expected: LinkResult = [
     ["body", 0, "expression"],
   ];
 
-  const actual = weave(program, calls);
+  const actual = link(program, calls);
   assertEquals(actual, expected);
 });

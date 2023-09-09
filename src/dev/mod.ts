@@ -33,6 +33,7 @@ async function walk(
     }
     const routesFolder = walkImpl(dir, options);
     for await (const entry of routesFolder) {
+      if (!entry.isFile) continue;
       entries.push(entry);
     }
   } catch (err) {

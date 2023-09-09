@@ -6,3 +6,6 @@
 .env.test.local
 .env.production.local
 .env.local
+
+# litdoc cache
+.litdoc/

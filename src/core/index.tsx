@@ -1,7 +1,7 @@
 import lit from "litdoc/lit.ts";
 
 export const _doc = lit();
-const { _md, name } = _doc;
+const { _md } = _doc;
 
 const version = "0.0.0";
 

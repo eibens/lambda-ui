@@ -1,1 +1,3 @@
-export { default as default } from "./litdoc/mod.ts";
+import * as Litdoc from "./core/mod.ts";
+
+export default Litdoc;

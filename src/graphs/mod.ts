@@ -1,13 +1,13 @@
 /** MAIN **/
 
-export type Context<T> = {
+export type RuleContext<T> = {
   path: Path;
   node: T;
 };
 
 export type Rule<Node, Match> = {
-  match: (ctx: Context<Node>) => boolean;
-  apply: (ctx: Context<Match>) => Iterable<Path> | void;
+  match: (ctx: RuleContext<Node>) => boolean;
+  apply: (ctx: RuleContext<Match>) => Iterable<Path> | void;
 };
 
 export type Path = (string | number)[];

@@ -1,18 +1,20 @@
 import { Head } from "$fresh/src/runtime/head.ts";
 import { PageProps } from "$fresh/src/server/types.ts";
-import litdoc from "litdoc/mod.ts";
+import Litdoc from "litdoc/mod.ts";
 import { View } from "litdoc/view/mod.ts";
-import manifest from "../litdoc.gen.ts";
+import * as Example from "../example.tsx";
 
 /** MAIN **/
 
-export default function render(props: PageProps) {
+export default async function render(props: PageProps) {
   const { params } = props;
   const { path = "" } = params;
 
-  const instance = litdoc({
-    manifest: manifest.routes,
+  Litdoc.setManifest({
+    "./example.tsx": Example,
   });
+
+  console.log(await Litdoc.getMarkdown("./example.tsx"));
 
   return (
     <>
