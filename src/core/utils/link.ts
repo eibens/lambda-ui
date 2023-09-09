@@ -9,14 +9,12 @@ import {
 
 /** HELPERS **/
 
-const isType = (type: string) => (ctx: { node: Node }) => {
-  return ctx.node.type === type;
+const isType = (...types: string[]) => (ctx: { node: Node }) => {
+  return types.includes(ctx.node.type);
 };
 
 const descendProgram: Rule<Node, Program> = {
-  match: (ctx) => {
-    return ctx.node.type === "Module" || ctx.node.type === "Script";
-  },
+  match: isType("Module", "Script"),
   apply: function* (ctx) {
     for (let i = 0; i < ctx.node.body.length; i++) {
       yield [...ctx.path, "body", i];

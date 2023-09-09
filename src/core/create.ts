@@ -1,7 +1,8 @@
 import { join } from "$std/path/join.ts";
 import { cached, concurrent, memoized, modified } from "litdoc/cache/mod.ts";
 import { hashed } from "litdoc/core/utils/hash.ts";
-import { parse, Program } from "litdoc/swc/mod.ts";
+import { parse as parseProgram, Program } from "litdoc/swc/mod.ts";
+import { parse as parseMarkdown } from "./utils/markdown.ts";
 import { Block, toMarkdown, weave } from "./utils/weave.ts";
 
 /** MAIN **/
@@ -40,6 +41,12 @@ export function create(config: Config = {}) {
       stringify: (text: string) => text,
       path: join(cacheRoot, "md"),
     }),
+    mdast: cached({
+      ext: "json",
+      parse: JSON.parse,
+      stringify: (value) => JSON.stringify(value, null, 2),
+      path: join(cacheRoot, "mdast"),
+    }),
   };
 
   const memo = {
@@ -59,7 +66,7 @@ export function create(config: Config = {}) {
       return cache.ast(file, hash, async () => {
         log(`parsing ${file}`);
         const text = await getText(file);
-        return parse(text, { syntax: "typescript" });
+        return parseProgram(text, { syntax: "typescript" });
       });
     })),
     blocks: memoized(concurrent((file, hash) => {
@@ -76,6 +83,13 @@ export function create(config: Config = {}) {
         const text = await getText(file);
         const blocks = await getBlocks(file);
         return toMarkdown(blocks, text);
+      });
+    })),
+    mdast: memoized(concurrent((file, hash) => {
+      return cache.mdast(file, hash, async () => {
+        log(`mdast ${file}`);
+        const md = await getMarkdown(file);
+        return parseMarkdown(md);
       });
     })),
   };
@@ -110,6 +124,11 @@ export function create(config: Config = {}) {
     return memo.md(file, hash);
   }
 
+  async function getMarkdownAst(file: string): Promise<unknown> {
+    const hash = await getHash(file);
+    return memo.mdast(file, hash);
+  }
+
   function setModules(modules: Record<string, unknown>): void {
     for (const [path, mod] of Object.entries(modules)) {
       cache.mod.set(path, mod);
@@ -118,6 +137,7 @@ export function create(config: Config = {}) {
 
   return {
     getMarkdown,
+    getMarkdownAst,
     setModules,
   };
 }

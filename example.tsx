@@ -12,5 +12,5 @@ This is an example of a litdoc document.
 const answer = (10 * 2 + 1) * 2;
 
 md`
-The answer to life, the universe, and everything is ${answer}.
+The answer to life, the universe, and everything is *${answer}*.
 `;

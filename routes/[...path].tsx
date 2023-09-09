@@ -16,7 +16,7 @@ export default async function render(props: PageProps) {
     "./example.tsx": Example,
   });
 
-  console.log(await litdoc.getMarkdown("./example.tsx"));
+  const md = await litdoc.getMarkdown("./example.tsx");
 
   return (
     <>
@@ -32,8 +32,12 @@ export default async function render(props: PageProps) {
         id="top"
       >
         <View class="my-32 px-6 w-full max-w-3xl">
-          <h1 class="text-4xl font-bold">{path}</h1>
-          <p>Hello world</p>
+          <h1 class="text-4xl font-bold">Litdoc</h1>
+          <code>
+            <pre>
+              {md}
+            </pre>
+          </code>
         </View>
       </View>
     </>
