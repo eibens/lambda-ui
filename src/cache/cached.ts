@@ -1,5 +1,4 @@
 import { dirname, join } from "$std/path/mod.ts";
-import { Loader } from "litdoc/cache/mod.ts";
 
 /** MAIN **/
 
@@ -44,13 +43,5 @@ export function cached<T>(options: CachedOptions<T>) {
         throw error;
       }
     }
-  };
-}
-
-export function modified<T>(loader: Loader<T>) {
-  return async (file: string, versionPostfix = "") => {
-    const stats = await Deno.stat(file);
-    const version = `${stats.mtime?.getTime()}-${stats.size}-${versionPostfix}`;
-    return loader(file, version);
   };
 }

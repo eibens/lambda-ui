@@ -10,11 +10,13 @@ export default async function render(props: PageProps) {
   const { params } = props;
   const { path = "" } = params;
 
-  Litdoc.setManifest({
+  const litdoc = Litdoc.create();
+
+  litdoc.setModules({
     "./example.tsx": Example,
   });
 
-  console.log(await Litdoc.getMarkdown("./example.tsx"));
+  console.log(await litdoc.getMarkdown("./example.tsx"));
 
   return (
     <>
