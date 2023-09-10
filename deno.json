@@ -1,12 +1,13 @@
 {
   "lock": false,
   "tasks": {
-    "start": "deno run -A --watch=static/,routes/,features/ dev.ts",
+    "web:build": "cd packages/litdoc-web && deno run -A dev.ts build",
+    "web:preview": "cd packages/litdoc-web && deno run -A main.ts",
+    "web:update": "cd packages/litdoc-web && deno run -A -r https://fresh.deno.dev/update .",
+    "web:start": "cd packages/litdoc-web && deno run -A --watch=static/,routes/,features/ dev.ts",
+    "web:clean": "cd packages/litdoc-web && rm -rf .litdoc && rm -rf _fresh",
     "check": "deno fmt --check && deno lint",
-    "fix": "deno fmt && deno task check && deno test --allow-read=.",
-    "build": "deno run -A dev.ts build",
-    "preview": "deno run -A main.ts",
-    "update": "deno run -A -r https://fresh.deno.dev/update ."
+    "fix": "deno fmt && deno task check && deno test --allow-read=."
   },
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.4.3/",
@@ -30,7 +31,7 @@
     "tiny-invariant": "https://esm.sh/tiny-invariant@1.0.6",
     "lodash/": "https://esm.sh/lodash@4.17.4/",
 
-    "litdoc/": "./src/"
+    "litdoc/": "./packages/litdoc-deno/"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
