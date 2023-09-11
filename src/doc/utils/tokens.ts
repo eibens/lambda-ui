@@ -8,23 +8,25 @@ const createText = (text = ""): Node => ({
   text,
 });
 
-const createToken = (text: string): Node => ({
-  type: "Token",
-  children: [createText(text)],
-});
-
 function* generator(str: string): Generator<Node> {
-  const iconRegex = /:([-_a-zA-Z0-9]+):/g;
+  const pattern = /:([^:\s]+):/g;
 
   let lastIndex = 0;
   let match;
-  while ((match = iconRegex.exec(str)) !== null) {
-    const [_, name] = match;
-    yield createText(str.slice(lastIndex, match.index));
-    yield createToken(name);
-    lastIndex = iconRegex.lastIndex;
+  while ((match = pattern.exec(str)) !== null) {
+    const [_, text] = match;
+    const before = str.slice(lastIndex, match.index);
+    if (before) yield createText(before);
+    yield {
+      type: "Link",
+      url: new URL(`token:///${text}`).href,
+      children: [createText()],
+      isInline: true,
+    };
+    lastIndex = pattern.lastIndex;
   }
-  yield createText(str.slice(lastIndex));
+  const after = str.slice(lastIndex);
+  if (after) yield createText(after);
 }
 
 function parse(str: string): Node[] {
@@ -33,20 +35,40 @@ function parse(str: string): Node[] {
 
 /** MAIN **/
 
-export function match(_: Editor, node: Node): node is Node<"Text"> {
-  return node.type === "Text";
-}
-
-export function apply(editor: Editor, entry: NodeEntry) {
+export function normalizeNode(editor: Editor, entry: NodeEntry): boolean {
   const [node, path] = entry;
-
-  if (!match(editor, node)) return false;
+  const match = node.type === "Text";
+  if (!match) return false;
 
   const children = parse(node.text);
-  if (children.length === 1) return false;
 
-  editor.removeNodes({ at: path });
-  editor.insertNodes(children, { at: path });
+  if (children.length === 0) return false;
+
+  // single child of a paragraph?
+  if (children.length === 1) {
+    const [child] = children;
+    if (child.type !== "Link") return false;
+    child.isInline = false;
+  }
+
+  Editor.withoutNormalizing(editor, () => {
+    editor.removeNodes({ at: path });
+    editor.insertNodes(children, { at: path });
+  });
 
   return true;
+}
+
+export function isToken(node: Node): node is Node<"Link"> {
+  return node.type === "Link" && node.url.startsWith("token:///");
+}
+
+export function parseToken(node: Node): null | {
+  type: string;
+  id: string;
+} {
+  if (!isToken(node)) return null;
+  const url = new URL(node.url);
+  const [, type, id] = url.pathname.split("/");
+  return { type, id };
 }

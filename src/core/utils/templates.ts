@@ -1,5 +1,3 @@
-import { nanoid } from "https://esm.sh/nanoid@4.0.0";
-
 /** MAIN **/
 
 export type Args<V = unknown> = [TemplateStringsArray, ...V[]];
@@ -12,9 +10,7 @@ export type Text = {
 
 export type Value = {
   type: "Value";
-  id: string;
-  isInline?: boolean;
-  children: Node[];
+  index: number;
 };
 
 export type Node =
@@ -22,14 +18,14 @@ export type Node =
   | Text;
 
 export type Template<V> = {
-  values: Record<string, V>;
+  values: V[];
   children: Node[];
 };
 
 export type Expression<V, Y> = (
   value: V,
-  id: string,
-  values: Record<string, V>,
+  index: number,
+  values: V[],
 ) => Y;
 
 export type Evaluate<V> = Expression<V, V>;
@@ -41,7 +37,7 @@ export type Stringify<V> = Expression<V, string>;
 export function tagged<V>(...args: Args<V>): Template<V> {
   const [strings, ...values] = args;
   const template: Template<V> = {
-    values: {},
+    values: [],
     children: [],
   };
 
@@ -50,16 +46,10 @@ export function tagged<V>(...args: Args<V>): Template<V> {
     template.children.push({ type: "Text", text });
 
     if (i < values.length) {
-      const id = nanoid();
-      template.values[id] = values[i];
+      template.values[i] = values[i];
       template.children.push({
         type: "Value",
-        id,
-        isInline: true,
-        children: [{
-          type: "Text",
-          text: `{{id:${id}}}`,
-        }],
+        index: i,
       });
     }
   }
@@ -72,9 +62,9 @@ export function evaluate<V>(
   evaluate: Evaluate<V>,
 ) {
   const { values } = template;
-  for (const id in values) {
-    const value = values[id];
-    values[id] = evaluate(value, id, values);
+  for (let index = 0; index < values.length; index++) {
+    const value = values[index];
+    values[index] = evaluate(value, index, values);
   }
   return template;
 }
@@ -88,9 +78,9 @@ export function inline<V>(
     ...template,
     children: template.children.map((child) => {
       if (child.type === "Text") return child;
-      const { id } = child;
-      const value = values[id];
-      const text = stringify(value, id, values);
+      const { index } = child;
+      const value = values[index];
+      const text = stringify(value, index, values);
       return { type: "Text", text };
     }),
   };

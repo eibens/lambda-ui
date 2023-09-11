@@ -23,20 +23,18 @@ type BaseInlineBlockProps = BaseElementProps & {
 
 export type NodeMap = ToNodeMap<{
   // Structural nodes
-  Root: BaseElementProps & {
-    values: Record<string, unknown>;
-  };
+  Root: BaseElementProps;
   Text: BaseLeafProps;
 
   // Inline Blocks
   // Can be marked either as inline or block element.
   // Determined by type of parent.
   Html: BaseInlineBlockProps;
-  Value: BaseInlineBlockProps & {
-    id: string;
-  };
   Code: BaseInlineBlockProps & {
     lang?: string;
+  };
+  Link: BaseInlineBlockProps & {
+    url: string;
   };
   Unknown: BaseInlineBlockProps;
 
@@ -73,10 +71,6 @@ export type NodeMap = ToNodeMap<{
   Strong: BaseElementProps;
   Delete: BaseElementProps;
   Break: BaseElementProps;
-  Token: BaseElementProps;
-  Link: BaseElementProps & {
-    url: string;
-  };
 }>;
 
 export type Nodes<NodeMap> = NodeMap[keyof NodeMap];
@@ -87,6 +81,6 @@ export type Node<T extends NodeType = NodeType> = NodeMap[T];
 
 export type Path = number[];
 
-export type NodeEntry<T extends NodeType = NodeType> = [Node<T>, Path];
+export type NodeEntry<T extends Node = Node> = [T, Path];
 
 export type Root = NodeMap["Root"];

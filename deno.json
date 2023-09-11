@@ -2,6 +2,7 @@
   "lock": false,
   "tasks": {
     "start": "deno run -A --watch=static/,routes/,features/ dev.ts",
+    "clean": "rm -rf .litdoc && rm -rf _fresh",
     "check": "deno fmt --check && deno lint",
     "fix": "deno fmt && deno task check && deno test --allow-read=.",
     "build": "deno run -A dev.ts build",
@@ -40,6 +41,7 @@
     "exclude": [
       "_fresh",
       "static/",
+      ".litdoc/",
       ".todo"
     ]
   },
@@ -53,11 +55,13 @@
     "exclude": [
       "_fresh",
       "static/",
-      ".todo"
+      ".todo",
+      ".litdoc/"
     ]
   },
   "test": {
     "exclude": [
+      ".litdoc/",
       "static/",
       ".todo"
     ]

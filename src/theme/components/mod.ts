@@ -16,6 +16,4 @@ export * from "./Root.tsx";
 export * from "./Strong.tsx";
 export * from "./Text.tsx";
 export * from "./ThematicBreak.tsx";
-export * from "./Token.tsx";
 export * from "./Unknown.tsx";
-export * from "./Value.tsx";

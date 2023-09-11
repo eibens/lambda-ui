@@ -2,11 +2,25 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./example.tsx";
+import * as $0 from "./docs/features/cards.tsx";
+import * as $1 from "./docs/features/headings.tsx";
+import * as $2 from "./docs/features/icons.tsx";
+import * as $3 from "./docs/features/links.tsx";
+import * as $4 from "./docs/features/lists.tsx";
+import * as $5 from "./docs/features/tags.tsx";
+import * as $6 from "./docs/features/templates.tsx";
+import * as $7 from "./docs/index.tsx";
 
 export default {
   baseUrl: import.meta.url,
   routes: {
-    "./example.tsx": $0,
+    "./docs/features/cards.tsx": $0,
+    "./docs/features/headings.tsx": $1,
+    "./docs/features/icons.tsx": $2,
+    "./docs/features/links.tsx": $3,
+    "./docs/features/lists.tsx": $4,
+    "./docs/features/tags.tsx": $5,
+    "./docs/features/templates.tsx": $6,
+    "./docs/index.tsx": $7,
   },
 };

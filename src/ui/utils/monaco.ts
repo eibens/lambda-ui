@@ -1,7 +1,8 @@
+/// <reference path="./monaco.d.ts" />
+
 import { useSignalEffect } from "@preact/signals";
 import { signal } from "@preact/signals-core";
 import { useCallback, useEffect, useState } from "preact/hooks";
-import "../assets/monaco.d.ts";
 
 let promise: Promise<Monaco> | undefined;
 

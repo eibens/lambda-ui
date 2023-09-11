@@ -1,9 +1,12 @@
 import { RenderNodeProps, useSlate, View } from "./deps.ts";
 
-export function Value(props: RenderNodeProps<"Value">) {
+export function Value(props: RenderNodeProps<"Link">) {
   const { attributes, children, node } = props;
 
-  const { id, isInline } = node;
+  const { url, isInline } = node;
+  const { pathname } = new URL(url);
+  const [_, id] = pathname.split("/").filter(Boolean);
+
   const editor = useSlate();
   const { values } = editor;
   const value = values[id];

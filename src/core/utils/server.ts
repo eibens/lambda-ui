@@ -2,6 +2,7 @@ import { join } from "$std/path/join.ts";
 import { cached, concurrent, memoized, modified } from "litdoc/cache/mod.ts";
 import * as Doc from "litdoc/doc/mod.ts";
 import * as Swc from "litdoc/swc/mod.ts";
+import { Editor } from "slate";
 import * as Hash from "./hash.ts";
 import * as Logger from "./logger.ts";
 import * as Markdown from "./markdown.ts";
@@ -9,25 +10,31 @@ import { Block, toMarkdown, weave } from "./weave.ts";
 
 /** MAIN **/
 
-export type Config = {
+export type ServerConfig = {
   cacheRoot?: string;
+  modules: Record<string, unknown>;
 };
 
-export type Context = {
+export type Server = {
+  has: (file: string) => boolean;
   getMarkdown: (file: string) => Promise<string>;
-  getDoc: (file: string) => Promise<Doc.Root>;
-  setModules: (modules: Record<string, unknown>) => void;
+  getEditor: (file: string) => Promise<Editor>;
+  getLibrary: () => Promise<Record<string, Doc.Root>>;
 };
 
-export function create(config: Config = {}): Context {
+export function server(config: ServerConfig): Server {
   const {
+    modules,
     cacheRoot = ".litdoc/cache",
   } = config;
 
   const log = Logger.task;
 
   const cache = {
-    module: new Map<string, unknown>(),
+    library: null as (null | Record<string, Doc.Root>),
+    modules,
+    values: new Map<string, Record<string, unknown>>(),
+    editors: new Map<string, Editor>(),
     program: cached<Swc.Program>({
       ext: "json",
       path: join(cacheRoot, "program"),
@@ -36,27 +43,27 @@ export function create(config: Config = {}): Context {
     }),
     blocks: cached({
       ext: "json",
+      path: join(cacheRoot, "blocks"),
       parse: JSON.parse,
       stringify: (value) => JSON.stringify(value, null, 2),
-      path: join(cacheRoot, "blocks"),
     }),
     template: cached({
       ext: "md",
+      path: join(cacheRoot, "template"),
       parse: (text: string) => text,
       stringify: (text: string) => text,
-      path: join(cacheRoot, "template"),
     }),
     mdast: cached({
       ext: "json",
+      path: join(cacheRoot, "mdast"),
       parse: JSON.parse,
       stringify: (value) => JSON.stringify(value, null, 2),
-      path: join(cacheRoot, "mdast"),
     }),
     doc: cached({
       ext: "json",
-      parse: JSON.parse,
-      stringify: (value) => JSON.stringify(value, null, 2),
       path: join(cacheRoot, "doc"),
+      parse: Doc.parse,
+      stringify: Doc.stringify,
     }),
   };
 
@@ -80,7 +87,12 @@ export function create(config: Config = {}): Context {
       return cache.program(file, hash, () => {
         return log(`parse typescript`, file, async (f) => {
           const text = await get.text(file);
-          return f(() => Swc.parse(text, { syntax: "typescript" }));
+          return f(() =>
+            Swc.parse(text, {
+              syntax: "typescript",
+              tsx: file.endsWith(".tsx"),
+            })
+          );
         });
       });
     })),
@@ -89,7 +101,11 @@ export function create(config: Config = {}): Context {
         return log(`get blocks`, file, async (f) => {
           const program = await get.program(file);
           const mod = get.module(file);
-          return f(() => weave(mod, program));
+          return f(() => {
+            const { values, children } = weave(mod, program);
+            cache.values.set(file, values);
+            return children;
+          });
         });
       });
     })),
@@ -113,8 +129,20 @@ export function create(config: Config = {}): Context {
     doc: concurrent(memoized((file, hash) => {
       return cache.doc(file, hash, () => {
         return log(`parse markdown `, file, async (f) => {
-          const ast = await get.mdast(file);
-          return f(() => Doc.create(ast));
+          const root = await get.mdast(file);
+          return f(() => {
+            const values = cache.values.get(file);
+            if (!values) {
+              throw new Error(`Values not found for ${file}`);
+            }
+
+            const editor = Doc.create({
+              children: root.children,
+              values: cache.values.get(file) || {},
+            });
+
+            return editor;
+          });
         });
       });
     })),
@@ -122,8 +150,7 @@ export function create(config: Config = {}): Context {
 
   const get = {
     module: (file: string) => {
-      if (!cache.module.has(file)) throw new Error(`Module not found: ${file}`);
-      return cache.module.get(file)!;
+      return cache.modules[file];
     },
     text: (file: string): Promise<string> => {
       return memo.text(file);
@@ -147,7 +174,7 @@ export function create(config: Config = {}): Context {
       const hash = await get.hash(file);
       return memo.mdast(file, hash);
     },
-    doc: async (file: string): Promise<Doc.Root> => {
+    doc: async (file: string): Promise<Editor> => {
       const hash = await get.hash(file);
       return memo.doc(file, hash);
     },
@@ -155,16 +182,36 @@ export function create(config: Config = {}): Context {
       // TODO: should render doc as markdown
       return get.template(file);
     },
+    root: async (file: string): Promise<Doc.Root> => {
+      const doc = await get.doc(file);
+      return {
+        type: "Root",
+        children: doc.children,
+      };
+    },
+    library: async (): Promise<Record<string, Doc.Root>> => {
+      if (!cache.library) {
+        const keys = Object.keys(modules);
+        const library: Record<string, Doc.Root> = {};
+
+        for (const key of keys) {
+          const root = await get.root(key);
+          library[key] = root;
+        }
+        cache.library = library;
+        return library;
+      }
+      return cache.library;
+    },
+    has: (file: string) => {
+      return file in modules;
+    },
   };
 
-  function setModules(modules: Record<string, unknown>): void {
-    for (const [path, mod] of Object.entries(modules)) {
-      cache.module.set(path, mod);
-    }
-  }
   return {
+    has: get.has,
     getMarkdown: get.markdown,
-    getDoc: get.doc,
-    setModules,
+    getEditor: get.doc,
+    getLibrary: get.library,
   };
 }

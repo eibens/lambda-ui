@@ -1,10 +1,10 @@
 import {
-  FaIcon,
   getFontSize,
   getLineHeight,
   getListIndent,
   getSpacing,
   RenderNodeProps,
+  Token,
   useSlate,
   View,
 } from "./deps.ts";
@@ -46,7 +46,7 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
             transform: "translateY(-0.053em)",
           }}
         >
-          <FaIcon name={node.icon ?? "minus"} />
+          <Token href={node.icon ?? "token://icons/minus"} />
         </View>
       </View>
       <View

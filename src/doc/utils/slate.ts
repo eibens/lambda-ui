@@ -1,6 +1,6 @@
-import { NodeMap, Nodes, Root } from "./schema.ts";
 import type { BaseEditor } from "slate";
 import type { ReactEditor } from "slate-react";
+import { NodeMap, Nodes, Root } from "./schema.ts";
 
 /** HELPERS **/
 
@@ -25,7 +25,9 @@ type ToCustomNodeTypes<NodeMap> = {
 };
 
 type ToCustomTypes<Editor> = ToCustomNodeTypes<NodeMap> & {
-  Editor: Editor & Root;
+  Editor: Editor & Root & {
+    values: Record<string, unknown>;
+  };
 };
 
 /** MAIN **/

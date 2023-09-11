@@ -72,5 +72,5 @@ export function getLineHeight(editor: Editor, node: Node) {
 }
 
 export function getListIndent(editor: Editor, node: Node) {
-  return getFontSize(editor, node) + 16;
+  return getFontSize(editor, node) + getFontSize(editor, node) / 2 + 8;
 }

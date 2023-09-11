@@ -2,14 +2,14 @@
 
 import dev from "$fresh/dev.ts";
 import "$std/dotenv/load.ts";
-import { dev as litdoc } from "litdoc/mod.ts";
+import litdoc from "litdoc/dev.ts";
 import config from "./fresh.config.ts";
 
 await litdoc(import.meta.url, {
   routes: {
     match: [
-      /example\.tsx$/,
       ///src\/.*\/index\.tsx$/,
+      /\/docs\/.*\.tsx$/,
     ],
     skip: [
       /\/\.todo\//,

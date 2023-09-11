@@ -8,3 +8,4 @@ export * from "./Link.tsx";
 export * from "./Tag.tsx";
 export * from "./ThemeToggle.tsx";
 export * from "./View.tsx";
+export * from "./Token.tsx";

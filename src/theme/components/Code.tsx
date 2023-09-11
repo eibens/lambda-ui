@@ -1,10 +1,4 @@
-import {
-  Code as CodeView,
-  ReactEditor,
-  RenderNodeProps,
-  useSlate,
-  View,
-} from "./deps.ts";
+import { ReactEditor, RenderNodeProps, useSlate, View } from "./deps.ts";
 
 export function Code(props: RenderNodeProps<"Code">) {
   const { children, node, attributes } = props;
@@ -31,11 +25,11 @@ export function Code(props: RenderNodeProps<"Code">) {
 
   return (
     <View {...attributes}>
-      <CodeView
-        lang={node.lang}
-        value={value}
-        readOnly
-      />
+      <code>
+        <pre>
+          {value}
+        </pre>
+      </code>
       {children}
     </View>
   );

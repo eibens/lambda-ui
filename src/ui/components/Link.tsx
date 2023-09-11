@@ -162,6 +162,7 @@ export function Link(
         ]}
       >
         <FaIcon
+          tag="span"
           name={getIcon(target)}
           scale={0.9}
         />

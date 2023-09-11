@@ -1,2 +1,3 @@
-export * from "./utils/create.ts";
-export { default as dev } from "./utils/dev.ts";
+export type * from "litdoc/doc/utils/schema.ts";
+export * from "./utils/client.ts";
+export * from "./utils/server.ts";
