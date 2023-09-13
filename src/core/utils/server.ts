@@ -99,10 +99,11 @@ export function server(config: ServerConfig): Server {
     blocks: concurrent(memoized((file, hash) => {
       return cache.blocks(file, hash, () => {
         return log(`get blocks`, file, async (f) => {
+          const text = await get.text(file);
           const program = await get.program(file);
           const mod = get.module(file);
           return f(() => {
-            const { values, children } = weave(mod, program);
+            const { values, children } = weave(mod, program, text);
             cache.values.set(file, values);
             return children;
           });

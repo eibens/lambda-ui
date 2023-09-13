@@ -1,4 +1,4 @@
-import { View } from "litdoc/ui/mod.ts";
+import { Tag, View } from "litdoc/ui/mod.ts";
 import { ComponentChildren, VNode } from "preact";
 import { Node } from "slate";
 
@@ -54,7 +54,10 @@ export function fromComponents(
     if (!Component) {
       console.log("Missing component for type", node);
       return (
-        <View class="color-red fill-10 stroke-50" {...props.attributes}>
+        <View tag="span" {...props.attributes}>
+          <Tag color="red">
+            Missing component for <b>{type}</b>
+          </Tag>
           {props.children}
         </View>
       );

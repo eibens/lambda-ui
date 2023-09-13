@@ -117,6 +117,19 @@ function trimTypescriptBlocks(blocks: Block[]) {
   return copy;
 }
 
+function inlineTypescript(blocks: Block[], source: string) {
+  return blocks
+    .map((node) => {
+      if (node.lang !== "ts") return node;
+      const { start, end } = node.span;
+      const code = source.slice(start - 1, end).trim();
+      return {
+        ...node,
+        children: [{ type: "Text", text: code }],
+      };
+    });
+}
+
 /** MAIN **/
 
 export type Block = {
@@ -148,12 +161,15 @@ export function toValues(mod: unknown) {
   return values;
 }
 
-export function weave(mod: unknown, program: Program) {
+export function weave(mod: unknown, program: Program, source: string) {
   const { children, values } = toBlocks(mod, program);
   return {
     values,
-    children: trimTypescriptBlocks(
-      mergeAdjacentTypescript(children),
+    children: inlineTypescript(
+      trimTypescriptBlocks(
+        mergeAdjacentTypescript(children),
+      ),
+      source,
     ),
   };
 }

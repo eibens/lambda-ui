@@ -22,10 +22,10 @@ function fix(node: Record<string, unknown>) {
     delete node.value;
   }
 
-  // Convert InlineCode nodes to Code elements.
-  if (node.type === "InlineCode") {
+  // Convert markdown code nodes to Code elements.
+  if (node.type === "InlineCode" || node.type === "Code") {
+    node.isInline = node.type === "InlineCode";
     node.type = "Code";
-    node.isInline = true;
     node.children = [{ type: "Text", text: node.text }];
     delete node.text;
   }
@@ -36,10 +36,7 @@ function fix(node: Record<string, unknown>) {
   const hasChildren = "children" in node;
   const isText = typeof node.text === "string";
   if (!hasChildren && !isText) {
-    node.children = [{
-      type: "Text",
-      text: "",
-    }];
+    node.children = [{ type: "Text", text: "" }];
   }
 
   // Recurse into child nodes.
