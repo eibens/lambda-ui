@@ -1,1 +1,1 @@
-export { create as default } from "./tags/mod.ts";
+export { create as default } from "litdoc/utils/tags.ts";

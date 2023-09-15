@@ -1,4 +1,4 @@
-import { create } from "litdoc/tags/mod.ts";
+import { create } from "litdoc/utils/tags.ts";
 
 /** MAIN **/
 

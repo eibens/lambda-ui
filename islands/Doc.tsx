@@ -1,5 +1,4 @@
-import * as Litdoc from "litdoc/mod.ts";
-import { Library } from "litdoc/mod.ts";
+import { client, Library } from "litdoc/client.ts";
 import * as Theme from "litdoc/theme/mod.ts";
 import { Editable, Slate, withReact } from "slate-react";
 import manifest from "../litdoc.gen.ts";
@@ -10,7 +9,7 @@ export default function Doc(props: {
 }) {
   const { library, file } = props;
 
-  const litdoc = Litdoc.client({
+  const litdoc = client({
     modules: manifest.routes,
     library,
   });

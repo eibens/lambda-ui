@@ -27,4 +27,6 @@ You are currently viewing the documentation for Litdoc,
 > - ### :icons/tag: [Tags](/docs/features/tags.tsx)
 
 > - ### :icons/code: [Templates](/docs/features/templates.tsx)
+
+> - ### :icons/tags: [Tokens](/docs/features/tokens.md)
 `;

@@ -1,7 +1,8 @@
 import { RouteContext } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
-import * as Litdoc from "litdoc/mod.ts";
-import { View } from "litdoc/ui/mod.ts";
+import { View } from "litdoc/components/View.tsx";
+import { server } from "litdoc/server.ts";
+import { logText } from "litdoc/utils/log.ts";
 import Doc from "../islands/Doc.tsx";
 import manifest from "../litdoc.gen.ts";
 
@@ -11,19 +12,18 @@ export default async function render(_: Request, ctx: RouteContext) {
   const { params } = ctx;
   const { path = "" } = params;
 
-  const litdoc = Litdoc.server({
+  const litdoc = server({
     modules: manifest.routes,
   });
 
   const library = await litdoc.getLibrary();
 
   const libraryJson = JSON.stringify(library);
-  console.log(`library has ${libraryJson.length} bytes`);
+  logText(`library has ${libraryJson.length} bytes`);
 
   const file = "./" + (path || "docs/index.tsx");
-  console.log(path, file);
 
-  if (!litdoc.has(file)) {
+  if (!litdoc.hasModule(file)) {
     return ctx.renderNotFound();
   }
 

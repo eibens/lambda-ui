@@ -1,5 +1,5 @@
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
-import { Dark } from "litdoc/ui/mod.ts";
+import * as Dark from "litdoc/services/dark.ts";
 
 export const handler = [
   async (req: Request, ctx: MiddlewareHandlerContext) => {

@@ -1,18 +1,14 @@
-import { RenderNodeProps, useSlate, View } from "./deps.ts";
+import { RenderNodeProps, Tag, View } from "./deps.ts";
 
 export function Unknown(props: RenderNodeProps<"Unknown">) {
   const { attributes, children, node } = props;
 
-  const editor = useSlate();
-  const isInline = editor.isInline(node);
-
+  const { type } = node;
   return (
-    <View
-      {...attributes}
-      tag={isInline ? "span" : "div"}
-      class="color-red fill-10 stroke-50"
-      contentEditable={false}
-    >
+    <View tag="span" {...attributes}>
+      <Tag color="red">
+        Missing component for <b>{type}</b>
+      </Tag>
       {children}
     </View>
   );

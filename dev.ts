@@ -6,16 +6,7 @@ import litdoc from "litdoc/dev.ts";
 import config from "./fresh.config.ts";
 
 await litdoc(import.meta.url, {
-  routes: {
-    match: [
-      ///src\/.*\/index\.tsx$/,
-      /\/docs\/.*\.tsx$/,
-    ],
-    skip: [
-      /\/\.todo\//,
-      /\/\routes\//,
-    ],
-  },
+  root: "docs",
 });
 
 await dev(import.meta.url, "./main.ts", config);

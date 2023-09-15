@@ -13,6 +13,7 @@ import * as $7 from "./docs/index.tsx";
 
 export default {
   baseUrl: import.meta.url,
+  root: "docs",
   routes: {
     "./docs/features/cards.tsx": $0,
     "./docs/features/headings.tsx": $1,
@@ -21,6 +22,7 @@ export default {
     "./docs/features/lists.tsx": $4,
     "./docs/features/tags.tsx": $5,
     "./docs/features/templates.tsx": $6,
+    "./docs/features/tokens.md": null,
     "./docs/index.tsx": $7,
   },
 };
