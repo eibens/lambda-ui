@@ -1,4 +1,3 @@
-import { link } from "litdoc/utils/link.ts";
 import { stringify } from "litdoc/utils/stringify.ts";
 import type { Program } from "litdoc/utils/swc.ts";
 import type { Call } from "litdoc/utils/tags.ts";
@@ -38,39 +37,50 @@ function stringifyModule(options: WeaveModuleOptions) {
 
 function stringifyProgram(options: WeaveProgramOptions) {
   const { program, text: source, module } = options;
+  const calls = getCalls(module);
+  let cursor = 0;
+  const blocks: { lang: string; text: string }[] = [];
 
-  const iter = (function* () {
-    const calls = getCalls(module);
-    const paths = link(program, calls);
-    const state = {
-      callIndex: 0,
-      start: 0,
-    };
+  for (let i = 0; i < program.body.length; i++) {
+    // Ignore everything after the last template.
+    if (calls.length === 0) break;
 
-    for (let i = 0; i < program.body.length; i++) {
-      const path = paths[state.callIndex];
-      if (!path) continue;
-      const [_, j] = path;
-      if (i !== j) continue;
+    // A template is an expression statement...
+    const node = program.body[i];
+    if (node.type !== "ExpressionStatement") continue;
 
-      const { start, end } = program.body[i].span;
-      if (state.start > 0 && start - 1 > state.start) {
-        const text = source.slice(state.start, start - 1);
-        if (text.trim().length > 0) {
-          yield { lang: "ts", text };
-          state.start = start;
-        }
+    // ... of either a call or a tagged template...
+    const { expression } = node;
+    const isCall = expression.type === "CallExpression";
+    const isTagged = expression.type === "TaggedTemplateExpression";
+    if (!isCall && !isTagged) continue;
+
+    // ... that has an identifier as callee or tag...
+    const identifier = isCall ? expression.callee : expression.tag;
+    if (identifier.type !== "Identifier") continue;
+
+    // ... that matches the next call in the queue.
+    if (identifier.value !== calls[0].name) continue;
+
+    // Before adding the template, add code since the last one.
+    // Unless, this is the first template or empty, then ignore.
+    const { start, end } = program.body[i].span;
+    if (cursor > 0) {
+      const text = source.slice(cursor, start - 1);
+      if (text.trim().length > 0) {
+        blocks.push({ lang: "ts", text });
+        cursor = start;
       }
-
-      const call = calls[state.callIndex++];
-      const { args, name: lang } = call;
-      const text = stringify({ args, path: [i] });
-      yield { lang, text };
-      state.start = end;
     }
-  })();
 
-  return [...iter]
+    // Add the template.
+    const { args, name: lang } = calls.shift()!;
+    const text = stringify({ args, path: [i] });
+    blocks.push({ lang, text });
+    cursor = end;
+  }
+
+  return blocks
     .map(stringifyCode)
     .join("\n\n");
 }
