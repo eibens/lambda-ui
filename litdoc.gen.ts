@@ -9,7 +9,6 @@ import * as $3 from "./docs/features/links.tsx";
 import * as $4 from "./docs/features/lists.tsx";
 import * as $5 from "./docs/features/tags.tsx";
 import * as $6 from "./docs/features/templates.tsx";
-import * as $7 from "./docs/index.tsx";
 
 export default {
   baseUrl: import.meta.url,
@@ -23,6 +22,6 @@ export default {
     "./docs/features/tags.tsx": $5,
     "./docs/features/templates.tsx": $6,
     "./docs/features/tokens.md": null,
-    "./docs/index.tsx": $7,
+    "./docs/index.md": null,
   },
 };

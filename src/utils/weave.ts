@@ -1,6 +1,6 @@
-import type { Program } from "litdoc/utils/swc.ts";
 import { link } from "litdoc/utils/link.ts";
 import { stringify } from "litdoc/utils/stringify.ts";
+import type { Program } from "litdoc/utils/swc.ts";
 import type { Call } from "litdoc/utils/tags.ts";
 
 /** HELPERS **/
@@ -19,6 +19,7 @@ function getCalls(mod: unknown): Call[] {
 function stringifyCode(options: WeaveCodeOptions): string {
   const { lang, text } = options;
   if (lang === "md") return text;
+  if (lang === "ts") return `~~~ts\n${text.trim()}\n~~~`;
   return `~~~${lang}\n${text}\n~~~`;
 }
 
@@ -38,57 +39,38 @@ function stringifyModule(options: WeaveModuleOptions) {
 function stringifyProgram(options: WeaveProgramOptions) {
   const { program, text: source, module } = options;
 
-  function mergeTs(blocks: WeaveCodeOptions[]) {
-    const merged: WeaveCodeOptions[] = [];
-    for (const block of blocks) {
-      const last = merged[merged.length - 1];
-      if (last && last.lang === block.lang && last.lang === "ts") {
-        last.text += block.text;
-        continue;
-      }
-      merged.push({ ...block });
-    }
-
-    return merged;
-  }
-
-  function trimTs(blocks: WeaveCodeOptions[]) {
-    const isTs = (block?: WeaveCodeOptions) => block?.lang === "ts";
-
-    if (blocks.length === 1 && isTs(blocks[0])) {
-      return blocks;
-    }
-
-    // remove ts block from start and end
-    const copy = [...blocks];
-    if (isTs(copy[0])) copy.shift();
-    if (isTs(copy[copy.length - 1])) copy.pop();
-
-    return copy;
-  }
-
-  function* generate() {
+  const iter = (function* () {
     const calls = getCalls(module);
     const paths = link(program, calls);
-    let callIndex = 0;
+    const state = {
+      callIndex: 0,
+      start: 0,
+    };
+
     for (let i = 0; i < program.body.length; i++) {
-      const path = paths[callIndex];
+      const path = paths[state.callIndex];
       if (!path) continue;
       const [_, j] = path;
-      if (i === j) {
-        const call = calls[callIndex++];
-        const { args, name: lang } = call;
-        const text = stringify({ args, path: [i] });
-        yield { lang, text };
-      } else {
-        const { start, end } = program.body[i].span;
-        const text = source.slice(start - 1, end);
-        yield { lang: "ts", text };
-      }
-    }
-  }
+      if (i !== j) continue;
 
-  return trimTs(mergeTs(Array.from(generate())))
+      const { start, end } = program.body[i].span;
+      if (state.start > 0 && start - 1 > state.start) {
+        const text = source.slice(state.start, start - 1);
+        if (text.trim().length > 0) {
+          yield { lang: "ts", text };
+          state.start = start;
+        }
+      }
+
+      const call = calls[state.callIndex++];
+      const { args, name: lang } = call;
+      const text = stringify({ args, path: [i] });
+      yield { lang, text };
+      state.start = end;
+    }
+  })();
+
+  return [...iter]
     .map(stringifyCode)
     .join("\n\n");
 }
