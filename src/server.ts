@@ -1,6 +1,5 @@
 import { join } from "$std/path/join.ts";
 import { extname } from "$std/path/mod.ts";
-import { parse as parseSwc } from "litdoc/services/swc.ts";
 import { cached } from "litdoc/utils/cached.ts";
 import { hashed } from "litdoc/utils/hashed.ts";
 import { logFileOperation, logTime } from "litdoc/utils/log.ts";
@@ -9,7 +8,7 @@ import { modified } from "litdoc/utils/modified.ts";
 import { parse } from "litdoc/utils/parse.ts";
 import type { Root } from "litdoc/utils/schema.ts";
 import "litdoc/utils/slate.ts";
-import type { Program } from "litdoc/utils/swc.ts";
+import { ParseOptions, Program, swc } from "litdoc/utils/swc.ts";
 import { weave, WeaveOptions } from "litdoc/utils/weave.ts";
 import { Editor } from "slate";
 
@@ -54,6 +53,7 @@ async function getWeaveOptions(
 function createProgramCache(ctx: ServerContext) {
   const { getConfig, getText } = ctx;
   const { cacheRoot } = getConfig();
+  let parse: (source: string, options: ParseOptions) => Promise<Program>;
   return cached<Program>({
     ext: "json",
     path: join(cacheRoot, "program"),
@@ -62,8 +62,9 @@ function createProgramCache(ctx: ServerContext) {
     stringify: (value) => JSON.stringify(value),
     load: async (file, f) => {
       const text = await getText(file);
+      if (!parse) parse = await swc();
       return f(() =>
-        parseSwc(text, {
+        parse(text, {
           syntax: "typescript",
           tsx: file.endsWith(".tsx"),
         })

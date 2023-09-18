@@ -1,8 +1,10 @@
 import { assertEquals } from "$std/assert/assert_equals.ts";
-import { parse } from "litdoc/services/swc.ts";
+import { swc } from "litdoc/utils/swc.ts";
 import { weave } from "litdoc/utils/weave.ts";
 
 /** HELPERS **/
+
+const parse = await swc();
 
 async function ts(strings: TemplateStringsArray) {
   const text = strings.join("");
