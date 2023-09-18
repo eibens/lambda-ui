@@ -65,11 +65,10 @@ function stringifyProgram(options: WeaveProgramOptions) {
     // Before adding the template, add code since the last one.
     // Unless, this is the first template or empty, then ignore.
     const { start, end } = program.body[i].span;
-    if (cursor > 0) {
+    if (blocks.length > 0) {
       const text = source.slice(cursor, start - 1);
       if (text.trim().length > 0) {
         blocks.push({ lang: "ts", text });
-        cursor = start;
       }
     }
 
