@@ -1,4 +1,4 @@
-import renderPath from "$/routes/docs/[...path].tsx";
+import renderPath from "$/routes/[...path].tsx";
 import { RouteContext } from "$fresh/server.ts";
 
 export default async function render(req: Request, ctx: RouteContext) {

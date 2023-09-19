@@ -1,4 +1,4 @@
-## :icons/file: Developer Notes
+# :icons/file: Developer Notes
 
 These are unsorted notes for the development of Litdoc.
 
@@ -33,7 +33,7 @@ names, as well as their exports, if the file is a TypeScript module.
   solely through module resolution.
   - File names or contents must be provided manually, if this mode is used and
     file system access is needed. File system is required for plain Markdown
-    files and for literate typescript modules.
+    files and for literate TypeScript modules.
   - One could pass the import.meta.url value to litdoc, which would then be
     available to Litdoc via the module export. The drawback of this
 
@@ -41,5 +41,17 @@ names, as well as their exports, if the file is a TypeScript module.
 
 Tokens are not implemented fully (see unit test output).
 
-- :icons/square: Tokens that stick to the node afterwards.
-- :icons/square: Trim whitespace surrounding sticky tokens.
+- :^icons/square: Tokens that stick to the node afterwards.
+- :^icons/square: Trim whitespace surrounding sticky tokens.
+
+#### File watcher for Markdown files
+
+Currently using the out-of-the-box `--watch` flag of deno. This works for
+changes in the dependency graph, but not for changes of other files, like
+Markdown documents. This hinders the use of litdoc with plain Markdown instead
+of the more powerful literate TypeScript.
+
+#### Back button broken
+
+The back button currently does not work when running litdoc in development mode
+via `deno task start`. It works when running `deno task preview`.

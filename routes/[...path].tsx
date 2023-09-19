@@ -1,10 +1,10 @@
+import Content from "$/islands/Content.tsx";
+import manifest from "$/litdoc.gen.ts";
 import { RouteContext } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
 import { Meta } from "litdoc/components/Meta.tsx";
 import { View } from "litdoc/components/View.tsx";
 import { server } from "litdoc/server.ts";
-import Content from "$/islands/Content.tsx";
-import manifest from "$/litdoc.gen.ts";
 
 /** MAIN **/
 
