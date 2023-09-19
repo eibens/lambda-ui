@@ -5,22 +5,30 @@
 import * as $0 from "./docs/features/cards.tsx";
 import * as $1 from "./docs/features/headings.tsx";
 import * as $2 from "./docs/features/icons.tsx";
-import * as $3 from "./docs/features/links.tsx";
-import * as $4 from "./docs/features/lists.tsx";
-import * as $5 from "./docs/features/tags.tsx";
-import * as $6 from "./docs/features/templates.tsx";
+import * as $3 from "./docs/features/linking/examples/basic/contact.ts";
+import * as $4 from "./docs/features/linking/examples/basic/index.ts";
+import * as $5 from "./docs/features/linking/examples/basic/sitemap.ts";
+import * as $6 from "./docs/features/links.tsx";
+import * as $7 from "./docs/features/lists.tsx";
+import * as $8 from "./docs/features/tags.tsx";
+import * as $9 from "./docs/features/templates.tsx";
 
 export default {
   baseUrl: import.meta.url,
   root: "docs",
   routes: {
+    "./docs/dev.md": null,
     "./docs/features/cards.tsx": $0,
     "./docs/features/headings.tsx": $1,
     "./docs/features/icons.tsx": $2,
-    "./docs/features/links.tsx": $3,
-    "./docs/features/lists.tsx": $4,
-    "./docs/features/tags.tsx": $5,
-    "./docs/features/templates.tsx": $6,
+    "./docs/features/linking/examples/basic/contact.ts": $3,
+    "./docs/features/linking/examples/basic/index.ts": $4,
+    "./docs/features/linking/examples/basic/sitemap.ts": $5,
+    "./docs/features/linking/index.md": null,
+    "./docs/features/links.tsx": $6,
+    "./docs/features/lists.tsx": $7,
+    "./docs/features/tags.tsx": $8,
+    "./docs/features/templates.tsx": $9,
     "./docs/features/tokens.md": null,
     "./docs/index.md": null,
   },

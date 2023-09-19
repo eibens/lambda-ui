@@ -22,7 +22,7 @@ Deno.test("inline token with text after", () => {
     type: "Fragment",
     children: [{
       type: "Token",
-      url: "token:///world",
+      url: "token:///hello",
       children: [{
         type: "Text",
         text: "",

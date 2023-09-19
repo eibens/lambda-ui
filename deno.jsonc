@@ -10,9 +10,18 @@
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "imports": {
+    // Needed for using litdoc.
+    // The library uses this specifier internally,
+    // so this entry must be added to userland import maps.
+    // We might try to get rid of it, but it is very convenient during development.
+    "litdoc/": "./src/",
+
+    // Used only for building the litdoc website.
+    // For example, use $/islands/ to import island components.
+    "$/": "./",
+
+    // Used for Fresh framework.
     "$fresh/": "https://deno.land/x/fresh@1.4.3/",
-    "preact": "https://esm.sh/preact@10.13.1",
-    "preact/": "https://esm.sh/preact@10.13.1/",
     "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.2.1",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.1.3",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.2.3",
@@ -20,8 +29,23 @@
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.200.0/",
 
-    "react": "https://esm.sh/preact@10.13.1/compat",
+    // Preact version is currently locked because of eibens/slack-preact-port.
+    // Fresh also depends on preact, so this is a problem.
+    "preact": "https://esm.sh/preact@10.13.1",
+    "preact/": "https://esm.sh/preact@10.13.1/",
+
+    // Slate should be completely standalone.
+    // It is needed for complex theming queries and transformations,
+    // as well as a dependency for slate-react.
+    // The overriding of the 'slate' module could happen in the theme only.
     "slate": "https://esm.sh/slate@0.94.0",
+
+    // These are slate-react dependencies.
+    // One should try to get rid of them, for example,
+    // by inlining these URLs in eibens/slate-preact-port.
+    // If the official slate-preact becomes preact compatible,
+    // these are hopefully no longer needed.
+    "react": "https://esm.sh/preact@10.13.1/compat",
     "slate-react": "https://raw.githubusercontent.com/eibens/slate-preact-port/v1.0.0-alpha/mod.ts",
     "@juggle/resize-observer": "https://esm.sh/@juggle/resize-observer@3.4.0",
     "direction": "https://esm.sh/direction@1.0.3",
@@ -29,9 +53,7 @@
     "is-plain-object": "https://esm.sh/is-plain-object@5.0.0",
     "scroll-into-view-if-needed": "https://esm.sh/scroll-into-view-if-needed@2.2.20",
     "tiny-invariant": "https://esm.sh/tiny-invariant@1.0.6",
-    "lodash/": "https://esm.sh/lodash@4.17.4/",
-
-    "litdoc/": "./src/"
+    "lodash/": "https://esm.sh/lodash@4.17.4/"
   },
   "compilerOptions": {
     "jsx": "react-jsx",

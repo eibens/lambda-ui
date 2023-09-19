@@ -177,10 +177,20 @@ export function getLead(editor: Editor, at: Path = []): string | undefined {
 
 export function getIcon(editor: Editor, at: Path = []): string | undefined {
   const [node] = editor.node(at);
-  return getTokens(node)
+
+  const icon = getTokens(node)
     .filter((token) => token.path[0] === "icons")
     .map((token) => token.path[1])
     .filter(Boolean)[0];
+
+  if (icon) return icon;
+
+  if (node.type === "ListItem") {
+    const [child] = node.children;
+    if (child) {
+      return getIcon(editor, at.concat(0));
+    }
+  }
 }
 
 export function getColor(editor: Editor, at: Path = []): string | undefined {
@@ -201,6 +211,12 @@ export function getSpacing(editor: Editor, at: Path = []) {
   if (!nextEntry) return 0;
   const [next] = nextEntry;
 
+  const isHeading = node.type === "Heading";
+  const isNextHeading = next.type === "Heading";
+  if (isHeading && isNextHeading) return unit;
+  if (isHeading) return unit;
+  if (isNextHeading) return 6 * unit;
+
   // The first paragraph after a heading is the lead.
   // It has a fixed spacing to the following element.
   if (node.type === "Paragraph") {
@@ -211,15 +227,13 @@ export function getSpacing(editor: Editor, at: Path = []) {
     }
   }
 
-  if (node.type == next.type) return unit;
-  if (next.type === "Heading") return 6 * unit;
-  if (node.type === "Heading") return unit;
+  if (node.type === next.type) return unit;
 
   // Reduce spacing between these elements.
   const narrow = ["Paragraph", "ListItem", "List"];
   const isNarrow = narrow.includes(node.type);
-  const nextIsNarrow = narrow.includes(next.type);
-  if (isNarrow && nextIsNarrow) return 3 * unit;
+  const isNextNarrow = narrow.includes(next.type);
+  if (isNarrow && isNextNarrow) return unit;
 
   return 3 * unit;
 }

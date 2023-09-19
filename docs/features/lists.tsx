@@ -22,9 +22,9 @@ These are examples of lists in Litdoc.
 
 ## [Icon List](#icon-list)
 
-> - :icons/circle-info: *List item*
-> - :icons/warning: List item
-> - :icons/tree: List item
+> - :^icons/circle-info: *List item*
+> - :^icons/warning: List item
+> - :^icons/tree: List item
 
 ## [Task List](#task-list)
 
@@ -43,40 +43,40 @@ These are examples of lists in Litdoc.
 
 ## [Hierarchical List](#hierarchical-list)
 
-> - ## :icons/star: Heading 2
+> - ## :^icons/star: Heading 2
 >   - Paragraph
 >   - Paragraph
-> - ## :icons/star: Heading 2
+> - ## :^icons/star: Heading 2
 >   - Paragraphs
 >   - Paragraph
 
 
-> - :icons/chevron-right: **Chapters**
+> - :^icons/chevron-right: **Chapters**
 >   - #### Chapter 1
 >   - #### Chapter 2
 >   - #### Chapter 3
-> - :icons/chevron-right: **Appendix**
+> - :^icons/chevron-right: **Appendix**
 >   - #### Code Samples
 >   - #### Glossary
 
 ## [Icon sizes](#icon-sizes)
 
-> - # :icons/smile: Heading 1
-> - ## :icons/smile: Heading 2
-> - ### :icons/smile: Heading 3
-> - #### :icons/smile: Heading 4
-> - ##### :icons/smile: Heading 5
-> - ###### :icons/smile: Heading 6
-> - :icons/smile: Paragraph
+> - # :^icons/smile: Heading 1
+> - ## :^icons/smile: Heading 2
+> - ### :^icons/smile: Heading 3
+> - #### :^icons/smile: Heading 4
+> - ##### :^icons/smile: Heading 5
+> - ###### :^icons/smile: Heading 6
+> - :^icons/smile: Paragraph
 
 ## [Icons alignment](#icon-alignment)
 
-> - # :icons/minus: :icons/minus: Heading 1
-> - ## :icons/minus: :icons/minus: Heading 2
-> - ### :icons/minus: :icons/minus: Heading 3
-> - #### :icons/minus: :icons/minus: Heading 4
-> - ##### :icons/minus: :icons/minus: Heading 5
-> - ###### :icons/minus: :icons/minus: Heading 6
-> - :icons/minus: :icons/minus: Paragraph
+> - # :^icons/minus: :icons/minus: Heading 1
+> - ## :^icons/minus: :icons/minus: Heading 2
+> - ### :^icons/minus: :icons/minus: Heading 3
+> - #### :^icons/minus: :icons/minus: Heading 4
+> - ##### :^icons/minus: :icons/minus: Heading 5
+> - ###### :^icons/minus: :icons/minus: Heading 6
+> - :^icons/minus: :icons/minus: Paragraph
 
 `;

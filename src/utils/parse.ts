@@ -11,23 +11,6 @@ function* parseTokens(str: string): Generator<Node> {
     text,
   });
 
-  const createProps = (text: string) => {
-    if (text.startsWith("^")) {
-      return {
-        assign: "before" as const,
-        text: text.slice(1),
-      };
-    }
-    if (text.endsWith("^")) {
-      return {
-        assign: "after" as const,
-        text: text.slice(0, -1),
-      };
-    }
-
-    return { text };
-  };
-
   const pattern = /:([^:\s]+):/g;
 
   let lastIndex = 0;
@@ -36,13 +19,31 @@ function* parseTokens(str: string): Generator<Node> {
     const [_, data] = match;
     const before = str.slice(lastIndex, match.index);
     if (before) yield createText(before);
-    const { assign, text } = createProps(data);
-    yield {
-      type: "Token",
-      assign,
-      url: new URL(`token:///${text}`).toString(),
-      children: [createText()],
-    };
+
+    const children = [createText()];
+    const getUrl = (text: string) => new URL(`token:///${text}`).toString();
+    if (data.startsWith("^")) {
+      yield {
+        type: "Token",
+        assign: "before" as const,
+        url: getUrl(data.slice(1)),
+        children,
+      };
+    } else if (data.endsWith("^")) {
+      yield {
+        type: "Token",
+        assign: "after" as const,
+        url: getUrl(data.slice(0, -1)),
+        children,
+      };
+    } else {
+      yield {
+        type: "Token",
+        url: getUrl(data),
+        children,
+      };
+    }
+
     lastIndex = pattern.lastIndex;
   }
   const after = str.slice(lastIndex);
@@ -91,9 +92,27 @@ function fix(node: Record<string, unknown>): Node[] {
 
   // Recurse into child nodes.
   if (Array.isArray(node.children)) {
-    const children = node.children.flatMap(fix);
+    const list = node.children.flatMap(fix);
+    const children: Node[] = [];
 
-    // TODO: Assign tokens.
+    let prev = node as Node;
+    for (const child of list) {
+      if (child.type === "Token") {
+        if (child.assign === "before") {
+          prev.tokens = prev.tokens ?? [];
+          prev.tokens.push(child.url);
+        } else if (child.assign === "after") {
+          console.warn("TODO: Handle after tokens");
+        } else {
+          children.push(child);
+          prev = child;
+        }
+      } else {
+        children.push(child);
+        prev = child;
+      }
+    }
+
     node.children = children;
   }
 
