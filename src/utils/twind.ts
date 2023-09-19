@@ -3,7 +3,7 @@ import * as Twind from "twind";
 
 const { apply } = Twind;
 
-const config: Omit<Twind.Configuration, "mode" | "sheet"> = {
+export const TwindConfig: Omit<Twind.Configuration, "mode" | "sheet"> = {
   darkMode: "class",
   preflight: {
     html: apply`
@@ -71,5 +71,3 @@ const config: Omit<Twind.Configuration, "mode" | "sheet"> = {
     },
   },
 };
-
-export default config;

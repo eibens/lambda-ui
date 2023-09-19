@@ -1,32 +1,23 @@
-import {
-  getFontSize,
-  getLineHeight,
-  getListIndent,
-  getSpacing,
-  RenderNodeProps,
-  Token,
-  useSlate,
-  View,
-} from "./deps.ts";
+import { FaIcon } from "litdoc/components/FaIcon.tsx";
+import { View, ViewProps } from "litdoc/components/View.tsx";
 
-export function ListItem(props: RenderNodeProps<"ListItem">) {
-  const { attributes, children, node } = props;
+export function ListItem(
+  props: ViewProps<"li"> & {
+    icon?: string;
+    indent: number;
+    lineHeight: number;
+    size: number;
+  },
+) {
+  const { children, icon, indent, size, lineHeight, ...rest } = props;
 
-  const editor = useSlate();
-  const spacing = getSpacing(editor, node);
-  const size = getFontSize(editor, node);
-  const lineHeight = getLineHeight(editor, node);
-  const indent = getListIndent(editor, node);
   return (
     <View
-      {...attributes}
       tag="li"
+      viewProps={rest}
       class={[
         "flex flex-row",
       ]}
-      style={{
-        marginBottom: spacing + "px",
-      }}
     >
       <View
         style={{
@@ -46,7 +37,7 @@ export function ListItem(props: RenderNodeProps<"ListItem">) {
             transform: "translateY(-0.053em)",
           }}
         >
-          <Token href={node.icon ?? "token://icons/minus"} />
+          {<FaIcon tag="span" name={icon ?? "minus"} />}
         </View>
       </View>
       <View

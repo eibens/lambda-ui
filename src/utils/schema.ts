@@ -6,11 +6,15 @@ type ToNodeMap<PropMap> = {
   } & PropMap[K];
 };
 
-type BaseLeafProps = {
+type BaseNodeProps = {
+  tokens?: string[];
+};
+
+type BaseLeafProps = BaseNodeProps & {
   text: string;
 };
 
-type BaseElementProps = {
+type BaseElementProps = BaseNodeProps & {
   // Cannot use Node here because it is circular
   children: NodeMap[keyof NodeMap][];
 };
@@ -22,8 +26,10 @@ type BaseInlineBlockProps = BaseElementProps & {
 /** MAIN **/
 
 export type NodeMap = ToNodeMap<{
-  // Structural nodes
   Root: BaseElementProps;
+  Fragment: BaseElementProps;
+
+  // Leaf nodes
   Text: BaseLeafProps;
 
   // Inline Blocks
@@ -71,6 +77,10 @@ export type NodeMap = ToNodeMap<{
   Strong: BaseElementProps;
   Delete: BaseElementProps;
   Break: BaseElementProps;
+  Token: BaseElementProps & {
+    url: string;
+    assign?: "before" | "after";
+  };
 }>;
 
 export type Nodes<NodeMap> = NodeMap[keyof NodeMap];
@@ -83,4 +93,6 @@ export type Path = number[];
 
 export type NodeEntry<T extends Node = Node> = [T, Path];
 
-export type Root = NodeMap["Root"];
+export type Root = Node<"Root">;
+
+export type Fragment = Node<"Fragment">;

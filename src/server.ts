@@ -2,15 +2,14 @@ import { join } from "$std/path/join.ts";
 import { extname } from "$std/path/mod.ts";
 import { cached } from "litdoc/utils/cached.ts";
 import { hashed } from "litdoc/utils/hashed.ts";
-import { logFileOperation, logTime } from "litdoc/utils/log.ts";
+import { logFileOperation, logText, logTime } from "litdoc/utils/log.ts";
 import { memoize } from "litdoc/utils/memoize.ts";
 import { modified } from "litdoc/utils/modified.ts";
 import { parse } from "litdoc/utils/parse.ts";
+import { Route, route } from "litdoc/utils/route.ts";
 import type { Root } from "litdoc/utils/schema.ts";
-import "litdoc/utils/slate.ts";
 import { ParseOptions, Program, swc } from "litdoc/utils/swc.ts";
 import { weave, WeaveOptions } from "litdoc/utils/weave.ts";
-import { Editor } from "slate";
 
 /** HELPERS **/
 
@@ -93,34 +92,21 @@ function createTemplateCache(ctx: ServerContext) {
   });
 }
 
-function createEditorCache(ctx: ServerContext) {
+function createRootCache(ctx: ServerContext) {
   const { getConfig, getTemplate, getValues } = ctx;
   const { cacheRoot } = getConfig();
   return cached({
     ext: "json",
-    path: join(cacheRoot, "doc"),
+    path: join(cacheRoot, "root"),
     log: "parse markdown",
-    parse: (string: string) => {
-      const root = JSON.parse(string);
-      const editor = parse("");
-      editor.children = root.children;
-      return editor;
-    },
-    stringify: (editor: Editor) => {
-      const root: Root = {
-        type: "Root",
-        children: editor.children,
-      };
-      return JSON.stringify(root);
-    },
+    parse: JSON.parse,
+    stringify: (value) => JSON.stringify(value),
     load: async (file, f) => {
       const template = await getTemplate(file);
       const values = getValues(file);
       if (!values) throw new Error(`Values not found for ${file}`);
       return f(() => {
-        const editor = parse(template);
-        editor.values = values;
-        return editor;
+        return parse(template);
       });
     },
   });
@@ -142,8 +128,8 @@ export type ServerContext = {
   getHash: (file: string) => Promise<string>;
   getProgram: (file: string) => Promise<Program>;
   getTemplate: (file: string) => Promise<string>;
-  getEditor: (file: string) => Promise<Editor>;
-  getLibrary: () => Promise<Record<string, Root>>;
+  getRoot: (file: string) => Promise<Root>;
+  getRoute: (file: string) => Promise<Route>;
   setValues: (file: string, values: Record<string, unknown>) => void;
 };
 
@@ -160,10 +146,10 @@ export function server(config: Partial<ServerConfig> = {}): ServerContext {
         modules,
       };
     },
-    hasModule: (file: string) => {
+    hasModule: (file) => {
       return file in modules;
     },
-    getModule: (file: string) => {
+    getModule: (file) => {
       return modules[file];
     },
     getValues: (file) => {
@@ -183,44 +169,40 @@ export function server(config: Partial<ServerConfig> = {}): ServerContext {
         return f(() => hashed(text));
       });
     })),
-    getProgram: async (file: string): Promise<Program> => {
+    getProgram: async (file) => {
       const hash = await ctx.getHash(file);
-      return state.program(file, hash);
+      return state.programs(file, hash);
     },
-    getTemplate: async (file: string): Promise<string> => {
+    getTemplate: async (file) => {
       const hash = await ctx.getHash(file);
-      return state.template(file, hash);
+      return state.templates(file, hash);
     },
-    getEditor: async (file: string): Promise<Editor> => {
+    getRoot: async (file) => {
       const hash = await ctx.getHash(file);
-      return state.editor(file, hash);
+      return await state.roots(file, hash);
     },
-    getLibrary: async (): Promise<Record<string, Root>> => {
-      if (!state.library) {
-        return await logTime("built library", (f) => {
-          return f(async () => {
-            const keys = Object.keys(modules);
-            const library: Record<string, Root> = {};
-            for (const file of keys) {
-              const { children } = await ctx.getEditor(file);
-              library[file] = { type: "Root", children };
-            }
-            state.library = library;
-            return library;
-          });
+    getRoute: async (path) => {
+      return await logTime("built library", (f) => {
+        return f(async () => {
+          const keys = Object.keys(modules);
+          const library: Record<string, Root> = {};
+          for (const file of keys) {
+            library[file] = await ctx.getRoot(file);
+          }
+          const json = JSON.stringify(library);
+          logText(`Library size: ${json.length} bytes`);
+
+          return route(library, path);
         });
-      }
-      return state.library;
+      });
     },
   };
 
   const state = {
-    library: null as (null | Record<string, Root>),
     values: new Map<string, Record<string, unknown>>(),
-    editors: new Map<string, Editor>(),
-    program: createProgramCache(ctx),
-    template: createTemplateCache(ctx),
-    editor: createEditorCache(ctx),
+    programs: createProgramCache(ctx),
+    templates: createTemplateCache(ctx),
+    roots: createRootCache(ctx),
   };
 
   return ctx;

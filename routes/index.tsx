@@ -5,9 +5,7 @@ export default async function render(req: Request, ctx: RouteContext) {
   return await renderPath(
     req,
     Object.assign(ctx, {
-      params: {
-        path: "",
-      },
+      params: {},
     }),
   );
 }
