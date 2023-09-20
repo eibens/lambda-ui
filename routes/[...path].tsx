@@ -1,5 +1,5 @@
+import * as docs from "$/docs.ts";
 import Content from "$/islands/Content.tsx";
-import * as manifest from "$/litdoc.ts";
 import { RouteContext } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
 import { Meta } from "litdoc/components/Meta.tsx";
@@ -12,8 +12,8 @@ export default async function render(_: Request, ctx: RouteContext) {
   const { params } = ctx;
   const { path = "docs/index.md" } = params;
 
-  const litdoc = server();
-  const route = await litdoc.route(manifest, path);
+  const context = server();
+  const route = await context.route(docs, path);
 
   return (
     <>

@@ -1,8 +1,9 @@
+import lit from "litdoc/lit.ts";
 import { create } from "litdoc/utils/tags.ts";
 
 /** MAIN **/
 
-export const doc = create();
+export const doc = lit();
 const { md } = doc;
 
 md`
@@ -50,22 +51,3 @@ num`This is the number ${123}.`;
 
 // @ts-expect-error - The str tag only accepts strings as values.
 str`This is an error: ${123}.`;
-
-md`
-## Middleware (TODO)
-
-A middleware can be used to modify the behavior of the template function.
-
-~~~ts
-tags({
-  foo: (context, next) => {
-    console.log("Foo got called");
-    next();
-  },
-  bar: (context, next) => {
-    console.log("Bar got called");
-    next();
-  },
-});
-~~~
-`;

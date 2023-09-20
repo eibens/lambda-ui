@@ -5,7 +5,7 @@ import "$std/dotenv/load.ts";
 import litdoc from "litdoc/dev.ts";
 import config from "./fresh.config.ts";
 
-await litdoc(import.meta.url, {
+await litdoc(import.meta.url, "./docs.ts", {
   root: "docs",
 });
 

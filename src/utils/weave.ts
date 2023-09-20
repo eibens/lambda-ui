@@ -1,3 +1,4 @@
+import { Manifest } from "litdoc/lit.ts";
 import { stringify } from "litdoc/utils/stringify.ts";
 import type { Program } from "litdoc/utils/swc.ts";
 import type { Call } from "litdoc/utils/tags.ts";
@@ -10,9 +11,8 @@ function getCalls(mod: unknown): Call[] {
   if (!("doc" in mod)) return [];
   const doc = mod.doc;
   if (typeof doc !== "function") return [];
-  const calls = doc();
-  if (!Array.isArray(calls)) return [];
-  return calls;
+  const manifest: Manifest = doc();
+  return manifest.calls;
 }
 
 function stringifyCode(options: WeaveCodeOptions): string {

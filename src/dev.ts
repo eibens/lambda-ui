@@ -137,12 +137,16 @@ export const doc = lit({
 
 /** MAIN **/
 
-export default async function dev(metaUrl: string | URL, options: {
-  root?: string;
-  skip?: RegExp[];
-  match?: RegExp[];
-  exts?: string[];
-}) {
+export default async function dev(
+  metaUrl: string | URL,
+  file: string,
+  options: {
+    root?: string;
+    skip?: RegExp[];
+    match?: RegExp[];
+    exts?: string[];
+  },
+) {
   const { root = "./", skip, match, exts } = options;
 
   const baseUrl = new URL("./", metaUrl);
@@ -172,7 +176,7 @@ export default async function dev(metaUrl: string | URL, options: {
   const template = toTemplate(root, entries);
   const raw = stringifyTemplate(template);
   const formatted = await formatTypescript(raw);
-  await writeLazy("litdoc.ts", formatted);
+  await writeLazy(new URL(file, metaUrl), formatted);
 
   console.log(
     `%cThe manifest has been generated for ` +

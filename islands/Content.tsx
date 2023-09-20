@@ -1,4 +1,4 @@
-import * as litdoc from "$/litdoc.ts";
+import * as docs from "$/docs.ts";
 import { Doc } from "litdoc/components/Doc.tsx";
 import { Route } from "litdoc/utils/route.ts";
 
@@ -8,8 +8,8 @@ export default function Content(props: {
   const { route } = props;
   return (
     <Doc
+      litdoc={docs}
       route={route}
-      litdoc={litdoc}
     />
   );
 }

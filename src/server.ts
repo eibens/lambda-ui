@@ -186,7 +186,7 @@ export function server(config: Partial<ServerConfig> = {}): ServerContext {
       return await state.roots(file, hash);
     },
     route: async (module, path) => {
-      return await logTime("built library", (f) => {
+      return await logTime("route generation", (f) => {
         manifest = module.doc();
         return f(async () => {
           const keys = Object.keys(manifest.assets);
