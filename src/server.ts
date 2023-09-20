@@ -1,5 +1,6 @@
 import { join } from "$std/path/join.ts";
 import { extname } from "$std/path/mod.ts";
+import { Litdoc, Manifest } from "litdoc/lit.ts";
 import { cached } from "litdoc/utils/cached.ts";
 import { hashed } from "litdoc/utils/hashed.ts";
 import { logFileOperation, logText, logTime } from "litdoc/utils/log.ts";
@@ -14,7 +15,7 @@ import { weave, WeaveOptions } from "litdoc/utils/weave.ts";
 /** HELPERS **/
 
 async function getWeaveOptions(
-  ctx: ServerContext,
+  ctx: Context,
   file: string,
 ): Promise<WeaveOptions> {
   const { getProgram, getModule, getText } = ctx;
@@ -49,7 +50,7 @@ async function getWeaveOptions(
   };
 }
 
-function createProgramCache(ctx: ServerContext) {
+function createProgramCache(ctx: Context) {
   const { getConfig, getText } = ctx;
   const { cacheRoot } = getConfig();
   let parse: (source: string, options: ParseOptions) => Promise<Program>;
@@ -72,7 +73,7 @@ function createProgramCache(ctx: ServerContext) {
   });
 }
 
-function createTemplateCache(ctx: ServerContext) {
+function createTemplateCache(ctx: Context) {
   const { getConfig, setValues } = ctx;
   const { cacheRoot } = getConfig();
   return cached<string>({
@@ -92,7 +93,7 @@ function createTemplateCache(ctx: ServerContext) {
   });
 }
 
-function createRootCache(ctx: ServerContext) {
+function createRootCache(ctx: Context) {
   const { getConfig, getTemplate, getValues } = ctx;
   const { cacheRoot } = getConfig();
   return cached({
@@ -112,14 +113,7 @@ function createRootCache(ctx: ServerContext) {
   });
 }
 
-/** MAIN **/
-
-export type ServerConfig = {
-  cacheRoot: string;
-  modules: Record<string, unknown>;
-};
-
-export type ServerContext = {
+type Context = ServerContext & {
   hasModule: (file: string) => boolean;
   getConfig: () => ServerConfig;
   getValues: (file: string) => Record<string, unknown>;
@@ -129,34 +123,44 @@ export type ServerContext = {
   getProgram: (file: string) => Promise<Program>;
   getTemplate: (file: string) => Promise<string>;
   getRoot: (file: string) => Promise<Root>;
-  getRoute: (file: string) => Promise<Route>;
   setValues: (file: string, values: Record<string, unknown>) => void;
 };
 
-export function server(config: Partial<ServerConfig> = {}): ServerContext {
-  const {
-    modules = {},
-    cacheRoot = ".litdoc/cache",
-  } = config;
+/** MAIN **/
 
-  const ctx: ServerContext = {
+export type ServerConfig = {
+  cacheRoot: string;
+};
+
+export type ServerContext = {
+  route: (main: Litdoc, path: string) => Promise<Route>;
+};
+
+export function server(config: Partial<ServerConfig> = {}): ServerContext {
+  let manifest: Manifest = {
+    assets: {},
+    routes: {},
+    calls: [],
+  };
+
+  const ctx: Context = {
     getConfig: () => {
       return {
-        cacheRoot,
-        modules,
+        cacheRoot: ".litdoc/cache",
+        ...config,
       };
-    },
-    hasModule: (file) => {
-      return file in modules;
-    },
-    getModule: (file) => {
-      return modules[file];
-    },
-    getValues: (file) => {
-      return state.values.get(file) || {};
     },
     setValues: (file, values) => {
       state.values.set(file, values);
+    },
+    hasModule: (file) => {
+      return file in manifest.assets;
+    },
+    getModule: (file) => {
+      return manifest.assets[file];
+    },
+    getValues: (file) => {
+      return state.values.get(file) || {};
     },
     getText: modified(memoize((file) => {
       return logFileOperation<string>(`read text`, file, (f) => {
@@ -181,10 +185,11 @@ export function server(config: Partial<ServerConfig> = {}): ServerContext {
       const hash = await ctx.getHash(file);
       return await state.roots(file, hash);
     },
-    getRoute: async (path) => {
+    route: async (module, path) => {
       return await logTime("built library", (f) => {
+        manifest = module.doc();
         return f(async () => {
-          const keys = Object.keys(modules);
+          const keys = Object.keys(manifest.assets);
           const library: Record<string, Root> = {};
           for (const file of keys) {
             library[file] = await ctx.getRoot(file);
@@ -205,5 +210,7 @@ export function server(config: Partial<ServerConfig> = {}): ServerContext {
     roots: createRootCache(ctx),
   };
 
-  return ctx;
+  return {
+    route: ctx.route,
+  };
 }

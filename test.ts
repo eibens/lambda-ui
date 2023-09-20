@@ -1,2 +1,2 @@
 import "./fresh.gen.ts";
-import "./litdoc.gen.ts";
+import "./litdoc.ts";

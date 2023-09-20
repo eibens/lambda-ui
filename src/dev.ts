@@ -84,12 +84,13 @@ function toTemplate(root: string, entries: {
     routes: [],
   };
 
-  for (const entry of entries) {
+  for (const i in entries) {
+    const entry = entries[i];
     const { path } = entry;
     const file = "./" + normalize(join(root, path));
     const isScript = scriptExtensions.some((ext) => file.endsWith(ext));
     if (isScript) {
-      const varName = `$${template.imports.length}`;
+      const varName = `$${i}`;
       template.imports.push({
         file: file,
         name: varName,
@@ -101,7 +102,7 @@ function toTemplate(root: string, entries: {
     } else {
       template.routes.push({
         file,
-        value: "null",
+        value: i,
       });
     }
   }
@@ -114,23 +115,24 @@ const stringifyTemplate = ({ root, imports, routes }: Template) => `
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running \`dev.ts\`.
 
+import lit from "litdoc/lit.ts"
 ${
   imports
     .map((item) => `import * as ${item.name} from "${item.file}";`)
     .join("\n")
 }
 
-export default {
-  baseUrl: import.meta.url,
+export const doc = lit({
+  url: import.meta.url,
   root: "${root}",
-  routes: {
+  assets: {
     ${
   routes
     .map((item) => `    "${item.file}": ${item.value},`)
     .join("\n")
 }
   },
-};
+})
 `;
 
 /** MAIN **/
@@ -170,7 +172,7 @@ export default async function dev(metaUrl: string | URL, options: {
   const template = toTemplate(root, entries);
   const raw = stringifyTemplate(template);
   const formatted = await formatTypescript(raw);
-  await writeLazy("litdoc.gen.ts", formatted);
+  await writeLazy("litdoc.ts", formatted);
 
   console.log(
     `%cThe manifest has been generated for ` +

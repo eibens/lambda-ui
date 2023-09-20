@@ -14,7 +14,8 @@ import {
   RenderNodeProps,
   useDoc,
 } from "litdoc/hooks/use_doc.ts";
-import { Root } from "litdoc/utils/schema.ts";
+import { Litdoc } from "litdoc/lit.ts";
+import { Route } from "litdoc/utils/route.ts";
 import "slate";
 import { Node } from "slate";
 import { Editable, ReactEditor, Slate, useSlate } from "slate-react";
@@ -342,13 +343,18 @@ const components: NodeComponents = {
     );
   },
   ThematicBreak: function (props) {
-    const { attributes, children } = props;
+    const { attributes, children, node } = props;
+    const editor = useSlate();
+    const path = ReactEditor.findPath(editor, node);
     return (
-      <View {...attributes}>
-        <View
-          tag="hr"
-          class="border-gray-300 dark:border-gray-700"
-        />
+      <View
+        {...attributes}
+        tag="hr"
+        class="border-gray-300 dark:border-gray-700"
+        style={{
+          marginBottom: editor.getSpacing(path) + "px",
+        }}
+      >
         {children}
       </View>
     );
@@ -370,8 +376,8 @@ const components: NodeComponents = {
 /** MAIN **/
 
 export type DocProps = {
-  root: Root;
-  values: Record<string, unknown>;
+  litdoc: Litdoc;
+  route: Route;
   components?: Partial<NodeComponents>;
 };
 

@@ -1,5 +1,5 @@
 import { assertEquals } from "$std/assert/assert_equals.ts";
-import { parse, parseFragment } from "litdoc/utils.ts";
+import { parse, parseFragment } from "litdoc/utils/parse.ts";
 
 Deno.test("single paragraph", () => {
   const node = parse(`hello world`);

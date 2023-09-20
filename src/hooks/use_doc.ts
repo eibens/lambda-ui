@@ -1,6 +1,8 @@
 import { ViewChildren } from "litdoc/components/View.tsx";
+import { Litdoc } from "litdoc/lit.ts";
 import { create } from "litdoc/utils/editor.ts";
-import { Root } from "litdoc/utils/schema.ts";
+import { Route } from "litdoc/utils/route.ts";
+import { weave } from "litdoc/utils/weave.ts";
 import { h, VNode } from "preact";
 import { useCallback, useMemo } from "preact/hooks";
 import "slate";
@@ -26,16 +28,20 @@ export type RenderNodeProps<T extends Node["type"] = Node["type"]> = {
 };
 
 export type DocProps = {
-  root: Root;
-  values: Record<string, unknown>;
+  route: Route;
+  litdoc: Litdoc;
   components: NodeComponents;
 };
 
 export function useDoc(props: DocProps) {
-  const { root, values, components } = props;
+  const { route, litdoc, components } = props;
+
+  const manifest = litdoc.doc();
+  const module = manifest.assets[route.file];
+  const { values } = weave({ type: "Values", module });
 
   const editor = useMemo(() => {
-    return withReact(create(root, values));
+    return withReact(create(route.root, values));
   }, []);
 
   const render = useCallback((props: RenderNodeProps) => {

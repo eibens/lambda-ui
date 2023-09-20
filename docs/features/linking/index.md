@@ -15,93 +15,11 @@ interlinked in the following way:
 - The sitemap links to all of the above, as well as itself, in order to provide
   the user with a complete overview of the website.
 
-:file/homepage.ts^:
-
-```ts
-import lit from "litdoc/lit.ts"
-import * as contact from "./contact.ts";
-import * as sitemap from "./sitemap.ts";
-
-export const doc = lit();
-const { md } = doc;
-
-md`
-# Homepage
-
-> Find stuff: [${sitemap}]
-
-> Find us: [${contact}]
-```
+:file/homepage.ts:
 
 :file/contact.ts^:
 
-```ts
-import lit from "litdoc/lit.ts"
-import * as homepage from "./index.ts";
-
-export const doc = lit();
-const { md } = doc;
-
-md`
-# Contact
-
-> Visit the homepage: [${homepage}]
-```
-
 :file/sitemap.ts^:
-
-```ts
-import lit from "litdoc/lit.ts";
-import * as contact from "./contact.ts";
-import * as homepage from "./index.ts";
-import * as sitemap from "./sitemap.ts";
-
-export const doc = lit();
-const { md } = doc;
-
-md`
-# Sitemap
-
-- [${homepage}]
-- [${contact}]
-- [${sitemap}]
-`;
-```
-
-The above files can be rendered as a homepage, by
-
-:file/routes/[...path].ts^:
-
-```tsx
-import LitdocPreact from "litdoc-preact/mod.ts";
-import Litdoc from "litdoc/preact.ts";
-import * as contact from "./contact.ts";
-import * as homepage from "./index.ts";
-import * as sitemap from "./sitemap.ts";
-
-export default function render(ctx: RouteContext) {
-  return (
-    <Litdoc
-      url={request.url}
-      routing={{
-        routes: {
-          "/": "./index.ts",
-          "/contact": "./contact.ts",
-          "/sitemap": "./sitemap.ts",
-        },
-      }}
-      manifest={{
-        url: new URL(import.meta.url),
-        files: {
-          "./contact.ts": contact,
-          "./index.ts": homepage,
-          "./sitemap.ts": sitemap,
-        },
-      }}
-    />
-  );
-}
-```
 
 This is the output:
 
