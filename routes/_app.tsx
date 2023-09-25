@@ -1,5 +1,5 @@
 import { AppProps } from "$fresh/src/server/types.ts";
-import * as Dark from "litdoc/services/dark.ts";
+import * as Dark from "../src/dark.ts";
 
 export default function App({ Component }: AppProps) {
   return (

@@ -1,4 +1,4 @@
-import { View, ViewProps } from "litdoc/components/View.tsx";
+import { View, ViewProps } from "./View.tsx";
 
 export function Heading(
   props: ViewProps & {

@@ -12,7 +12,8 @@
     "litdoc",
     "mdast",
     "preact",
-    "twind"
+    "twind",
+    "urlpattern"
   ],
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"

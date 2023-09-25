@@ -3,36 +3,55 @@
 // This file is automatically updated during development when running `dev.ts`.
 
 import lit from "litdoc/lit.ts";
-import * as $1 from "./docs/examples/multi-page/contact.ts";
-import * as $2 from "./docs/examples/multi-page/index.ts";
-import * as $3 from "./docs/examples/multi-page/sitemap.ts";
-import * as $4 from "./docs/examples/single-page/index.ts";
-import * as $5 from "./docs/features/cards.tsx";
-import * as $6 from "./docs/features/headings.tsx";
-import * as $7 from "./docs/features/icons.tsx";
-import * as $9 from "./docs/features/links.tsx";
-import * as $10 from "./docs/features/lists.tsx";
-import * as $11 from "./docs/features/tags.tsx";
-import * as $12 from "./docs/features/templates.tsx";
+import * as $1 from "./src/docs/examples/multi-page/contact.ts";
+import * as $2 from "./src/docs/examples/multi-page/index.ts";
+import * as $3 from "./src/docs/examples/multi-page/sitemap.ts";
+import * as $4 from "./src/docs/examples/single-page/index.ts";
+import * as $5 from "./src/docs/features/cards.tsx";
+import * as $6 from "./src/docs/features/headings.tsx";
+import * as $7 from "./src/docs/features/icons.tsx";
+import * as $9 from "./src/docs/features/links.tsx";
+import * as $10 from "./src/docs/features/lists.tsx";
+import * as $11 from "./src/docs/features/templates.tsx";
 
 export const doc = lit({
-  url: import.meta.url,
-  root: "docs",
+  baseUrl: import.meta.url,
   assets: {
-    "./docs/dev.md": 0,
-    "./docs/examples/multi-page/contact.ts": $1,
-    "./docs/examples/multi-page/index.ts": $2,
-    "./docs/examples/multi-page/sitemap.ts": $3,
-    "./docs/examples/single-page/index.ts": $4,
-    "./docs/features/cards.tsx": $5,
-    "./docs/features/headings.tsx": $6,
-    "./docs/features/icons.tsx": $7,
-    "./docs/features/linking/index.md": 8,
-    "./docs/features/links.tsx": $9,
-    "./docs/features/lists.tsx": $10,
-    "./docs/features/tags.tsx": $11,
-    "./docs/features/templates.tsx": $12,
-    "./docs/features/tokens.md": 13,
-    "./docs/index.md": 14,
+    "./src/docs/dev.md": 0,
+    "./src/docs/examples/multi-page/contact.ts": $1,
+    "./src/docs/examples/multi-page/index.ts": $2,
+    "./src/docs/examples/multi-page/sitemap.ts": $3,
+    "./src/docs/examples/single-page/index.ts": $4,
+    "./src/docs/features/cards.tsx": $5,
+    "./src/docs/features/headings.tsx": $6,
+    "./src/docs/features/icons.tsx": $7,
+    "./src/docs/features/linking/index.md": 8,
+    "./src/docs/features/links.tsx": $9,
+    "./src/docs/features/lists.tsx": $10,
+    "./src/docs/features/templates.tsx": $11,
+    "./src/docs/features/tokens.md": 12,
+    "./src/docs/index.md": 13,
+    "./src/docs/logs/23-09-21.md": 14,
+    "./src/docs/logs/23-09-22.md": 15,
+    "./src/docs/logs/23-09-24.md": 16,
+  },
+  routes: {
+    "/dev": 0,
+    "/examples/multi-page/contact": $1,
+    "/examples/multi-page/": $2,
+    "/examples/multi-page/sitemap": $3,
+    "/examples/single-page/": $4,
+    "/features/cards": $5,
+    "/features/headings": $6,
+    "/features/icons": $7,
+    "/features/linking/": 8,
+    "/features/links": $9,
+    "/features/lists": $10,
+    "/features/templates": $11,
+    "/features/tokens": 12,
+    "/": 13,
+    "/logs/23-09-21": 14,
+    "/logs/23-09-22": 15,
+    "/logs/23-09-24": 16,
   },
 });

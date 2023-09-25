@@ -1,5 +1,5 @@
-import { FaIcon } from "litdoc/components/FaIcon.tsx";
-import { Tag } from "litdoc/components/Tag.tsx";
+import { FaIcon } from "./FaIcon.tsx";
+import { Tag } from "./Tag.tsx";
 
 export function Token(props: {
   href: string;

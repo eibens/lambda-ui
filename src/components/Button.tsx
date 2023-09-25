@@ -1,4 +1,4 @@
-import { View, ViewChild, ViewProps } from "litdoc/components/View.tsx";
+import { View, ViewChild, ViewProps } from "./View.tsx";
 
 export type ButtonProps =
   & Omit<ViewProps<"a" | "button">, "size" | "icon" | "label">

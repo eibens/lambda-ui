@@ -2,11 +2,11 @@
 
 import dev from "$fresh/dev.ts";
 import "$std/dotenv/load.ts";
-import litdoc from "litdoc/dev.ts";
 import config from "./fresh.config.ts";
+import { generate } from "./src/dev.ts";
 
-await litdoc(import.meta.url, "./docs.ts", {
-  root: "docs",
+await generate(import.meta.url, "./docs.ts", {
+  root: "src/docs",
 });
 
 await dev(import.meta.url, "./main.ts", config);

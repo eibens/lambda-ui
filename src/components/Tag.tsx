@@ -1,4 +1,4 @@
-import { View, ViewChildren } from "litdoc/components/View.tsx";
+import { View, ViewChildren } from "./View.tsx";
 
 export function Tag(props: {
   text?: string;

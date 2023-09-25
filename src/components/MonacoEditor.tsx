@@ -1,8 +1,8 @@
 import { useSignalEffect } from "@preact/signals";
-import { View } from "litdoc/components/View.tsx";
 import * as Dark from "litdoc/services/dark.ts";
 import * as Monaco from "litdoc/services/monaco.ts";
 import { useEffect, useState } from "preact/hooks";
+import { View } from "./View.tsx";
 
 function useMonacoTheme() {
   const monaco = Monaco.useInstance();

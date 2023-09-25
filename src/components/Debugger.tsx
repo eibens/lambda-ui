@@ -1,10 +1,10 @@
 import { useSignal } from "@preact/signals";
 import { useEffect, useState } from "preact/hooks";
 import { Editor, Element, Node, Range } from "slate";
-import { Button } from "litdoc/components/Button.tsx";
-import { FaIcon } from "litdoc/components/FaIcon.tsx";
-import { Tag } from "litdoc/components/Tag.tsx";
-import { View } from "litdoc/components/View.tsx";
+import { Button } from "./Button.tsx";
+import { FaIcon } from "./FaIcon.tsx";
+import { Tag } from "./Tag.tsx";
+import { View } from "./View.tsx";
 
 function StringValue(props: {
   value: string;

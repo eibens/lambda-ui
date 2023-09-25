@@ -1,7 +1,24 @@
 import { titleCase } from "https://esm.sh/tiny-case@1.0.3";
-import { useScrollOffset } from "litdoc/hooks/use_scroll_offset.ts";
-import { Link } from "litdoc/components/Link.tsx";
-import { View } from "litdoc/components/View.tsx";
+import { useEffect, useState } from "preact/hooks";
+import { Link } from "./Link.tsx";
+import { View } from "./View.tsx";
+
+/** MAIN **/
+
+function useScrollOffset() {
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const offset = window.scrollY;
+      setOffset(offset);
+    };
+    addEventListener("scroll", onScroll);
+    return () => removeEventListener("scroll", onScroll);
+  }, []);
+
+  return offset;
+}
 
 /** MAIN **/
 

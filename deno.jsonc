@@ -7,18 +7,12 @@
     "fix": "deno fmt && deno task check && deno test --allow-read=.",
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
-    "update": "deno run -A -r https://fresh.deno.dev/update ."
+    "update": "echo 'Fresh update is disabled because it removes the comments in this file. Please update dependencies manually.'"
   },
   "imports": {
-    // Needed for using litdoc.
-    // The library uses this specifier internally,
-    // so this entry must be added to userland import maps.
-    // We might try to get rid of it, but it is very convenient during development.
-    "litdoc/": "./src/",
-
-    // Used only for building the litdoc website.
-    // For example, use $/islands/ to import island components.
-    "$/": "./",
+    // Used for writing docs.
+    // Must not be used inside library code.
+    "litdoc/lit.ts": "./src/lit.ts",
 
     // Used for Fresh framework.
     "$fresh/": "https://deno.land/x/fresh@1.4.3/",
@@ -40,13 +34,16 @@
     // The overriding of the 'slate' module could happen in the theme only.
     "slate": "https://esm.sh/slate@0.94.0",
 
-    // These are slate-react dependencies.
+    // This is a preact compatible version of slate-react.
+    // This fork should not be used in production right now.
+    // If the official slate-preact becomes preact compatible,
+    // this fork and its dependencies below are hopefully no longer needed.
+    "slate-react": "https://raw.githubusercontent.com/eibens/slate-preact-port/v1.0.0-alpha/mod.ts",
+
+    // These are eibens/slate-preact-port dependencies.
     // One should try to get rid of them, for example,
     // by inlining these URLs in eibens/slate-preact-port.
-    // If the official slate-preact becomes preact compatible,
-    // these are hopefully no longer needed.
     "react": "https://esm.sh/preact@10.13.1/compat",
-    "slate-react": "https://raw.githubusercontent.com/eibens/slate-preact-port/v1.0.0-alpha/mod.ts",
     "@juggle/resize-observer": "https://esm.sh/@juggle/resize-observer@3.4.0",
     "direction": "https://esm.sh/direction@1.0.3",
     "is-hotkey": "https://esm.sh/is-hotkey@0.1.6",

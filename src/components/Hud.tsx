@@ -1,6 +1,6 @@
-import { Breadcrumbs } from "litdoc/components/Breadcrumbs.tsx";
-import { ThemeToggle } from "litdoc/components/ThemeToggle.tsx";
-import { View } from "litdoc/components/View.tsx";
+import { Breadcrumbs } from "./Breadcrumbs.tsx";
+import { ThemeToggle } from "./ThemeToggle.tsx";
+import { View } from "./View.tsx";
 
 /** MAIN **/
 

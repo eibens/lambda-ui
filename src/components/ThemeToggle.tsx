@@ -1,5 +1,5 @@
-import { Button, ButtonProps } from "litdoc/components/Button.tsx";
-import { FaIcon } from "litdoc/components/FaIcon.tsx";
+import { Button, ButtonProps } from "./Button.tsx";
+import { FaIcon } from "./FaIcon.tsx";
 
 export function ThemeToggle(props: {
   size?: ButtonProps["size"];

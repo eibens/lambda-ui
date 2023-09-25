@@ -1,5 +1,5 @@
-import { FaIcon } from "litdoc/components/FaIcon.tsx";
-import { View, ViewChildren, ViewProps } from "litdoc/components/View.tsx";
+import { FaIcon } from "./FaIcon.tsx";
+import { View, ViewChildren, ViewProps } from "./View.tsx";
 
 /** HELPERS **/
 

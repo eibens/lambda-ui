@@ -1,31 +1,31 @@
-import { Call, create, TemplateArgs } from "litdoc/utils/tags.ts";
+import { Call, Doc, Manifest, Template } from "./types.ts";
 
-export type Manifest = {
-  url?: string;
-  root?: string;
-  route?: string;
-  routes: Record<string, unknown>;
-  assets: Record<string, unknown>;
-  calls: Call[];
-};
-
-export type Doc =
-  & (() => Manifest)
-  & {
-    [key: string]: (...args: TemplateArgs<unknown>) => unknown;
-  };
-
-export type Litdoc = {
-  doc: () => Manifest;
-};
+/** MAIN **/
 
 export default function lit(config: Partial<Manifest> = {}): Doc {
-  return create((calls) => {
+  const calls: Call[] = [];
+
+  const doc = (): Manifest => {
     return {
       assets: {},
       routes: {},
-      calls,
       ...config,
+      calls,
     };
+  };
+
+  const proxy = new Proxy(doc, {
+    get: (_, name) => {
+      return (...args: Template) => {
+        const call: Call = {
+          name: String(name),
+          args,
+        };
+        calls.push(call);
+        return call;
+      };
+    },
   });
+
+  return proxy as Doc;
 }

@@ -1,24 +1,25 @@
-import * as docs from "$/docs.ts";
-import Content from "$/islands/Content.tsx";
 import { RouteContext } from "$fresh/server.ts";
 import { Head } from "$fresh/src/runtime/head.ts";
-import { Meta } from "litdoc/components/Meta.tsx";
-import { View } from "litdoc/components/View.tsx";
-import { server } from "litdoc/server.ts";
+import * as docs from "../docs.ts";
+import Content from "../islands/Content.tsx";
+import * as Kernel from "../src/kernel.ts";
+import { Meta, View } from "../src/theme.ts";
 
 /** MAIN **/
 
 export default async function render(_: Request, ctx: RouteContext) {
   const { params } = ctx;
-  const { path = "docs/index.md" } = params;
-
-  const context = server();
-  const route = await context.route(docs, path);
-
+  const path = "/" + (params.path ?? "");
+  const kernel = Kernel.create(docs.doc(), {
+    storage: "disk",
+  });
+  const key = Kernel.route(kernel, path);
+  const bundle = await Kernel.bundle(kernel, key);
+  const page = bundle.pages[key];
   return (
     <>
       <Head>
-        <title>{route.title}</title>
+        <title>{page.title}</title>
         <Meta />
       </Head>
       <View
@@ -26,7 +27,7 @@ export default async function render(_: Request, ctx: RouteContext) {
         id="top"
       >
         <View class="my-32 px-6 w-full max-w-3xl">
-          <Content route={route} />
+          <Content bundle={bundle} path={path} />
         </View>
       </View>
     </>
