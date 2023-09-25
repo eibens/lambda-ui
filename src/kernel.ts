@@ -188,7 +188,7 @@ export async function getProgram(
 export async function getTemplate(state: Kernel, key: string) {
   const file = await getFile(state, key);
   return fromCacheMap(state.templates, file, async () => {
-    const manifest = await getManifest(state, key);
+    const manifest = getManifest(state, key);
     const calls = manifest?.calls ?? [];
 
     const program = await getProgram(state, key);
@@ -215,7 +215,7 @@ export async function getRoot(state: Kernel, key: string) {
       });
     }
 
-    const manifest = await getManifest(state, key);
+    const manifest = getManifest(state, key);
     if (manifest) {
       const template = await getTemplate(state, key);
       return logFileOperation("parse markdown", key, () => {
