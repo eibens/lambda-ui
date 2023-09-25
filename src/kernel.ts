@@ -138,7 +138,7 @@ export async function getFile(state: Kernel, key: string): Promise<File> {
       const buffer = new TextEncoder().encode(text);
       const hash = await crypto.subtle.digest("SHA-256", buffer);
       const decoder = new TextDecoder();
-      const checksum = decoder.decode(encode(new Uint8Array(hash)));
+      const checksum = decoder.decode(encode(new Uint8Array(hash))).slice(0, 8);
       return { text, version: checksum, key };
     });
   });
