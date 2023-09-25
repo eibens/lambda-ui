@@ -23,11 +23,11 @@ function stringifyTemplate(template: Template, offset = 0): string {
       if (i < values.length) {
         const value = values[i];
         if (value === undefined) yield "";
-        if (value === null) yield "";
-        if (typeof value === "boolean") yield "";
-        if (typeof value === "number") yield value.toString();
-        if (typeof value === "string") yield value;
-        yield `:values/${offset + i}:`;
+        else if (value === null) yield "";
+        else if (typeof value === "boolean") yield "";
+        else if (typeof value === "number") yield value.toString();
+        else if (typeof value === "string") yield value;
+        else yield `:values/${offset + i}:`;
       }
     }
   })();
