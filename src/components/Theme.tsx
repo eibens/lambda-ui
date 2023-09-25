@@ -2,7 +2,7 @@ import { kebabCase } from "https://esm.sh/tiny-case@1.0.3";
 import { h, VNode } from "preact";
 import { Editor as EditorType, Node } from "slate";
 import { ReactEditor, useSlate } from "slate-react";
-import * as Helpers from "../editor.ts";
+import * as Helpers from "../theme.ts";
 import { Blockquote } from "./Blockquote.tsx";
 import { Code } from "./Code.tsx";
 import { Editor, EditorNodeProps } from "./Editor.tsx";
