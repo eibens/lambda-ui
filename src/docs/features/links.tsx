@@ -4,7 +4,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :icons/link: Links
+# :^icons/link: Links
 
 Links
 

@@ -159,12 +159,16 @@ const COMPONENTS: NodeComponents = {
     const { attributes, children, node } = props;
     const editor = useSlate();
     const path = ReactEditor.findPath(editor, node);
+    const parent = editor.parent(path);
+    const isListItemChild = parent?.[0].type === "ListItem";
     const slug = kebabCase(Node.string(node));
+    const icon = isListItemChild ? undefined : Helpers.getIcon(editor, path);
     return (
       <Heading
         {...attributes}
         depth={node.depth}
         id={slug}
+        icon={icon}
         style={{
           lineHeight: Helpers.getLineHeight(editor, path) + "px",
           fontSize: Helpers.getFontSize(editor, path) + "px",

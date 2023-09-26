@@ -1,4 +1,4 @@
-# Litdoc Markdown Tokens
+# :^icons/tag: Litdoc Markdown Tokens
 
 This is the specification and implementation of the Litdoc Markdown tokens,
 hereafter referred to just as _tokens_. Tokens allow authors to add custom nodes

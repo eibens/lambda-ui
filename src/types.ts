@@ -126,7 +126,7 @@ export type Root = Node<"Root">;
 export type Fragment = Node<"Fragment">;
 
 export type LitdocEditor = BaseEditor & Root & {
-  values: Record<string, unknown>;
+  values: Record<string, Value>;
 };
 
 export type ToCustomTypes<Editor> = ToCustomNodeTypes<NodeMap> & {
@@ -140,7 +140,10 @@ export type Value =
   | null
   | undefined
   | Litdoc
+  | Call
+  | Call[]
   | Node
+  | Node[]
   | VNode;
 
 export type Template = [
@@ -149,6 +152,7 @@ export type Template = [
 ];
 
 export type Call = {
+  type: "Call";
   name: string;
   args: Template;
 };
@@ -179,13 +183,7 @@ export type Page = {
   color?: string;
   description?: string;
   breadcrumbs: string[];
-  links: Record<string, unknown>;
-};
-
-export type Reader = {
-  page: Page;
-  root: Root;
-  values: Record<string, unknown>;
+  relations: Route[];
 };
 
 export type File = {
@@ -249,4 +247,16 @@ export type Kernel = {
   pages: CacheMap<Page>;
   swc: BinaryCache;
   swcWasmUrl: URL;
+};
+
+export type Route = {
+  key: string;
+  path: string;
+  values: Record<string, Value>;
+};
+
+export type TokenData = {
+  href: string;
+  path: string[];
+  params: URLSearchParams;
 };

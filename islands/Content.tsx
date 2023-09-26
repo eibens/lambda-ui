@@ -1,7 +1,8 @@
 import * as docs from "../docs.ts";
+import { ThematicBreak } from "../src/components/ThematicBreak.tsx";
 import * as Editor from "../src/editor.ts";
 import * as Kernel from "../src/kernel.ts";
-import { Theme } from "../src/theme.ts";
+import { PagePanel, Theme, View } from "../src/theme.ts";
 import { Bundle } from "../src/types.ts";
 
 /** MAIN **/
@@ -14,19 +15,34 @@ export default function Content(props: {
 }) {
   const { path, bundle } = props;
 
-  const key = Kernel.route(kernel, path);
-  const root = bundle.roots[key];
-  if (!root) throw new Error(`No such root: ${key}`);
+  const route = Kernel.route(kernel, path);
 
-  const page = bundle.pages[key];
-  if (!page) throw new Error(`No such page: ${key}`);
+  if (!route) {
+    return <div>Not Found</div>;
+  }
 
-  const values = Kernel.getValues(kernel, key);
-  const editor = Editor.create(root, { ...values });
+  const root = bundle.roots[route.key];
+  if (!root) throw new Error(`No such root: ${route.key}`);
+
+  const page = bundle.pages[route.key];
+  if (!page) throw new Error(`No such page: ${route.key}`);
+
+  const editor = Editor.create(root, route.values);
 
   return (
-    <Theme
-      editor={editor}
-    />
+    <View
+      class="flex justify-center"
+      id="top"
+    >
+      <View class="my-32 px-6 w-full max-w-3xl gap-16 flex flex-col">
+        <Theme editor={editor} />
+        <ThematicBreak />
+        <PagePanel
+          page={page}
+          kernel={kernel}
+          bundle={bundle}
+        />
+      </View>
+    </View>
   );
 }

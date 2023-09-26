@@ -18,6 +18,7 @@ export default function lit(config: Partial<Manifest> = {}): Doc {
     get: (_, name) => {
       return (...args: Template) => {
         const call: Call = {
+          type: "Call",
           name: String(name),
           args,
         };

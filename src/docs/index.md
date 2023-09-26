@@ -1,4 +1,4 @@
-# :icons/cube: [Litdoc](#litdoc)
+# :^icons/cube: [Litdoc](#litdoc)
 
 Litdoc is a library for literate programming in Deno. You are currently viewing
 the documentation for Litdoc, which is written in Litdoc itself.
@@ -20,8 +20,6 @@ the documentation for Litdoc, which is written in Litdoc itself.
 
 > - ### :^icons/list: [Lists](/features/lists)
 
-> - ### :^icons/templates: [Tags](/features/templates)
-
-> - ### :^icons/code: [Templates](/features/templates)
+> - ### :^icons/templates: [Templates](/features/templates)
 
 > - ### :^icons/tokens: [Tokens](/features/tokens)

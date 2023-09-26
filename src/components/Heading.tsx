@@ -1,11 +1,13 @@
+import { FaIcon } from "./FaIcon.tsx";
 import { View, ViewProps } from "./View.tsx";
 
 export function Heading(
   props: ViewProps & {
     depth: number;
+    icon?: string;
   },
 ) {
-  const { depth, ...rest } = props;
+  const { icon, children, depth, ...rest } = props;
 
   const i = depth - 1;
   const h = [1, 2, 3, 4, 5, 6][i] ?? 6;
@@ -18,6 +20,10 @@ export function Heading(
       class={[
         "font-sans font-bold",
       ]}
-    />
+    >
+      {icon && <FaIcon name={icon} />}
+      {icon && " "}
+      {children}
+    </View>
   );
 }

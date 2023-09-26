@@ -4,7 +4,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :icons/face-smile: Icons
+# :^icons/face-smile: Icons
 
 Icons can be specified using the following syntax:
 

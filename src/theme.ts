@@ -9,6 +9,7 @@ const { apply } = Twind;
 /** MAIN **/
 
 export { Meta } from "./components/Meta.tsx";
+export { PagePanel } from "./components/PagePanel.tsx";
 export { Theme } from "./components/Theme.tsx";
 export { View } from "./components/View.tsx";
 export { getIcon } from "./editor.ts";

@@ -14,7 +14,6 @@ import {
 } from "./cache.ts";
 import * as Editor from "./editor.ts";
 import { logFileOperation } from "./log.ts";
-import * as Markdown from "./markdown.ts";
 import * as Template from "./template.ts";
 import type {
   Bundle,
@@ -22,8 +21,10 @@ import type {
   File,
   Kernel,
   Manifest,
+  Page,
   Program,
   Root,
+  Route,
   Value,
 } from "./types.ts";
 
@@ -119,12 +120,6 @@ export function getManifest(state: Kernel, key: string): Manifest | null {
   return doc();
 }
 
-export function getValues(state: Kernel, key: string) {
-  const manifest = getManifest(state, key);
-  const calls = manifest?.calls ?? [];
-  return calls.flatMap((call) => call.args.slice(1) as Value[]);
-}
-
 export async function getFile(state: Kernel, key: string): Promise<File> {
   const url = new URL(key, state.main.baseUrl);
   const file = fromFileUrl(url);
@@ -211,7 +206,7 @@ export async function getRoot(state: Kernel, key: string) {
 
     if (lang === "md") {
       return logFileOperation("parse markdown", key, () => {
-        return Markdown.parse(text);
+        return Template.parse(text);
       });
     }
 
@@ -219,7 +214,7 @@ export async function getRoot(state: Kernel, key: string) {
     if (manifest) {
       const template = await getTemplate(state, key);
       return logFileOperation("parse markdown", key, () => {
-        return Markdown.parse(template);
+        return Template.parse(template);
       });
     }
 
@@ -234,13 +229,29 @@ export async function getRoot(state: Kernel, key: string) {
   });
 }
 
-export async function getPage(state: Kernel, key: string) {
+export async function getPage(state: Kernel, key: string): Promise<Page> {
   const file = await getFile(state, key);
   return fromCacheMap(state.pages, file, async () => {
     const root = await getRoot(state, key);
     return logFileOperation("page", key, () => {
       const editor = Editor.create(root);
-      return Editor.getPage(editor);
+      const links = Editor.getLinks(editor);
+      const relations = links
+        .map((link) => {
+          const route = routeHref(state, link.url);
+          if (!route) return null;
+          return route;
+        })
+        .filter(Boolean) as Route[];
+
+      return {
+        icon: Editor.getIcon(editor),
+        title: Editor.getTitle(editor) ?? "Untitled",
+        description: Editor.getLead(editor),
+        color: Editor.getColor(editor),
+        breadcrumbs: [],
+        relations,
+      };
     });
   });
 }
@@ -275,37 +286,85 @@ export function setMemory(state: Kernel, bundle: Partial<Bundle>) {
   hydrateMemoryMap(state.pages.memory, pages, versions);
 }
 
-export function route(kernel: Kernel, path: string) {
+export function route(kernel: Kernel, path: string): Route | null {
   const { main } = kernel;
   const module = main.routes?.[path];
   for (const key in main.assets) {
     const ref = main.assets[key];
-    if (ref === module) return key;
+    if (ref === module) {
+      const manifest = getManifest(kernel, key);
+      const calls = manifest?.calls ?? [];
+      const values = calls
+        .flatMap((call) => call.args.slice(1) as Value[])
+        .reduce<Record<string, Value>>(
+          (values, value, i) => ({ ...values, [i]: value }),
+          {},
+        );
+      return {
+        key,
+        values,
+        path,
+      };
+    }
   }
-  console.log(main.routes, path);
-  throw new Error(`No such route: ${path}`);
+
+  return null;
 }
 
-export async function bundle(kernel: Kernel, key: string): Promise<Bundle> {
-  const page = await getPage(kernel, key);
-  const root = await getRoot(kernel, key);
-  const program = await getProgram(kernel, key);
-  const template = await getTemplate(kernel, key);
-  const file = await getFile(kernel, key);
-  const keys = Object.keys(page.links);
-  const linkedPages = Object.fromEntries(
-    await Promise.all(
-      keys.map(async (key) => [key, await getPage(kernel, key)]),
-    ),
-  );
+export function routeHref(kernel: Kernel, href: string): Route | null {
+  function getRoute(path: string) {
+    try {
+      const url = new URL(path);
+      return {
+        url,
+        target: "external" as const,
+      };
+    } catch (_) {
+      try {
+        const url = new URL(path, "http://example.com");
+        return {
+          url,
+          target: "internal" as const,
+        };
+      } catch (_) {
+        throw new Error(`Invalid route: ${path}`);
+      }
+    }
+  }
 
-  return {
-    pages: { [key]: page, ...linkedPages },
-    files: { [key]: file },
-    programs: program ? { [key]: program } : {},
-    templates: { [key]: template },
-    roots: { [key]: root },
-  };
+  const path = getRoute(href).url.pathname;
+  return route(kernel, path);
+}
+
+export function bundle(kernel: Kernel, key: string): Promise<Bundle> {
+  return logFileOperation("bundle", key, async () => {
+    const page = await getPage(kernel, key);
+    const root = await getRoot(kernel, key);
+    const program = await getProgram(kernel, key);
+    const template = await getTemplate(kernel, key);
+    const file = await getFile(kernel, key);
+    const linkedKeys = page.relations
+      .map((item) => route(kernel, item.path))
+      .filter(Boolean)
+      .map((route) => route as Route)
+      .map((route) => route.key);
+
+    const linkedPages = Object.fromEntries(
+      await Promise.all(
+        linkedKeys
+          .filter(Boolean)
+          .map(async (key) => [key, await getPage(kernel, key as string)]),
+      ),
+    );
+
+    return {
+      pages: { [key]: page, ...linkedPages },
+      files: { [key]: file },
+      programs: program ? { [key]: program } : {},
+      templates: { [key]: template },
+      roots: { [key]: root },
+    };
+  });
 }
 
 export async function pages(kernel: Kernel): Promise<Bundle> {

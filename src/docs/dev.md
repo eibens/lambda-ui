@@ -1,4 +1,4 @@
-# :icons/file: Developer Notes
+# :^icons/file: Developer Notes
 
 These are unsorted notes for the development of Litdoc.
 

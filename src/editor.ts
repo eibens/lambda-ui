@@ -1,7 +1,63 @@
 import { createEditor, Editor, Node, Path, Text } from "slate";
 import { ReactEditor, withReact } from "slate-react";
-import { getTokens } from "./tokens.ts";
-import type { LitdocEditor, Page, Root, ToCustomTypes } from "./types.ts";
+import type {
+  LitdocEditor,
+  NodeMap,
+  Root,
+  ToCustomTypes,
+  TokenData,
+  Value,
+} from "./types.ts";
+
+/** HELPERS **/
+
+function* resolveToken(
+  node: Node,
+  values: Record<string, Value>,
+): Iterable<Node> {
+  if (node.type !== "Token") {
+    return yield node;
+  }
+
+  // Token is not a value.
+  const valuePrefix = "token:///values/";
+  if (!node.url.startsWith(valuePrefix)) {
+    return yield node;
+  }
+
+  // Extract key and value.
+  const key = node.url.slice(valuePrefix.length);
+  const value = values[key];
+
+  // All values must resolve.
+  if (value == null) {
+    console.warn(`Value ${key} not found.`);
+    return yield node;
+  }
+
+  // At this stage, there should be only nodes and VDom.
+  if (typeof value !== "object") {
+    throw new Error(`Value ${key} is not an object.`);
+  }
+
+  if ("doc" in value) {
+    throw new Error("TODO: Handle Litdoc values.");
+  }
+
+  // VDom will be handled later during rendering.
+  if ("$$typeof" in value) {
+    return [node];
+  }
+
+  const nodes: Node[] = (Array.isArray(value) ? value : [value]) as Node[];
+  for (const child of nodes) {
+    if (child.type === "Fragment" || child.type === "Root") {
+      yield* child.children;
+    } else {
+      yield child;
+    }
+  }
+}
 
 /** MAIN **/
 
@@ -10,7 +66,7 @@ declare module "slate" {
   interface CustomTypes extends ToCustomTypes<LitdocEditor & ReactEditor> {}
 }
 
-export function create(root: Root, values?: Record<string, unknown>) {
+export function create(root: Root, values?: Record<number | string, Value>) {
   const editor = createEditor();
   const old = { ...editor };
 
@@ -53,6 +109,38 @@ export function create(root: Root, values?: Record<string, unknown>) {
           return;
         }
 
+        if (node.type === "Token") {
+          // Token sticks to the node before it (or parent).
+          if (node.assign === "before") {
+            const [target, targetPath] = editor.previous({ at: path }) ??
+              editor.parent(path);
+            const tokens = [...(target.tokens ?? []), node.url];
+            editor.setNodes({ tokens }, { at: targetPath });
+            editor.removeNodes({ at: path });
+            return;
+          }
+
+          // Token sticks to the node after it (or parent).
+          if (node.assign === "after") {
+            const [target, targetPath] = editor.next({ at: path }) ??
+              editor.parent(path);
+            const tokens = [...(target.tokens ?? []), node.url];
+            editor.setNodes({ tokens }, { at: targetPath });
+            editor.removeNodes({ at: path });
+            return;
+          }
+
+          // Token is parsed as a node.
+          const nodes = Array.from(resolveToken(node, editor.values));
+          if (nodes.length !== 1 || nodes[0] !== node) {
+            editor.removeNodes({ at: path });
+            editor.insertNodes(nodes, {
+              at: path,
+            });
+            return;
+          }
+        }
+
         old.normalizeNode(entry, options);
       },
     },
@@ -88,6 +176,16 @@ export function getLead(editor: Editor, at: Path = []): string | undefined {
   }
 }
 
+export function getTokens(node: Node): TokenData[] {
+  return (node.tokens ?? [])
+    .map((href) => new URL(href))
+    .map((url) => ({
+      href: url.href,
+      path: url.pathname.split("/").filter(Boolean),
+      params: url.searchParams,
+    }));
+}
+
 export function getIcon(editor: Editor, at: Path = []): string | undefined {
   const [node] = editor.node(at);
 
@@ -98,7 +196,7 @@ export function getIcon(editor: Editor, at: Path = []): string | undefined {
 
   if (icon) return icon;
 
-  if (node.type === "ListItem") {
+  if (node.type === "ListItem" || node.type === "Root") {
     const [child] = node.children;
     if (child) {
       return getIcon(editor, at.concat(0));
@@ -114,14 +212,16 @@ export function getColor(editor: Editor, at: Path = []): string | undefined {
     .filter(Boolean)[0];
 }
 
-export function getPage(root: Root): Page {
-  const editor = create(root);
-  return {
-    icon: getIcon(editor),
-    title: getTitle(editor),
-    description: getLead(editor),
-    color: getColor(editor),
-    breadcrumbs: [],
-    links: {},
-  };
+export function getLinks(editor: Editor, at: Path = []) {
+  const nodes = editor.nodes<Extract<Node, { type: "Link" }>>({
+    at,
+    match: (node) => node.type === "Link",
+  });
+
+  const links: NodeMap["Link"][] = [];
+  for (const [node] of nodes) {
+    links.push({ ...node });
+  }
+
+  return links;
 }

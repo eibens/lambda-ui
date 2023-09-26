@@ -4,7 +4,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :icons/font: Headings
+# :^icons/font: Headings
 
 > # Heading 1
 > ## Heading 2

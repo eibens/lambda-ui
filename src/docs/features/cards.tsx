@@ -7,7 +7,7 @@ const t =
   "This is placeholder paragraph with some text about nothing. More text is here to add length to the paragraph.";
 
 md`
-# :icons/border-all: Cards
+# :^icons/border-all: Cards
 
 >> # :icons/circle-info: Heading 1
 >> ${t}

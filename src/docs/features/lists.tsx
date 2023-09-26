@@ -4,7 +4,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :icons/list: [Lists](#lists)
+# :^icons/list: [Lists](#lists)
 
 These are examples of lists in Litdoc.
 

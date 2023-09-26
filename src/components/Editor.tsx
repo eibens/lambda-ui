@@ -36,9 +36,6 @@ export function Editor(props: EditorProps) {
             ...rest,
             node: leaf,
           })}
-        style={{
-          padding: "16px",
-        }}
       />
     </Slate>
   );

@@ -4,7 +4,7 @@ export const doc = lit();
 const { md } = doc;
 
 md`
-# :icons/code: [Templates](#templates)
+# :^icons/code: [Templates](#templates)
 
 Templates in Litdoc can be created with template literals.
 This allows interspersing text with runtime values,
