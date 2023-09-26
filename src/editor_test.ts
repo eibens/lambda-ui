@@ -39,6 +39,54 @@ Deno.test("token that sticks to text after", () => {
   }]);
 });
 
+Deno.test("token ignores whitespace node before prev element", () => {
+  const node = parse(`*hello* :^world:`);
+
+  assertEquals(node, [{
+    type: "Paragraph",
+    children: [{
+      type: "Text",
+      text: "",
+    }, {
+      type: "Emphasis",
+      tokens: [
+        "token:///world",
+      ],
+      children: [{
+        type: "Text",
+        text: "hello",
+      }],
+    }, {
+      type: "Text",
+      text: "",
+    }],
+  }]);
+});
+
+Deno.test("token ignores whitespace text node before next element", () => {
+  const node = parse(`:hello^: *world*`);
+
+  assertEquals(node, [{
+    type: "Paragraph",
+    children: [{
+      type: "Text",
+      text: "",
+    }, {
+      type: "Emphasis",
+      tokens: [
+        "token:///hello",
+      ],
+      children: [{
+        type: "Text",
+        text: "world",
+      }],
+    }, {
+      type: "Text",
+      text: "",
+    }],
+  }]);
+});
+
 Deno.test("token that sticks to parent node before", () => {
   const node = parse(`:^hello: world`);
 
