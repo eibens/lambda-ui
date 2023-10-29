@@ -1,11 +1,11 @@
 import { assertEquals } from "$std/assert/assert_equals.ts";
 import { create } from "./editor.ts";
-import * as Template from "./template.ts";
-import { md, weave } from "./template.ts";
-import { Value } from "./types.ts";
+import type { Value } from "./lit.ts";
+import { md, parse as parseMd } from "./markdown.ts";
+import { weave } from "./weaver.ts";
 
 function parse(template: string, values?: Record<string | number, Value>) {
-  const root = Template.parse(template);
+  const root = parseMd(template);
   const editor = create(root, values);
   return editor.children;
 }
@@ -229,9 +229,9 @@ Deno.test("unwraps root node", () => {
 
 Deno.test("handles nested calls", () => {
   const call = md`${"foo"} ${md`${"bar"} ${md`${"baz"}`}`}`;
-  const [template, ...args] = weave(call.args);
-  const values = Object.fromEntries(args.entries());
-  const node = parse(template, values);
+  const template = weave([call]);
+  const values = Object.fromEntries(template.values.entries());
+  const node = parse(template.text, values);
 
   assertEquals(node, [{
     type: "Paragraph",
@@ -245,9 +245,9 @@ Deno.test("handles nested calls", () => {
 Deno.test("handles nested arrays of calls", () => {
   const array = [md`foo`, md`bar`, md`baz`];
   const call = md`${array}`;
-  const [template, ...args] = weave(call.args);
-  const values = Object.fromEntries(args.entries());
-  const node = parse(template, values);
+  const template = weave([call]);
+  const values = Object.fromEntries(template.values.entries());
+  const node = parse(template.text, values);
 
   assertEquals(node, [{
     type: "Paragraph",

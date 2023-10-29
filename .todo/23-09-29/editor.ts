@@ -1,15 +1,34 @@
-import { createEditor, Editor, Node, Path, Text } from "slate";
+import type { Value } from "litdoc/lit.ts";
+import { BaseEditor, createEditor, Editor, Node, Path, Text } from "slate";
 import { ReactEditor, withReact } from "slate-react";
-import type {
-  LitdocEditor,
-  NodeMap,
-  Root,
-  ToCustomTypes,
-  TokenData,
-  Value,
-} from "./types.ts";
+import type { NodeMap, Nodes, Root } from "./markdown.ts";
+
+declare module "slate" {
+  // deno-lint-ignore no-empty-interface
+  interface CustomTypes extends ToCustomTypes<LitdocEditor & ReactEditor> {}
+}
 
 /** HELPERS **/
+
+type ToElementMap<NodeMap> = {
+  [K in keyof NodeMap]: NodeMap[K] extends {
+    children: infer _;
+  } ? NodeMap[K]
+    : never;
+};
+
+type ToTextMap<NodeMap> = {
+  [K in keyof NodeMap]: NodeMap[K] extends {
+    text: string;
+  } ? NodeMap[K]
+    : never;
+};
+
+type ToCustomNodeTypes<NodeMap> = {
+  Node: Nodes<NodeMap>;
+  Element: Nodes<ToElementMap<NodeMap>>;
+  Text: Nodes<ToTextMap<NodeMap>>;
+};
 
 function* resolveToken(
   node: Node,
@@ -49,7 +68,7 @@ function* resolveToken(
     return [node];
   }
 
-  const nodes: Node[] = (Array.isArray(value) ? value : [value]) as Node[];
+  const nodes = (Array.isArray(value) ? value : [value]) as unknown[] as Node[];
   for (const child of nodes) {
     if (child.type === "Fragment" || child.type === "Root") {
       yield* child.children;
@@ -61,10 +80,28 @@ function* resolveToken(
 
 /** MAIN **/
 
-declare module "slate" {
-  // deno-lint-ignore no-empty-interface
-  interface CustomTypes extends ToCustomTypes<LitdocEditor & ReactEditor> {}
-}
+export type Page = {
+  title?: string;
+  icon?: string;
+  color?: string;
+  description?: string;
+  breadcrumbs: string[];
+  relations: string[];
+};
+
+export type LitdocEditor = ReactEditor & BaseEditor & Root & {
+  values: Record<string, Value>;
+};
+
+export type ToCustomTypes<Editor> = ToCustomNodeTypes<NodeMap> & {
+  Editor: Editor;
+};
+
+export type TokenData = {
+  href: string;
+  path: string[];
+  params: URLSearchParams;
+};
 
 export function create(root: Root, values?: Record<number | string, Value>) {
   const editor = createEditor();

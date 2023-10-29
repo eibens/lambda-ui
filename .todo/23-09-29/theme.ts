@@ -1,5 +1,5 @@
 import * as TwindColors from "https://esm.sh/twind@0.16.17/colors";
-import { Editor, Path } from "slate";
+import type { Editor, Path } from "slate";
 import * as Twind from "twind";
 
 /** HELPERS **/
@@ -9,7 +9,6 @@ const { apply } = Twind;
 /** MAIN **/
 
 export { Meta } from "./components/Meta.tsx";
-export { PagePanel } from "./components/PagePanel.tsx";
 export { Theme } from "./components/Theme.tsx";
 export { View } from "./components/View.tsx";
 export { getIcon } from "./editor.ts";
